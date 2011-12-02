@@ -112,25 +112,25 @@ program test_shmem_iget
 
     call shmem_barrier_all()
 
-    call shmem_integer_iget(dest1, src1, 1, 2, N, nextpe)
-    call shmem_real_iget(dest2, src2, 1, 2, N, nextpe)
-    call shmem_double_iget(dest3, src3, 1, 2, N, nextpe)
-    call shmem_logical_iget(dest6, src6, 1, 2, N, nextpe)
+    call shmem_integer_iget(dest1, src1, 1, 2, N/2, nextpe)
+    call shmem_real_iget(dest2, src2, 1, 2, N/2, nextpe)
+    call shmem_double_iget(dest3, src3, 1, 2, N/2, nextpe)
+    call shmem_logical_iget(dest6, src6, 1, 2, N/2, nextpe)
 
     call shmem_barrier_all()
 
     if(me .eq. 0) then
-      do i = 1, 1, 1
-        if(dest1(i) .ne. 1) then
+      do i = 0, N/2 - 1, 1
+        if(dest1(i + 1) .ne. 1) then
           success1 = success1 + 1
         end if
-        if(dest2(i) .ne. 1) then
+        if(dest2(i + 1) .ne. 1) then
           success2 = success2 + 1
         end if
-        if(dest3(i) .ne. 1) then
+        if(dest3(i + 1) .ne. 1) then
           success3 = success3 + 1
         end if
-        if(.not. dest6(i)) then
+        if(.not. dest6(i + 1)) then
           success6 = success6 + 1
         end if
       end do 
@@ -170,17 +170,17 @@ program test_shmem_iget
 
       call shmem_barrier_all()
 
-      call shmem_iget32(dest1, src1, 1, 2, N, nextpe)
-      call shmem_iget64(dest7, src7, 1, 2, N, nextpe)
+      call shmem_iget32(dest1, src1, 1, 2, N/2, nextpe)
+      call shmem_iget64(dest7, src7, 1, 2, N/2, nextpe)
 
       call shmem_barrier_all()
 
       if(me .eq. 0) then
-        do i = 1, 1, 1
-          if(dest1(i) .ne. 1) then
+        do i = 0, N/2 - 1, 1
+          if(dest1(i + 1) .ne. 1) then
             success2 = 1
           end if
-          if(dest7(i) .ne. 1) then
+          if(dest7(i + 1) .ne. 1) then
             success3 = 1
           end if
         end do

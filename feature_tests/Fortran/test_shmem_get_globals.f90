@@ -123,7 +123,7 @@ program test_shmem_get
     call shmem_real_get(dest2, src2, N, nextpe)
     call shmem_double_get(dest3, src3, N, nextpe)
     call shmem_character_get(dest4, src4, N, nextpe)
-    call shmem_getmem(dest5, src5, N, nextpe)
+    !call shmem_getmem(dest5, src5, N, nextpe)
     call shmem_logical_get(dest6, src6, N, nextpe)
 
     call shmem_barrier_all()

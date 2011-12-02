@@ -110,12 +110,12 @@ program test_shmem_put
     nextpe = mod((me + 1), npes)
 
     call shmem_barrier_all()
-
+    
     call shmem_integer_put(dest1, src1, N, nextpe)
     call shmem_real_put(dest2, src2, N, nextpe)
     call shmem_double_put(dest3, src3, N, nextpe)
     call shmem_character_put(dest4, src4, N, nextpe)
-    call shmem_putmem(dest5, src5, N, nextpe)
+    !call shmem_putmem(dest5, src5, N, nextpe)
     call shmem_logical_put(dest6, src6, N, nextpe)
 
     call shmem_barrier_all()

@@ -42,7 +42,7 @@ program test_shmem_reduction
 
   integer,   parameter :: N = 3
 
-  integer,   save      :: pSync(SHMEM_BCAST_SYNC_SIZE)
+  integer*8, save      :: pSync(SHMEM_REDUCE_SYNC_SIZE)
   integer*8, save      :: src(N)
   integer*8, save      :: dst(N)
   integer  , save      :: src1 
@@ -60,8 +60,8 @@ program test_shmem_reduction
   real*8   , save      :: src7
   real*8   , save      :: dst7
   integer  , save      :: expected_result
-  integer  , save      :: pWrk1(SHMEM_REDUCE_SYNC_SIZE)
-  integer*8, save      :: pWrk2(SHMEM_REDUCE_SYNC_SIZE)
+  integer  , save      :: pWrk1(SHMEM_REDUCE_MIN_WRKDATA_SIZE)
+  integer*8, save      :: pWrk2(SHMEM_REDUCE_MIN_WRKDATA_SIZE)
 
   integer              :: i,j
   integer              :: me, npes
@@ -82,9 +82,7 @@ program test_shmem_reduction
   me   = my_pe()
   npes = num_pes()
 
-  do i = 1, SHMEM_BCAST_SYNC_SIZE, 1
-    pSync(i) = SHMEM_SYNC_VALUE
-  end do
+  pSync(:) = SHMEM_SYNC_VALUE
 
   do i = 1, N, 1
     src(i) = me + i

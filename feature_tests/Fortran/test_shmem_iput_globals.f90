@@ -111,15 +111,16 @@ program test_shmem_iput
 
     call shmem_barrier_all()
 
-    call shmem_integer_iput(dest1, src1, 1, 2, N, nextpe)
-    call shmem_real_iput(dest2, src2, 1, 2, N, nextpe)
-    call shmem_double_iput(dest3, src3, 1, 2, N, nextpe)
-    call shmem_logical_iput(dest6, src6, 1, 2, N, nextpe)
+    call shmem_integer_iput(dest1, src1, 1, 2, N/2, nextpe)
+    call shmem_real_iput(dest2, src2, 1, 2, N/2, nextpe)
+    call shmem_double_iput(dest3, src3, 1, 2, N/2, nextpe)
+    call shmem_logical_iput(dest6, src6, 1, 2, N/2, nextpe)
 
     call shmem_barrier_all()
 
     if(me .eq. 0) then
-      do i = 0, N/2, 1
+     
+      do i = 0, N/2 - 1, 1
         if(dest1(i + 1) .ne. (npes - 1)) then
           success1 = success1 + 1
         end if
@@ -171,13 +172,13 @@ program test_shmem_iput
 
     call shmem_barrier_all()
 
-    call shmem_iput32(dest1, src1, 1, 2, N, nextpe)
-    call shmem_iput64(dest7, src7, 1, 2, N, nextpe)
+    call shmem_iput32(dest1, src1, 1, 2, N/2, nextpe)
+    call shmem_iput64(dest7, src7, 1, 2, N/2, nextpe)
 
     call shmem_barrier_all()
 
     if(me .eq. 0) then
-      do i = 0, N/2, 1
+      do i = 0, N/2 - 1, 1
         if(dest2(i + 1) .ne. npes - 1) then
           success2 = success2 + 1
         end if
@@ -205,4 +206,5 @@ program test_shmem_iput
   else
     write(*,*) "Number of PEs must be > 1 to test shmem get, test skipped"
   end if
+
 end program

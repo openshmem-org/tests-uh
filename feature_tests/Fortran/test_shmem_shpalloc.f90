@@ -38,7 +38,7 @@ program test_shmem_shpalloc
   implicit none
   include 'mpp/shmem.fh'
 
-  integer, parameter :: N = 3
+  integer, parameter :: N = 20
 
   integer*8          :: ptr
   integer            :: dst(1)    
