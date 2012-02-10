@@ -41,7 +41,7 @@ program test_shmem_get
   integer          ::  i,j
   integer          ::  nextpe
   integer          ::  me, npes
-  logical          ::  success
+  logical          ::  success1
 
   integer*4          :: dest(N)
   integer*4          , save :: src(N)
@@ -58,7 +58,7 @@ program test_shmem_get
 
   if(npes .gt. 1) then
 
-    success = .TRUE.
+    success1 = .TRUE.
 
     do i = 1, N, 1
       dest(i) = -9
@@ -79,11 +79,11 @@ program test_shmem_get
     if(me .eq. 0) then
       do i = 1, N, 1
         if(dest(i) .ne. 54321) then
-          success = .FALSE.
+          success1 = .FALSE.
         end if
       end do 
 
-      if (success .eqv. .TRUE.) then
+      if (success1 .eqv. .TRUE.) then
         write(*,*) "Test shmem_integer_get: Passed" 
       else
         write(*,*) "Test shmem_integer_get: Failed"

@@ -41,11 +41,9 @@ program test_shmem_put
   integer                 ::  i,j
   integer                 ::  nextpe
   integer                 ::  me, npes
-  logical                 ::  success
+  logical                 ::  success1
 
-  integer*8               :: ptr
-  character                :: dest(1)
-  pointer       (ptr, dest)
+  character, save          :: dest(N)
 
   character                :: src(N)
 
@@ -55,22 +53,20 @@ program test_shmem_put
   integer                 :: my_pe, num_pes  
 
   call start_pes(0)
-  me   = my_pe();
-  npes = num_pes();
+  me   = my_pe()
+  npes = num_pes()
 
 ! Make sure this job is running on at least 2 PEs
   if(npes .gt. 1) then
 
-    success = .TRUE. 
-
-    call shpalloc(ptr, N, errcode, abort)
+    success1 = .TRUE. 
 
     do i = 1, N, 1
       dest(i) = 'z'
     end do 
 
     do i = 1, N, 1
-      src(i) = '54321' 
+      src(i) = 'g' 
     end do 
 
     nextpe = mod((me + 1), npes)
@@ -83,12 +79,12 @@ program test_shmem_put
 
     if(me .eq. 0) then
       do i = 1, N, 1
-        if(dest(i) .ne. '54321') then
-          success = .FALSE.
+        if(dest(i) .ne. 'g') then
+          success1 = .FALSE.
         end if
       end do 
 
-      if(success .eqv. .TRUE.) then
+      if(success1 .eqv. .TRUE.) then
         write(*,*) "Test shmem_character_put: Passed" 
       else
         write(*,*) "Test shmem_character_put: Failed"
@@ -96,8 +92,6 @@ program test_shmem_put
     end if 
 
     call shmem_barrier_all()
-
-    call shpdeallc(ptr, errcode, abort)
 
   else
     write(*,*) "Number of PEs must be > 1 to test shmem get, test skipped"

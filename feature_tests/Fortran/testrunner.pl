@@ -100,12 +100,15 @@ sub test_runner($){
 
  print "\nDone testing.\n";
 
- print "\n\nSummary:\n";
- print "- Tests that passed: $ht_stats->{'pass'}/$ht_stats->{'total'}\n";
- print "- Tests that failed: $ht_stats->{'fail'}/$ht_stats->{'total'}\n";
+ print "Summary:\n";
+ print "- $ht_stats->{'pass'}/$ht_stats->{'total'} Passed.\n";
+ print "- $ht_stats->{'fail'}/$ht_stats->{'total'} Failed.\n";
+
  if($ht_stats->{'notfound'} > 0){
-   print "- $ht_stats->{'notfound'}/$ht_stats->{'total'} tests were not found.\n";
+   print "- $ht_stats->{'notfound'}/$ht_stats->{'total'} tests were not found. The tests build may be incomplete :/\n";
  }
+
+ print "\n\n";
 }
 
 # Runs a single test
@@ -121,7 +124,6 @@ sub run_test($$) {
   }
   print "($test_id) Running $executable: $test_config->{'title'}... ";
   @output = `($RUN_CMD -np $test_config->{'npes'} ./$executable ) 2>&1`;   
-  print "($RUN_CMD -np $test_config->{'npes'} ./$executable ) 2>&1\n";
 
   if($output[0] =~ /Passed/){
     $test_result = "Pass";
