@@ -1,6 +1,7 @@
 #
-# Copyright (c) 2011, University of Houston System and Oak Ridge National
-# Laboratory.
+#
+# Copyright (c) 2011, 2012
+#   University of Houston System and Oak Ridge National Laboratory.
 # 
 # All rights reserved.
 # 
@@ -31,64 +32,37 @@
 # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+#
 
-SHELL = /bin/sh
+# TODO: make this a more decent makefile :)
 
-SHMEM_F90        = oshfort
-SHMEM_F90CFLAGS   = -ggdb -O0 -fcray-pointer
-SHMEM_F90LFLAGS   = -ggdb -O0 -fcray-pointer
-
-
-# Please set these variables. They are used in execution time.
-# #
-# # the run command consists
-# # > $RUNCMD $RUNOPT $NCOREOPT $NCORE[...] $NPROCOPT $NPROC[...]  executable
-
-RUNCMD=oshrun
-RUNOPT=
-NCOREOPT= 
-NCORE=
-NPROCOPT=-np
-NPROC=2
-
-
-
-F90_TESTS        = $(wildcard *.f90)
-
-F90_EXES         = $(F90_TESTS:.f90=.x)
-
-EXES             = $(F90_EXES)
-
-.PHONY: clean all default
-
-all default:    $(EXES)
-
-.SUFFIXES: .x
-
-%.x:    %.f90
-	        -$(SHMEM_F90) $(SHMEM_F90CFLAGS) $(SHMEM_F90LFLAGS) -o $@ $^
+all:
+	@(cd accessibility; make)
+	@(cd alloc; make)
+	@(cd atomic; make)
+	@(cd barrier; make)
+	@(cd broadcast; make)
+	@(cd collect; make)
+	@(cd reductions; make)
+	@(cd transfer; make)
 
 clean:
-	        rm -f $(EXES)
-
+	@(cd accessibility; make clean)
+	@(cd alloc; make clean)
+	@(cd atomic; make clean)
+	@(cd barrier; make clean)
+	@(cd broadcast; make clean)
+	@(cd collect; make clean)
+	@(cd reductions; make clean)
+	@(cd transfer; make clean)
 
 run:
-	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_accessible.x
-	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_atomics.x
-	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_barrier.x
-	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_broadcast.x
-	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_collects.x
-	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_lock.x
-	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_put_globals.x
-	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_iput_globals.x
-	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_get_globals.x
-	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_iget_globals.x
-	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_shpalloc.x
-	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_reduction.x
-	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_synchronization.x
-
-
-clean:
-	        rm -f $(EXES)
-
-
+	@(cd accessibility; make run)
+	@(cd alloc; make run)
+	@(cd atomic; make run)
+	@(cd barrier; make run)
+	@(cd broadcast; make run)
+	@(cd collect; make run)
+	@(cd reductions; make run)
+	@(cd transfer; make run)

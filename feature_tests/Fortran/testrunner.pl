@@ -123,7 +123,7 @@ sub run_test($$) {
     $ht_stats->{'notfound'}++;
   }
   print "($test_id) Running $executable: $test_config->{'title'}... ";
-  @output = `($RUN_CMD -np $test_config->{'npes'} ./$executable ) 2>&1`;   
+  @output = `($RUN_CMD -np $test_config->{'npes'} ./$executable ) 2>/dev/null`;   
 
   if($output[0] =~ /Passed/){
     $test_result = "Pass";

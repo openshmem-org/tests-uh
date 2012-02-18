@@ -1,6 +1,7 @@
 !
-! Copyright (c) 2011, University of Houston System and Oak Ridge National
-! Laboratory.
+!
+! Copyright (c) 2011, 2012
+!   University of Houston System and Oak Ridge National Laboratory.
 ! 
 ! All rights reserved.
 ! 
@@ -31,6 +32,8 @@
 ! LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 ! NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 ! SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+!
+!
 
 program test_shmem_atomics
   implicit none
@@ -67,9 +70,9 @@ program test_shmem_atomics
 
     call shpalloc(target_ptr, 1, errcode, abort)
 
-    target(1) = me
+    target(1) = INT(me, KIND=8)
 
-    new_val = me
+    new_val = INT(me, KIND=8)
 
     call shmem_barrier_all()
 
@@ -83,7 +86,7 @@ program test_shmem_atomics
     !  as well as the target PE
 
     if(me .eq. 0) then
-      if(swapped_val .eq. 1) then
+      if(swapped_val .eq. INT(1, KIND=8)) then
         success1 = .TRUE.
       end if
     end if

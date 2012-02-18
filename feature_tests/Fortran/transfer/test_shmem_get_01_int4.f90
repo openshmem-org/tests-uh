@@ -1,6 +1,7 @@
 !
-! Copyright (c) 2011, University of Houston System and Oak Ridge National
-! Laboratory.
+!
+! Copyright (c) 2011, 2012
+!   University of Houston System and Oak Ridge National Laboratory.
 ! 
 ! All rights reserved.
 ! 
@@ -31,6 +32,8 @@
 ! LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 ! NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 ! SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+!
+!
 
 program test_shmem_get
   implicit none
@@ -65,7 +68,7 @@ program test_shmem_get
     end do 
 
     do i = 1, N, 1
-      src(i) = 54321
+      src(i) = INT(54321 + i, KIND=4)
     end do 
 
     nextpe = mod((me + 1), npes)
@@ -78,7 +81,7 @@ program test_shmem_get
 
     if(me .eq. 0) then
       do i = 1, N, 1
-        if(dest(i) .ne. 54321) then
+        if(dest(i) .ne. INT(54321 + i, KIND=4)) then
           success1 = .FALSE.
         end if
       end do 

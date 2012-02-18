@@ -1,6 +1,7 @@
 !
-! Copyright (c) 2011, University of Houston System and Oak Ridge National
-! Laboratory.
+!
+! Copyright (c) 2011, 2012
+!   University of Houston System and Oak Ridge National Laboratory.
 ! 
 ! All rights reserved.
 ! 
@@ -31,6 +32,8 @@
 ! LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 ! NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 ! SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+!
+!
 
 program test_shmem_atomics
   implicit none
@@ -64,9 +67,9 @@ program test_shmem_atomics
     success1 = .FALSE.
     success2 = .FALSE.
 
-    target = 567
+    target = INT(5678, KIND=4)
 
-    new_val = 567
+    new_val = INT(5678, KIND=4)
 
     call shmem_barrier_all()
 
@@ -88,7 +91,7 @@ program test_shmem_atomics
     end if
 
     if(me .eq. npes - 1) then
-      if(target .eq. 567 + 51234) then
+      if(target .eq. INT(5678, KIND=4) + 51234) then
         call shmem_logical_put(success2, true_val, 1, 0)
       end if
     end if

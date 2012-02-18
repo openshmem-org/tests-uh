@@ -1,15 +1,4 @@
-SHELL = /bin/sh
-
-SHMEM_F90         = gfortran
-SHMEM_F90CFLAGS   = -ggdb -O0 -fcray-pointer -lmpi -lsma -I/opt/sgi/mpt/mpt-2.03/include/
-SHMEM_F90LFLAGS   = -ggdb -O0 -fcray-pointer -lmpi -lsma
-TEST_RUNNER=testrunner.pl
-
-
-# Please set these variables. They are used in execution time.
-# #
-# # the run command consists
-# # > $RUNCMD $RUNOPT $NCOREOPT $NCORE[...] $NPROCOPT $NPROC[...]  executable
+include ../Makefile.in
 
 RUNCMD=oshrun
 RUNOPT=
@@ -31,7 +20,7 @@ all default:    $(EXES)
 .SUFFIXES: .x
 
 %.x:    %.f90
-	-$(SHMEM_F90) $(SHMEM_F90CFLAGS) $(SHMEM_F90LFLAGS) -o $@ $^
+	$(SHMEM_F90) $(SHMEM_F90CFLAGS) $(SHMEM_F90LFLAGS) -o $@ $^
 
 clean:
 	rm -f $(EXES)

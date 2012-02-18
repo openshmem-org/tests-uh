@@ -1,6 +1,7 @@
 !
-! Copyright (c) 2011, University of Houston System and Oak Ridge National
-! Loboratory.
+!
+! Copyright (c) 2011, 2012
+!   University of Houston System and Oak Ridge National Laboratory.
 ! 
 ! All rights reserved.
 ! 
@@ -16,7 +17,7 @@
 !   documentation and/or other materials provided with the distribution.
 ! 
 ! o Neither the name of the University of Houston System, Oak Ridge
-!   National Loboratory nor the names of its contributors may be used to
+!   National Laboratory nor the names of its contributors may be used to
 !   endorse or promote products derived from this software without specific
 !   prior written permission.
 ! 
@@ -31,16 +32,8 @@
 ! LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 ! NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 ! SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-! ===========================================================================
-! Target routine:
-!  shmem_addr_accessible()
-! Description:
-!   Verify that remote private data is not accessible. 
 !
-! Notes:
-!  
-! ===========================================================================
+!
 
 program test_shmem_accessible
   implicit none
