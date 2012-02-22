@@ -35,37 +35,41 @@
 !
 !
 
-program test_shmem_accessible
+program test_shmem_shpalloc
   implicit none
   include 'mpp/shmem.fh'
+
+  integer, parameter :: nelems = 1024000000
+
+  integer*8          :: array_addr
+  integer*8           :: array(1)    
+  pointer            (array_addr, array)
   
-  integer                   :: me, npes
-  logical                   :: rc
- 
- ! SHMEM function definitions
-  integer                   :: my_pe, num_pes
-  
+  integer            :: errcode, abort, me, npes
+  character*(*), parameter :: TEST_NAME='shpalloc'
+
+  ! Function return value types
+  integer            :: my_pe, num_pes
+
   call start_pes(0)
-  
+
   me = my_pe()
   npes = num_pes()
-  
-  if(npes .lt. 2 ) then
-    write(*,*) 'This test requires 2+ PEs to run.'
-    stop    
-  end if
-  
-  if(me .eq. 0) then
-    rc = shmem_pe_accessible(npes + 1);
 
-    if(rc .eqv. .TRUE.) then
-      write (*,*) 'test_shmem_acc_02: Failed'
+  ! allocate remotely accessible block
+  call shpalloc(array_addr, nelems, errcode, abort)
+
+  if(me .eq. 0) then
+    if(.not.errcode .ne. -1) then
+      write (*,*) TEST_NAME, ': Failed'
     else
-      write (*,*) 'test_shmem_acc_02: Passed'
+      write (*,*) TEST_NAME, ': Passed'
     end if
   end if
+
+  ! All PEs wait until PE 0 has finished.
+  call shmem_barrier_all()
+
+  !call shpdeallc(array_addr, errcode, abort)
   
-end program test_shmem_accessible
-  
-  
-  
+end program

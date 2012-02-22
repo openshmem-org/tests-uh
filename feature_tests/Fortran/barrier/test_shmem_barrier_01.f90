@@ -35,37 +35,58 @@
 !
 !
 
-program test_shmem_accessible
+program test_shmem_barrier
   implicit none
-  include 'mpp/shmem.fh'
-  
-  integer                   :: me, npes
-  logical                   :: rc
- 
- ! SHMEM function definitions
-  integer                   :: my_pe, num_pes
-  
-  call start_pes(0)
-  
-  me = my_pe()
-  npes = num_pes()
-  
-  if(npes .lt. 2 ) then
-    write(*,*) 'This test requires 2+ PEs to run.'
-    stop    
-  end if
-  
-  if(me .eq. 0) then
-    rc = shmem_pe_accessible(npes + 1);
 
-    if(rc .eqv. .TRUE.) then
-      write (*,*) 'test_shmem_acc_02: Failed'
-    else
-      write (*,*) 'test_shmem_acc_02: Passed'
+  include 'mpp/shmem.fh'
+
+  integer       :: pSync(1)
+  integer*8     :: pSync_ptr
+  pointer       (pSync_ptr, pSync)
+
+  integer       :: flag(1)
+  integer*8     :: flag_ptr
+  pointer       (flag_ptr, flag)
+
+  integer       :: me, npes, i
+
+! Function definitions
+  integer       :: my_pe, num_pes
+  integer       :: errcode, abort
+
+  
+  call start_pes(0);
+  me   = my_pe();
+  npes = num_pes();
+  
+  if(npes .gt. 4) then
+
+    call shpalloc(pSync_ptr, SHMEM_BARRIER_SYNC_SIZE, errcode, abort)
+    call shpalloc (flag_ptr, 1, errcode, abort)
+
+    do i = 1, SHMEM_BARRIER_SYNC_SIZE
+      pSync(i) = SHMEM_SYNC_VALUE 
+    end do
+
+     call shmem_barrier_all()
+
+    if(me .ge. 2) then
+      call shmem_barrier(2, 0, npes - 2, pSync) ! Only PEs 2, 3, 4, ... + perform the barrier
     end if
-  end if
-  
-end program test_shmem_accessible
-  
-  
-  
+
+    if(me .ge. 1) then
+      call shmem_int4_inc(flag, 0)
+    end if
+
+    if(me .eq. 0) then
+      call shmem_wait_until(flag(1), SHMEM_CMP_EQ, npes - 1 )
+      write (*,*) "test_shmem_barrier_01.f90: Passed" 
+    end if
+
+    call shpdeallc(pSync_ptr, errcode, abort)
+    call shpdeallc(flag_ptr, errcode, abort)
+
+  else
+    write (*,*) 'Number of PEs must be 5+ to test barrier, test skipped'
+  end if  
+end program test_shmem_barrier

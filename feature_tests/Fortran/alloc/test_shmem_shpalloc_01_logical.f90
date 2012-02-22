@@ -35,37 +35,79 @@
 !
 !
 
-program test_shmem_accessible
+program test_shmem_shpalloc
   implicit none
   include 'mpp/shmem.fh'
+
+  integer, parameter :: min_npes = 3
+  integer, parameter :: nelems = 50
+
+  logical           :: array(1)    
+  integer*8          :: array_addr
+  pointer            (array_addr, array)
+
+  logical           :: buffer(nelems)
   
-  integer                   :: me, npes
-  logical                   :: rc
- 
- ! SHMEM function definitions
-  integer                   :: my_pe, num_pes
-  
+  integer            :: errcode, abort, me, npes, pe, i
+  logical            :: success
+
+  character*(*), parameter  :: TEST_NAME='shpalloc'
+
+  ! Function return value types
+  integer            :: my_pe, num_pes
+
   call start_pes(0)
-  
+
   me = my_pe()
   npes = num_pes()
-  
-  if(npes .lt. 2 ) then
-    write(*,*) 'This test requires 2+ PEs to run.'
-    stop    
-  end if
-  
-  if(me .eq. 0) then
-    rc = shmem_pe_accessible(npes + 1);
 
-    if(rc .eqv. .TRUE.) then
-      write (*,*) 'test_shmem_acc_02: Failed'
-    else
-      write (*,*) 'test_shmem_acc_02: Passed'
+  success = .TRUE.
+
+  if(npes .ge. min_npes) then
+
+    ! allocate remotely accessible block
+    call shpalloc(array_addr, nelems, errcode, abort)
+
+    do i = 1, nelems 
+      array(i) = .TRUE. 
+    end do
+
+    call shmem_barrier_all();
+
+    if(me .eq. 0) then
+      do pe = 1, npes - 1, 1
+        ! Reset the contents of our local buffer
+        do i = 1, nelems, 1
+          buffer(i) = .FALSE. 
+        end do
+
+        ! Get data on PE 'pe'
+        call shmem_logical_get(buffer, array, nelems, pe) 
+
+        ! Check that values are correct
+        do i = 1, nelems, 1
+          if(buffer(i) .neqv. .TRUE.) then
+            success = .FALSE.
+          end if
+        end do
+      end do
+
+      if(success .eqv. .TRUE.) then
+        write (*,*) TEST_NAME, ': Passed'
+      else
+        write (*,*) TEST_NAME, ': Failed'
+      end if
     end if
+
+    ! All PEs wait until PE 0 has finished.
+    call shmem_barrier_all()
+
+    call shpdeallc(array_addr, errcode, abort)
+
+  else
+   if(me .eq. 0) then
+     write (*,*) 'This test requires ', min_npes, ' or more PEs.'
+   end if
   end if
   
-end program test_shmem_accessible
-  
-  
-  
+end program

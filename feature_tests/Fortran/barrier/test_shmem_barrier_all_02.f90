@@ -35,37 +35,43 @@
 !
 !
 
-program test_shmem_accessible
+program test_shmem_barrier
   implicit none
   include 'mpp/shmem.fh'
-  
-  integer                   :: me, npes
-  logical                   :: rc
- 
- ! SHMEM function definitions
-  integer                   :: my_pe, num_pes
-  
-  call start_pes(0)
-  
-  me = my_pe()
-  npes = num_pes()
-  
-  if(npes .lt. 2 ) then
-    write(*,*) 'This test requires 2+ PEs to run.'
-    stop    
-  end if
-  
-  if(me .eq. 0) then
-    rc = shmem_pe_accessible(npes + 1);
 
-    if(rc .eqv. .TRUE.) then
-      write (*,*) 'test_shmem_acc_02: Failed'
-    else
-      write (*,*) 'test_shmem_acc_02: Passed'
+  integer              :: flag
+  integer*8            :: flag_ptr
+  pointer              (flag_ptr, flag)
+
+  integer              :: me, npes, i
+
+! Function definitions
+  integer              :: my_pe, num_pes
+  integer              :: errcode, abort
+
+  call start_pes(0);
+
+  me   = my_pe();
+  npes = num_pes();
+
+! Test that processes can succesfully go past the barrier when each get to it.
+  if (npes .gt. 1) then
+    call shpalloc(flag_ptr, 1, errcode, abort)
+
+    if(me .ne. 0) then
+      call shmem_int4_inc(flag, 0)
+    end if 
+
+    if(me .eq. 0) then
+! If all PEs updated the flag it means they all got past the barrier
+      call shmem_int4_wait(flag, npes - 1)
+      write (*,*) 'Test shmem_barrier_all: Passed'
     end if
-  end if
-  
-end program test_shmem_accessible
-  
-  
-  
+
+    call shpdeallc(flag_ptr, errcode, abort)
+
+  else
+    write (*,*) 'Number of PEs must be > 1 to test barrier, test skipped'
+  end if  
+
+end program test_shmem_barrier

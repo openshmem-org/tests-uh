@@ -35,37 +35,36 @@
 !
 !
 
-program test_shmem_accessible
+program test_shmem_barrier
   implicit none
-  include 'mpp/shmem.fh'
-  
-  integer                   :: me, npes
-  logical                   :: rc
- 
- ! SHMEM function definitions
-  integer                   :: my_pe, num_pes
-  
-  call start_pes(0)
-  
-  me = my_pe()
-  npes = num_pes()
-  
-  if(npes .lt. 2 ) then
-    write(*,*) 'This test requires 2+ PEs to run.'
-    stop    
-  end if
-  
-  if(me .eq. 0) then
-    rc = shmem_pe_accessible(npes + 1);
 
-    if(rc .eqv. .TRUE.) then
-      write (*,*) 'test_shmem_acc_02: Failed'
-    else
-      write (*,*) 'test_shmem_acc_02: Passed'
+  include 'mpp/shmem.fh'
+
+  integer, save :: flag
+  integer       :: me, npes, i
+
+! Function definitions
+  integer                   :: my_pe, num_pes
+
+  flag = 10101
+  
+  call start_pes(0);
+
+  me   = my_pe();
+  npes = num_pes();
+
+  if (npes .gt. 1) then
+    
+    if(me .eq. npes - 1) then
+      call shmem_barrier_all()
     end if
-  end if
-  
-end program test_shmem_accessible
-  
-  
-  
+
+! All PEs should call shmem_barrier_all before leaving the barrier
+    if(me .eq. npes - 1) then
+      write (*,*) 'Test shmem_barrier_all: Failed'
+    end if
+
+  else
+    write (*,*) 'Number of PEs must be > 1 to test barrier, test skipped'
+  end if  
+end program test_shmem_barrier

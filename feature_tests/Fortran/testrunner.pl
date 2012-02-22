@@ -42,7 +42,6 @@
 # printed "Failed", TestRunner assumes the test failed.
 
 # TODO: support user configurable launchers
-# TODO: support test timeout functionality
 # TODO: improve test Pass/Fail detection ?
 # TODO: logging of individual tests ? to find out more about a failed test
 
@@ -50,13 +49,18 @@ use strict;
 use Env;
 use Env qw(PATH HOME TERM);
 use Env qw($SHELL @LD_LIBRARY_PATH);
+use Time::HiRes qw( usleep ualarm gettimeofday tv_interval nanosleep
+                      clock_gettime clock_getres clock_nanosleep clock
+                      stat );
 use Data::Dumper;
 
 our $EXIT_ERROR = -1;
 our $EXIT_OK = 0;
-our $TEST_FAILED = 1;
-our $TEST_OK = 2;
-our $TEST_NOTFOUND =3;
+our $TEST_FAILED = "Fail";
+our $TEST_OK = "Pass";
+our $TEST_NOTFOUND = "NotFound";
+our $TEST_UNDEF = "Undef";
+our $TEST_TIMEOUT = "Timeout";
 our $RUN_CMD="mpirun";
 our $SHELL_OPT="2>&1";
 our $TEST_CONFIG_FILE="test_parameters.conf";
@@ -111,31 +115,97 @@ sub test_runner($){
  print "\n\n";
 }
 
+sub execute_test($){
+  my ($test_config) = @_;
+  my @output;
+
+  @output = `($RUN_CMD -np $test_config->{'npes'} ./$test_config->{'executable'} ) 2>/dev/null`;   
+
+  if($output[0] =~ /Passed/){
+    return $TEST_OK;
+  }
+
+  return $TEST_FAILED;
+}
+
 # Runs a single test
 sub run_test($$) {
   my ($test_id, $test_config) = @_;
   my @output;
   my $test_result = "Fail";
   my $executable = $test_config->{'executable'};
+  my $child_pid;
+  my $test_result;
 
   if(! -e $executable) {
     print "Warning: The test file \"$executable\" could not be found, skipping test.\n";
     $ht_stats->{'notfound'}++;
+    return;
   }
-  print "($test_id) Running $executable: $test_config->{'title'}... ";
-  @output = `($RUN_CMD -np $test_config->{'npes'} ./$executable ) 2>/dev/null`;   
+  	print "($test_id) Running $executable: $test_config->{'title'}... ";
+	# If the test passed we'll get $TEST_OK, if the test criteria was not meet we'll get $TEST_FAILED.
+	$test_result = $TEST_UNDEF;
 
-  if($output[0] =~ /Passed/){
-    $test_result = "Pass";
-  }
+	# Set up signal handlers
+	$SIG{'HUP'} = sub {
+		$test_result = $TEST_OK;
+	};
 
-  if($test_config->{'expect'} eq $test_result){
-    print "OK\n";
-    $ht_stats->{'pass'}++;
-  }else{
-    print "Failed\n";
-    $ht_stats->{'fail'}++;
-  }
+	$SIG{'INT'} = sub {
+		$test_result = $TEST_FAILED;
+	};
+
+	$child_pid = fork();
+	if($child_pid == 0){
+	  my $rc = execute_test $test_config;
+		if($rc eq $TEST_OK){
+			kill 1, getppid(); # signal the parent that test passed.
+		}else{
+			kill 2, getppid(); # signal the parent that test failed.
+		}
+		exit 0; # kill child
+	}else{
+		my $start_time;
+		my $elapsed;
+		my $result;
+
+	  $start_time = [gettimeofday];
+		while(1){
+
+			usleep 100; # wait 100usecs before checking again.
+			$elapsed = tv_interval $start_time, [gettimeofday];
+
+			if($test_config->{'timeout'} != 0 && $elapsed >= $test_config->{'timeout'}){
+
+				# terminate the child process and check the results
+				kill 9, $child_pid + 1; 
+				kill 9, $child_pid + 2; 
+				if($test_result eq $TEST_UNDEF){
+				  # We may be expecting a timeout to occur
+					if($test_config->{'expect'} eq $TEST_TIMEOUT){
+  	  					print "OK\n";
+						$ht_stats->{'pass'}++;
+						last;
+					}
+
+  	  				print "Failed (timeout)\n";
+				  	$ht_stats->{'fail'}++;
+					last;
+				}
+			}
+			if($test_result eq $test_config->{'expect'}){
+  	  			print "OK\n";
+				$ht_stats->{'pass'}++;
+				last;
+			}elsif($test_result ne $TEST_UNDEF){
+  	  			print "Failed\n";
+				$ht_stats->{'fail'}++;
+				last;
+			}
+		}	
+	}
+	# The following is an ugly hack to eliminate zombie processes... TODO: I should REALLY fix this.
+	waitpid $child_pid, 0;
 }
 
 
@@ -215,7 +285,7 @@ sub read_test_config($){
      $ht_tmp->{'timeout'} = $tmp_value; 
   
      $tmp_value = clean_string($elems[5]);
-     if($tmp_value ne "Pass" and $tmp_value ne "Fail"){
+     if($tmp_value ne "Pass" and $tmp_value ne "Fail" and $tmp_value ne "Timeout"){
        print "Error: Configuration file, line $line_num >> Invalid value for 'Expected' field: $tmp_value \n";
        exit;
      }

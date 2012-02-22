@@ -35,37 +35,69 @@
 !
 !
 
-program test_shmem_accessible
+program test_shmem_broadcast
   implicit none
   include 'mpp/shmem.fh'
   
-  integer                   :: me, npes
-  logical                   :: rc
- 
- ! SHMEM function definitions
-  integer                   :: my_pe, num_pes
-  
+  integer, parameter :: min_npes = 3
+  integer, parameter  :: nelems = 10
+  integer*8, save    :: pSync(SHMEM_BCAST_SYNC_SIZE)
+   
+  integer            :: i
+  logical            :: success
+  logical, save    :: target(nelems)
+  logical, save    :: src(nelems)
+
+  integer            :: abort, errcode
+
+  integer            :: me, npes
+
+! Function definitions
+  integer            :: my_pe, num_pes
+
   call start_pes(0)
-  
   me = my_pe()
   npes = num_pes()
   
-  if(npes .lt. 2 ) then
-    write(*,*) 'This test requires 2+ PEs to run.'
-    stop    
-  end if
-  
-  if(me .eq. 0) then
-    rc = shmem_pe_accessible(npes + 1);
+  success = .TRUE.
 
-    if(rc .eqv. .TRUE.) then
-      write (*,*) 'test_shmem_acc_02: Failed'
-    else
-      write (*,*) 'test_shmem_acc_02: Passed'
+  if(npes .ge. min_npes) then
+    pSync(:) = SHMEM_SYNC_VALUE
+
+    do i = 1, nelems, 1      
+      src(i) = .TRUE.
+    end do 
+
+    do i = 1, nelems, 1
+      target(i) = .FALSE.
+    end do
+
+    call shmem_barrier_all()
+
+    call shmem_broadcast4(target, src, nelems, 0, 0, 0, npes, pSync)
+
+    call shmem_barrier_all()
+
+    if(me .eq. 1) then
+      do i = 1, nelems, 1
+        if(target(i) .neqv. .TRUE.) then
+          success = .FALSE.
+        end if
+      end do
+
+      if(success .eqv. .TRUE.) then
+        write (*,*) "test_shmem_broadcast32_01: Passed"
+      else
+        write (*,*) "test_shmem_broadcast32_01: Failed"
+      end if
     end if
-  end if
-  
-end program test_shmem_accessible
-  
-  
-  
+
+  else
+    if(me .eq. 0) then
+      write (*,*) 'This test requires ', min_npes, ' or more PEs.'
+    end if
+  end if 
+
+  stop
+
+end program test_shmem_broadcast

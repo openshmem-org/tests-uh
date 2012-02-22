@@ -35,37 +35,81 @@
 !
 !
 
-program test_shmem_accessible
+program test_shmem_broadcast
   implicit none
   include 'mpp/shmem.fh'
   
-  integer                   :: me, npes
-  logical                   :: rc
- 
- ! SHMEM function definitions
-  integer                   :: my_pe, num_pes
-  
+  integer, parameter :: min_npes = 3
+  integer, parameter  :: nelems = 10
+  integer*8, save    :: pSync(SHMEM_BCAST_SYNC_SIZE)
+   
+  integer            :: i
+  logical            :: success
+
+  real*8           :: target(1)
+  integer*8          :: target_addr
+  pointer            (target_addr, target)
+
+  real*8           :: src(1)
+  integer*8          :: src_addr
+  pointer            (src_addr, src)
+
+  integer            :: abort, errcode
+
+  integer            :: me, npes
+
+! Function definitions
+  integer            :: my_pe, num_pes
+
   call start_pes(0)
-  
   me = my_pe()
   npes = num_pes()
   
-  if(npes .lt. 2 ) then
-    write(*,*) 'This test requires 2+ PEs to run.'
-    stop    
-  end if
-  
-  if(me .eq. 0) then
-    rc = shmem_pe_accessible(npes + 1);
+  success = .TRUE.
 
-    if(rc .eqv. .TRUE.) then
-      write (*,*) 'test_shmem_acc_02: Failed'
-    else
-      write (*,*) 'test_shmem_acc_02: Passed'
+  if(npes .ge. min_npes) then
+    pSync(:) = SHMEM_SYNC_VALUE
+
+    call shpalloc(target_addr, nelems, errcode, abort)
+    call shpalloc(src_addr, nelems, errcode, abort)
+
+    do i = 1, nelems, 1      
+      src(i) = REAL(54321 + i, KIND=8)
+    end do 
+
+    do i = 1, nelems, 1
+      target(i) = -9
+    end do
+
+    call shmem_barrier_all()
+
+    call shmem_broadcast8(target, src, nelems, 0, 0, 0, npes, pSync)
+
+    call shmem_barrier_all()
+
+    if(me .eq. 1) then
+      do i = 1, nelems, 1
+        if(target(i) .ne. REAL(54321 + i, KIND=8)) then
+          success = .FALSE.
+        end if
+      end do
+
+      if(success .eqv. .TRUE.) then
+        write (*,*) "test_shmem_broadcast8_03: Passed"
+      else
+        write (*,*) "test_shmem_broadcast8_03: Failed"
+      end if
     end if
-  end if
-  
-end program test_shmem_accessible
-  
-  
-  
+
+    call shmem_barrier_all()
+
+    call shpdeallc(target_addr, errcode, abort)
+    call shpdeallc(src_addr, errcode, abort)
+
+  else
+    if(me .eq. 0) then
+      write (*,*) 'This test requires ', min_npes, ' or more PEs.'
+    end if
+  end if 
+
+end program test_shmem_broadcast
