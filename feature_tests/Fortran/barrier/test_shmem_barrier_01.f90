@@ -38,7 +38,7 @@
 program test_shmem_barrier
   implicit none
 
-  include 'mpp/shmem.fh'
+  include 'shmem.fh'
 
   integer       :: pSync(1)
   integer*8     :: pSync_ptr

@@ -1,6 +1,5 @@
 SHELL = /bin/sh
+SHMEM_F90         = oshfort
+SHMEM_F90CFLAGS   = -ggdb -O0 -fcray-pointer
+SHMEM_F90LFLAGS   = -ggdb -O0 -fcray-pointer
 TEST_RUNNER       = testrunner.pl
-# The following should be changed depending your building environment
-SHMEM_F90         = gfortran
-SHMEM_F90CFLAGS   = -ggdb -O0 -fcray-pointer -lmpi -lsma -I/opt/sgi/mpt/mpt-2.03/include/
-SHMEM_F90LFLAGS   = -ggdb -O0 -fcray-pointer -lmpi -lsma

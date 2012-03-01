@@ -37,7 +37,7 @@
 
 program test_shmem_shpalloc
   implicit none
-  include 'mpp/shmem.fh'
+  include 'shmem.fh'
 
   integer, parameter :: numElements = 0 
 

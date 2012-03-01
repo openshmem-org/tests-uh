@@ -37,7 +37,7 @@
 
 program test_shmem_put
   implicit none
-  include 'mpp/shmem.fh'
+  include 'shmem.fh'
 
   integer, parameter :: N = 7
 

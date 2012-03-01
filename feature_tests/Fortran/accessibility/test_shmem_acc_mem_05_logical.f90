@@ -37,7 +37,7 @@
 
 program test_shmem_accessible
   implicit none
-  include 'mpp/shmem.fh'
+  include 'shmem.fh'
   integer, parameter    :: length = 4
 
   logical, ALLOCATABLE :: remote_target(:)

@@ -61,7 +61,7 @@ our $TEST_OK = "Pass";
 our $TEST_NOTFOUND = "NotFound";
 our $TEST_UNDEF = "Undef";
 our $TEST_TIMEOUT = "Timeout";
-our $RUN_CMD="mpirun";
+our $RUN_CMD="oshrun";
 our $SHELL_OPT="2>&1";
 our $TEST_CONFIG_FILE="test_parameters.conf";
 

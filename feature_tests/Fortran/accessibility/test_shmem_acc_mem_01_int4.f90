@@ -37,7 +37,7 @@
 
 program test_shmem_accessible
   implicit none
-  include 'mpp/shmem.fh'
+  include 'shmem.fh'
 
   integer*4, save     :: target(2)
   

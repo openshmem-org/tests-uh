@@ -38,7 +38,7 @@
 program test_shmem_barrier
   implicit none
 
-  include 'mpp/shmem.fh'
+  include 'shmem.fh'
   integer, parameter :: min_npes = 3
 
   integer   :: flag

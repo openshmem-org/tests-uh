@@ -37,7 +37,7 @@
 
 program test_shmem_collects
   implicit none
-  include 'mpp/shmem.fh'
+  include 'shmem.fh'
  
 
   integer,        save :: pSync(SHMEM_COLLECT_SYNC_SIZE)

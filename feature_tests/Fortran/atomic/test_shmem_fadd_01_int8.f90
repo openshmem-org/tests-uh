@@ -37,7 +37,7 @@
 
 program test_shmem_atomics
   implicit none
-  include 'mpp/shmem.fh'
+  include 'shmem.fh'
 
   logical, parameter        :: true_val = .TRUE.
   logical, save             :: success1

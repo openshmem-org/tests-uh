@@ -37,7 +37,7 @@
 
 program test_shmem_barrier
   implicit none
-  include 'mpp/shmem.fh'
+  include 'shmem.fh'
 
   integer              :: flag
   integer*8            :: flag_ptr

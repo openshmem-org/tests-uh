@@ -37,7 +37,7 @@
 
 program test_shmem_iget
   implicit none
-  include 'mpp/shmem.fh'
+  include 'shmem.fh'
 
   character*80       :: argv ! testing reading cmdline argument
   integer            :: argc
