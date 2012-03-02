@@ -40,6 +40,7 @@
  */
 #include <mpp/shmem.h>
 #include <stdio.h>
+#include <sys/time.h>
 
 // global shmem_accesible
 double maxtime;
@@ -64,16 +65,17 @@ main (int argc, char *argv[])
 {
   int n = 16;
   int i;
-  static float pWork[_SHMEM_REDUCE_SYNC_SIZE];
-  static long pSync[_SHMEM_BCAST_SYNC_SIZE];
-  static double dpWrk[_SHMEM_REDUCE_SYNC_SIZE];
-  static long sync[_SHMEM_REDUCE_MIN_WRKDATA_SIZE];
+  static float pWork[_SHMEM_REDUCE_MIN_WRKDATA_SIZE];
+  static long pSync[_SHMEM_REDUCE_SYNC_SIZE];
+  static long pSync1[_SHMEM_REDUCE_SYNC_SIZE];
+  static double dpWrk[_SHMEM_REDUCE_MIN_WRKDATA_SIZE];
   static float el, es;
   int my_pe, num_pes;
 
-  for (i = 0; i < SHMEM_BCAST_SYNC_SIZE; i += 1)
+  for (i = 0; i < _SHMEM_REDUCE_SYNC_SIZE; i += 1)
     {
       pSync[i] = _SHMEM_SYNC_VALUE;
+	  pSync1[i] = _SHMEM_SYNC_VALUE;
     }
 
   tv[0] = gettime ();
@@ -135,7 +137,7 @@ main (int argc, char *argv[])
 
   tv[1] = gettime ();
   t = dt (&tv[1], &tv[0]);
-  shmem_double_max_to_all (&maxtime, &t, 1, 0, 0, num_pes, dpWrk, pSync);
+  shmem_double_max_to_all (&maxtime, &t, 1, 0, 0, num_pes, dpWrk, pSync1);
 
   if (my_pe == 1)
     {
