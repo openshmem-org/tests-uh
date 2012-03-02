@@ -1,6 +1,8 @@
 #!/usr/bin/perl
-# Copyright (c) 2011, University of Houston System and Oak Ridge National
-# Laboratory.
+#
+#
+# Copyright (c) 2011, 2012
+#   University of Houston System and Oak Ridge National Laboratory.
 # 
 # All rights reserved.
 # 
@@ -31,6 +33,8 @@
 # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+#
  
 # TestRunner
 #   Runs a set of tests and prints out results in a format that is somehow nice to humans :D

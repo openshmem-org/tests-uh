@@ -1,6 +1,7 @@
 !
-! Copyright (c) 2011, University of Houston System and Oak Ridge National
-! Laboratory.
+!
+! Copyright (c) 2011, 2012
+!   University of Houston System and Oak Ridge National Laboratory.
 ! 
 ! All rights reserved.
 ! 
@@ -31,13 +32,9 @@
 ! LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 ! NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 ! SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+!
+!
 
-! Tests conditational wait (shmem_int8_wait) call
-! PE 1 waits for PE 0 to send something other than 9.
-! Send 4 9s to test wait condition, then some random values until != 9.
-! 
-! shmem_int4_wait,  shmem_int4_wait_until,  shmem_int8_wait,
-! shmem_int8_wait_until
 program test_shmem_synchronization
   implicit none
   include 'mpp/shmem.fh'
