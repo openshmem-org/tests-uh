@@ -182,8 +182,9 @@ sub run_test($$) {
 			if($test_config->{'timeout'} != 0 && $elapsed >= $test_config->{'timeout'}){
 
 				# terminate the child process and check the results
-				kill 9, $child_pid + 1; 
+				kill 9, $child_pid;
 				kill 9, $child_pid + 2; 
+				kill 9, $child_pid + 1; 
 				if($test_result eq $TEST_UNDEF){
 				  # We may be expecting a timeout to occur
 					if($test_config->{'expect'} eq $TEST_TIMEOUT){

@@ -56,11 +56,12 @@ program test_shmem_shpalloc
   me = my_pe()
   npes = num_pes()
 
+  abort = 0
   ! allocate remotely accessible block
   call shpalloc(ptr, numElements, errcode, abort)
 
   if(me .eq. 0) then
-    if(.not.errcode .ne. -1) then
+    if(errcode .ne. -1) then
       write (*,*) TEST_NAME, ': Failed'
     else
       write (*,*) TEST_NAME, ': Passed'

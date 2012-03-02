@@ -74,12 +74,13 @@ program test_shmem_barrier
       call shmem_barrier(2, 0, npes - 2, pSync) ! Only PEs 2, 3, 4, ... + perform the barrier
     end if
 
-    if(me .ge. 1) then
-      call shmem_int4_inc(flag, 0)
+
+    if(me .ge. 2) then
+      call shmem_int4_inc(flag(1), 0)
     end if
 
     if(me .eq. 0) then
-      call shmem_wait_until(flag(1), SHMEM_CMP_EQ, npes - 1 )
+      call shmem_int4_wait_until(flag(1), SHMEM_CMP_EQ, npes - 2 )
       write (*,*) "test_shmem_barrier_01.f90: Passed" 
     end if
 
