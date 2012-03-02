@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2011, University of Houston System and Oak Ridge National
+ * Copyright (c) 2011, 2012 University of Houston System and Oak Ridge National
  * Laboratory.
  * 
  * All rights reserved.
@@ -46,8 +46,7 @@
   double
 gettime () 
 {
-  struct timeval tv;
-  gettimeofday (&tv, 0);
+  struct timeval tv;  gettimeofday (&tv, 0);
   return (tv.tv_sec * 1000000 + tv.tv_usec);
 }
 double
@@ -80,8 +79,8 @@ print_array (double **array, int blocksize)
 
 
 // needed for reduction operation
-long pSync[_SHMEM_BCAST_SYNC_SIZE];
-double pWrk[_SHMEM_REDUCE_SYNC_SIZE];
+long pSync[_SHMEM_REDUCE_SYNC_SIZE];
+double pWrk[_SHMEM_REDUCE_MIN_WRKDATA_SIZE];
 
 // global shmem_accesible
 double maxtime;
@@ -96,7 +95,7 @@ main (int argc, char **argv)
   double **a_local, **b_local;
   double **c_local;
   int B_matrix_displacement;
-  for (i = 0; i < _SHMEM_BCAST_SYNC_SIZE; i += 1)
+  for (i = 0; i < _SHMEM_REDUCE_SYNC_SIZE; i += 1)
     pSync[i] = _SHMEM_SYNC_VALUE;
   tv[0] = gettime ();
   start_pes (0);
