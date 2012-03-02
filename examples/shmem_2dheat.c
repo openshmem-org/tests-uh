@@ -85,8 +85,8 @@ int HEIGHT = _HEIGHT;
 int meth = _METHOD;
 float EPSILON = _EPSILON;
 
-long pSync[_SHMEM_BCAST_SYNC_SIZE];
-float pWrk[_SHMEM_REDUCE_SYNC_SIZE];
+long pSync[_SHMEM_REDUCE_SYNC_SIZE];
+float pWrk[_SHMEM_REDUCE_MIN_WRKDATA_SIZE];
 
 float convergence;
 float convergence_sqd, local_convergence_sqd;
@@ -124,12 +124,7 @@ main (int argc, char **argv)
   double time;
   double t, tv[2];
 
-  /* initialize mpi stuff */
-  //MPI_Init(&argc, &argv);
-  /* get number of procs */
-  //MPI_Comm_size(MPI_COMM_WORLD,&p); 
-  /* get rank of current process */
-  //MPI_Comm_rank(MPI_COMM_WORLD,&my_rank);  
+  /*OpenSHMEM initilization*/
   start_pes (0);
   p = _num_pes ();
   my_rank = _my_pe ();
@@ -200,15 +195,15 @@ main (int argc, char **argv)
 
 
   /* wait for user to input runtime params */
-  //MPI_Barrier(MPI_COMM_WORLD);
-  for (i = 0; i < _SHMEM_BCAST_SYNC_SIZE; i += 1)
+ 
+  for (i = 0; i < _SHMEM_REDUCE_SYNC_SIZE; i += 1)
     pSync[i] = _SHMEM_SYNC_VALUE;
 
   shmem_barrier_all ();
 
 
   /* broadcast method to use  */
-  //(void) MPI_Bcast(&meth,1,MPI_INT,0,MPI_COMM_WORLD);
+  
   shmem_broadcast32 (&meth, &meth, 1, 0, 0, 0, p, pSync);
   switch (meth)
     {
@@ -258,7 +253,7 @@ main (int argc, char **argv)
   /* iterate for solution */
   if (my_rank == ROOT)
     {
-      //time = MPI_Wtime();
+     
       tv[0] = gettime ();
     }
   k = 1;
@@ -267,7 +262,7 @@ main (int argc, char **argv)
       method (U_Curr, U_Next);
 
       local_convergence_sqd = get_convergence_sqd (U_Curr, U_Next, my_rank);
-      //MPI_Reduce(&local_convergence_sqd,&convergence_sqd,1,MPI_FLOAT,MPI_SUM,ROOT,MPI_COMM_WORLD);
+     
       shmem_barrier_all ();
       shmem_float_sum_to_all (&convergence_sqd, &local_convergence_sqd, 1, 0,
 			      0, p, pWrk, pSync);
@@ -281,9 +276,9 @@ main (int argc, char **argv)
 	}
 
       /* broadcast method to use */
-      //(void) MPI_Bcast(&convergence,1,MPI_INT,0,MPI_COMM_WORLD);
+     
       shmem_barrier_all ();
-      shmem_broadcast64 (&convergence, &convergence, 1, 0, 0, 0, p, pSync);
+      shmem_broadcast32 (&convergence, &convergence, 1, 0, 0, 0, p, pSync);
       if (convergence <= EPSILON)
 	{
 	  break;
