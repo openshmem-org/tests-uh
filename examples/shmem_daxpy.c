@@ -38,7 +38,7 @@
 /* A simple DAXPY like sample kernel with computation and communication.
  * Adopted/ported from source url: http://parallel-for.sourceforge.net/shmem-proc-cpu-scalar.html 
  */
-#include <mpp/shmem.h>
+#include <shmem.h>
 #include <stdio.h>
 #include <sys/time.h>
 

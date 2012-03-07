@@ -62,7 +62,7 @@
 #include <math.h>
 #include <sys/time.h>
 #include <unistd.h>
-#include <mpp/shmem.h>
+#include <shmem.h>
 
 /* declare functions */
 int get_start (int rank);

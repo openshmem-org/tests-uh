@@ -40,7 +40,7 @@
   
 #include <stdio.h>
 #include <stdlib.h>
-#include <mpp/shmem.h>
+#include <shmem.h>
 #include <sys/time.h>
 #include <unistd.h>
   double
