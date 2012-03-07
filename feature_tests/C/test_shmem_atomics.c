@@ -46,7 +46,7 @@
 
 #include <stdio.h>
 
-#include <mpp/shmem.h>
+#include <shmem.h>
 
 int success1_p2 ;
 int success2_p2 ;

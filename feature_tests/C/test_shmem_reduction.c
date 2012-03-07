@@ -50,7 +50,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <mpp/shmem.h>
+#include <shmem.h>
 
 long pSync[_SHMEM_REDUCE_SYNC_SIZE];
 long pSync1[_SHMEM_REDUCE_SYNC_SIZE];
