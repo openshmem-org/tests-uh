@@ -47,7 +47,7 @@
 
 #include <shmem.h>
 
-static long pSync[_SHMEM_BCAST_SYNC_SIZE];
+static long pSync[_SHMEM_COLLECT_SYNC_SIZE];
 
 static int src1[4] = { 11, 12, 13, 14 };
 static long src2[4] = { 101, 102, 103, 104 };
