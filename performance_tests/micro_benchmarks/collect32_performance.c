@@ -40,7 +40,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <mpp/shmem.h>
+#include <shmem.h>
 long pSync[_SHMEM_BCAST_SYNC_SIZE];
 
 #define N_ELEMENTS 4

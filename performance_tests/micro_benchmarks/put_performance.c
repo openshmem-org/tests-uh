@@ -41,7 +41,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <mpp/shmem.h>
+#include <shmem.h>
 
 #define N_ELEMENTS 25600/*Data size chosen to be able to capture time required*/
 int
