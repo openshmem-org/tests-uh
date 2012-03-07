@@ -37,7 +37,7 @@
 
 program test_shmem_lock
   implicit none
-  include 'mpp/shmem.fh'
+  include 'shmem.fh'
 
   integer*8, save :: L
   integer  , save :: x

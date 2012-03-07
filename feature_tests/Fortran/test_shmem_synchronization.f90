@@ -37,7 +37,7 @@
 
 program test_shmem_synchronization
   implicit none
-  include 'mpp/shmem.fh'
+  include 'shmem.fh'
 
   integer         :: me, npes
   integer*8, save :: dest
