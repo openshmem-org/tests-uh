@@ -40,7 +40,8 @@ SHMEM_CFLAGS=
 
 GCC=gcc
 
-CC = oshcc
+CC = oshcc 
+#tau_cc.sh
 
 
 # Please set these variables. They are used in execution time.
@@ -53,7 +54,7 @@ RUNOPT=
 NCOREOPT= 
 NCORE=
 NPROCOPT=-np
-NPROC=2
+NPROC=4
 
 C_TESTS        = $(wildcard *.c)
 
@@ -78,6 +79,9 @@ run:	$(EXES)
 	$(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./shmem_2dheat.x
 	$(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./shmem_matrix.x
 	$(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./shmem_heat_image.x 10 10
+	$(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./ptp.x
+	$(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./adjacent_32bit_amo.x
+
 
 clean:
 	rm -f $(EXES) tmp.image
