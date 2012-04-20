@@ -71,7 +71,7 @@ all default:    $(EXES)
 
 
 
-run:
+run:	all $(EXES)
 	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./put_performance.x
 	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./get_performance.x
 	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./barrier_performance.x
