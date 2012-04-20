@@ -71,7 +71,7 @@ all default:    $(EXES)
 %.x:    %.c
 	$(CC) $(SHMEM_CFLAGS) -o $@ $^ -lm
 
-run:	$(EXES)
+run: 	all $(EXES)
 	$(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./hello.x
 	$(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./cpi.x
 	$(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./sping.x
