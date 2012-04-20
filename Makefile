@@ -41,7 +41,7 @@ help:
 	@echo
 	@echo "Please use one of the following targets:"
 	@echo
-	@echo "    * For Examples, C feature tests, Fortran feature tests and Microbenchmarks : compile, run, clean"
+	@echo "    * For Examples, C feature tests, Fortran feature tests and Microbenchmarks : make compile, make run, make clean"
 	@echo "    * For Examples : make examples, make examples-run"
 	@echo "    * For C feature tests : make C_feature_tests, make C_feature_tests-run "
 	@echo "    * For  Fortran feature tests : make F_feature_tests, make F_feature_tests-run"
