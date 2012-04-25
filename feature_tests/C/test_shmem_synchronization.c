@@ -49,7 +49,7 @@
 
 #include <stdio.h>
 #include <shmem.h>
-
+#include <sys/time.h>
 int
 main(void)
 {
