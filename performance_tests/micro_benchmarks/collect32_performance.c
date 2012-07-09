@@ -41,7 +41,8 @@
 #include <stdlib.h>
 #include <time.h>
 #include <shmem.h>
-long pSync[_SHMEM_BCAST_SYNC_SIZE];
+long pSyncA[_SHMEM_BCAST_SYNC_SIZE];
+long pSyncB[_SHMEM_BCAST_SYNC_SIZE];
 
 #define N_ELEMENTS 4
   int
@@ -70,7 +71,8 @@ main(void)
     target[i] = -90;
   }
   for (i = 0; i < _SHMEM_BCAST_SYNC_SIZE; i += 1) {
-    pSync[i] = _SHMEM_SYNC_VALUE;
+    pSyncA[i] = _SHMEM_SYNC_VALUE;
+    pSyncB[i] = _SHMEM_SYNC_VALUE;
   }
   shmem_barrier_all();
 
@@ -79,7 +81,12 @@ main(void)
  
     start_time = (start.tv_sec * 1000000.0) + start.tv_usec;
  
-    shmem_collect32(target, source, N_ELEMENTS, 0, 0, npes, pSync);
+    /* alternate between 2 pSync arrays to synchronize
+     * consequent collectives of even and odd iterations */
+    if(i % 2)
+      shmem_collect32(target, source, N_ELEMENTS, 0, 0, npes, pSyncA);
+    else
+      shmem_collect32(target, source, N_ELEMENTS, 0, 0, npes, pSyncB);
  
     gettimeofday(&end, NULL);
 
