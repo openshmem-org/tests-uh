@@ -66,10 +66,10 @@ main(void)
     source[i] = (i + 1)*10 + me;
   }
   target = (int *) shmalloc( N_ELEMENTS * sizeof(*target)*npes );
-  for (i = 0; i < N_ELEMENTS; i += 1) {
+  for (i = 0; i < N_ELEMENTS * npes ; i += 1) {
     target[i] = -90;
   }
-  for (i = 0; i < _SHMEM_BCAST_SYNC_SIZE; i += 1) {
+  for (i = 0; i < _SHMEM_COLLECT_SYNC_SIZE; i += 1) {
     pSyncA[i] = _SHMEM_SYNC_VALUE;
     pSyncB[i] = _SHMEM_SYNC_VALUE;
   }
