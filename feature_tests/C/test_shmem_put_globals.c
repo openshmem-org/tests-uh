@@ -328,9 +328,9 @@ main(int argc, char **argv)
 
       shmem_barrier_all();
 
-      shmem_iput32(dest2, src2, 1, 2, N, nextpe);
-      shmem_iput64(dest3, src3, 1, 2, N, nextpe);
-      shmem_iput128(dest4, src4, 1, 2, N, nextpe);
+      shmem_iput32(dest2, src2, 1, 2, N/2, nextpe);
+      shmem_iput64(dest3, src3, 1, 2, N/2, nextpe);
+      shmem_iput128(dest4, src4, 1, 2, N/2, nextpe);
 
       shmem_barrier_all();
 
@@ -374,9 +374,9 @@ main(int argc, char **argv)
 
       shmem_barrier_all();
 
-      shmem_iput32(dest1, src1, 1, 2, N, nextpe);
-      shmem_iput64(dest2, src2, 1, 2, N, nextpe);
-      shmem_iput128(dest3, src3, 1, 2, N, nextpe);
+      shmem_iput32(dest1, src1, 1, 2, N/2, nextpe);
+      shmem_iput64(dest2, src2, 1, 2, N/2, nextpe);
+      shmem_iput128(dest3, src3, 1, 2, N/2, nextpe);
 
       shmem_barrier_all();
 
@@ -426,11 +426,11 @@ main(int argc, char **argv)
 
     shmem_barrier_all();
 
-    shmem_short_iput(dest1, src1, 1, 2, N, nextpe);
-    shmem_int_iput(dest2, src2, 1, 2, N, nextpe);
-    shmem_long_iput(dest3, src3, 1, 2, N, nextpe);
-    shmem_double_iput(dest6, src6, 1, 2, N, nextpe);
-    shmem_float_iput(dest7, src7, 1, 2, N, nextpe);
+    shmem_short_iput(dest1, src1, 1, 2, N/2, nextpe);
+    shmem_int_iput(dest2, src2, 1, 2, N/2, nextpe);
+    shmem_long_iput(dest3, src3, 1, 2, N/2, nextpe);
+    shmem_double_iput(dest6, src6, 1, 2, N/2, nextpe);
+    shmem_float_iput(dest7, src7, 1, 2, N/2, nextpe);
 
     shmem_barrier_all();
 
