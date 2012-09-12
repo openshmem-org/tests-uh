@@ -75,7 +75,7 @@ main(void)
   target = (int *) shmalloc( N_ELEMENTS * sizeof(*target) );
 
   if(me == 0)
-    printf("Size (Bytes)\t\tTime (Microseconds)\t\tBandwidth (Bytes/Second)\n");
+    printf("Put performance test results:\nSize (Bytes)\t\tTime (Microseconds)\t\tBandwidth (Bytes/Second)\n");
 
   for (i = 0; i < N_ELEMENTS; i += 1) {
     source[i] = i + 1;
