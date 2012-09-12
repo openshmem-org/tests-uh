@@ -36,15 +36,20 @@
  */
 
 
-/* Performance test for shmem_XX_put */
+/* Performance test for shmem_XX_put (latency and bandwidth) */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <shmem.h>
 
-#define N_ELEMENTS 25600/*Data size chosen to be able to capture time required*/
-int
+long double time_taken;
+
+long pSync[_SHMEM_REDUCE_SYNC_SIZE];
+long double pWrk[_SHMEM_REDUCE_MIN_WRKDATA_SIZE];
+
+//#define N_ELEMENTS 25600/*Data size chosen to be able to capture time required*/
+  int
 main(void)
 {
   int i,j,k;
@@ -53,47 +58,67 @@ main(void)
   int me, npes;
   int nxtpe;
   struct timeval start, end;
-  long time_taken,start_time,end_time;
+  long double start_time,end_time;
+
+  int N_ELEMENTS = (4194304*2)/sizeof(int);
 
   start_pes(0);
   me = _my_pe();
   npes = _num_pes();
 
+  for (i = 0; i < SHMEM_BCAST_SYNC_SIZE; i += 1)
+  {
+    pSync[i] = _SHMEM_SYNC_VALUE;
+  }
   nxtpe = (me+1)%npes;
   source = (int *) shmalloc( N_ELEMENTS * sizeof(*source) );
+  target = (int *) shmalloc( N_ELEMENTS * sizeof(*target) );
 
-  time_taken = 0;
+  if(me == 0)
+    printf("Size (Bytes)\t\tTime (Microseconds)\t\tBandwidth (Bytes/Second)\n");
 
   for (i = 0; i < N_ELEMENTS; i += 1) {
     source[i] = i + 1;
-  }
-  target = (int *) shmalloc( N_ELEMENTS * sizeof(*target) );
-  for (i = 0; i < N_ELEMENTS; i += 1) {
     target[i] = -90;
   }
   shmem_barrier_all();
 
-  for(i=0;i<10000;i++){
-    gettimeofday(&start, NULL);
+  /*For int put we take average of all the times realized by a pair of PEs, thus
+   * reducing effects of physical location of PEs*/
+  for (i=1;i<=N_ELEMENTS;i=i*2)
+  {
+    time_taken = 0;
 
-    start_time = (start.tv_sec * 1000000.0) + start.tv_usec;
+    for(j=0;j<10000;j++){
+      gettimeofday(&start, NULL);
 
-    shmem_int_put(target, source, N_ELEMENTS,nxtpe);
+      start_time = (start.tv_sec * 1000000.0) + start.tv_usec;
 
-    gettimeofday(&end, NULL);
+      shmem_int_put(target, source, i,nxtpe);
 
-    end_time = (end.tv_sec * 1000000.0) + end.tv_usec;
-    if(me==0){
+      gettimeofday(&end, NULL);
+
+      end_time = (end.tv_sec * 1000000.0) + end.tv_usec;
+
       time_taken = time_taken + (end_time - start_time);
+
+    }
+    shmem_longdouble_sum_to_all(&time_taken, &time_taken,1, 0, 0, npes, pWrk, pSync);
+
+
+    if(me == 0){
+      time_taken = time_taken/(npes*10000); /*Average time across all PEs for one put*/
+      if (i*sizeof(i) < 1048576)
+        printf("%ld \t\t\t\t %ld\t\t\t\t %ld\n",i*sizeof(i),time_taken,(i*sizeof(i))/(time_taken*1000000.0));
+      else
+        printf("%ld \t\t\t %ld\t\t\t\t %ld\n",i*sizeof(i),time_taken,(i*sizeof(i))/(time_taken*1000000.0));
+
     }
 
   }
-  if(me == 0)
-    printf("Time required for a int put of 100 Kbytes of data is %ld microseconds\n",time_taken/10000);
-
   shmem_barrier_all();
 
   shfree(target);
   shfree(source);
   return 0;
-  }
+}
