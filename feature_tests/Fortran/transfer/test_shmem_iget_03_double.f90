@@ -69,7 +69,7 @@ program test_shmem_iget
 
     success = .TRUE.
 
-    call shpalloc(src_ptr, N, errcode, abort)
+    call shpalloc(src_ptr,2*N, errcode, abort)
 
     dest(:) = -9
 

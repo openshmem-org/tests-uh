@@ -66,7 +66,7 @@ program test_shmem_put
 
     success1 = .TRUE. 
 
-    call shpalloc(dest_ptr, N, errcode, abort)
+    call shpalloc(dest_ptr, 2*N, errcode, abort)
 
     do i = 1, N, 1
       dest(i) = -9
