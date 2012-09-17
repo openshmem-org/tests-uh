@@ -39,180 +39,207 @@
 /*Tests shmem_broadcast32 shmem_broadcast64 calls
  * PE 0 broadcasts to all other PEs
  * source and destination arrays are shmalloc-ed
- * */
+ * Strided tests use active sets of all even PEs
+ * PE 0 is the root,
+ * and require a minimum of 3 PEs to test.
+*/
 #include <stdio.h>
 #include <stdlib.h>
 
+/* #include <mpp/shmem.h> */
 #include <shmem.h>
 
 long pSync[_SHMEM_BCAST_SYNC_SIZE];
+int success32_root;
+int success64_root;
+int success32, success64;
 
-  int
+int
 main(void)
 {
-  int i,success32, success64;
   int *targ;
   int *src;
   long *target;
   long *source;
-  int me, npes;
+  int i, me, npes;
 
   start_pes(0);
   me = _my_pe();
   npes = _num_pes();
-  success32 = 0;
-  success64 = 0;
+  success32 = -9;
+  success64 = -9;
+  success32_root = -9;
+  success64_root = -9;
+  for (i = 0; i < _SHMEM_BCAST_SYNC_SIZE; i += 1) {
+    pSync[i] = _SHMEM_SYNC_VALUE;
+  }
+  src = (int *) shmalloc( npes * sizeof(*src) );
+  targ = (int *) shmalloc( npes * sizeof(*targ) );
+  source = (long *) shmalloc( npes * sizeof(*source) );
+  target = (long *) shmalloc( npes * sizeof(*target) );
+  for (i = 0; i < npes; i += 1) {
+    src[i] = i + 1;
+    targ[i] = -999;
+    source[i] = i + 1;
+    target[i] = -999;
+  }
+
+  shmem_barrier_all();
 
   if(npes > 1){
-    for (i = 0; i < _SHMEM_BCAST_SYNC_SIZE; i += 1) {
-      pSync[i] = _SHMEM_SYNC_VALUE;
-    }
 
     /*Test shmem_broadcast32*/
-    src = (int *) shmalloc( npes * sizeof(*src) );
-    for (i = 0; i < npes; i += 1) {
-      src[i] = i + 1;
-    }
-
-    targ = (int *) shmalloc( npes * sizeof(*targ) );
-    for (i = 0; i < npes; i += 1) {
-      targ[i] = -999;
-    }
-
-
-    shmem_barrier_all();
 
     shmem_broadcast32(targ, src, npes, 0, 0, 0, npes, pSync);
 
-    shmem_barrier_all();
-
-    if(me == 1){
+    if(me == 0){
       for (i = 0; i < npes; i++) {
-        if( targ[i] != (i+1))
-          success32=1;
+        if( targ[i] == -999)
+          success32=0;
       }
-      if(success32==1)
-        printf("Test shmem_broadcast32: Failed\n");
-      else
-        printf("Test shmem_broadcast32: Passed\n");
+    }
+
+    if(me == npes-1){
+
+      for (i = 0; i < npes; i++) {
+        if( targ[i] == (i+1))
+          success32=0;
+      }
     }
 
     shmem_barrier_all();
+    if(me==npes-1){
+      shmem_int_get(&success32_root, &success32,1,0);
+      if(success32==0 && success32_root==0)
+        printf("Test shmem_broadcast32: Passed\n");
+      else
+        printf("Test shmem_broadcast32: Failed\n");
+    }
 
+
+    shmem_barrier_all();
     /*Test shmem_broadcast64*/
 
-    source = (long *) shmalloc( npes * sizeof(*source) );
-    for (i = 0; i < npes; i += 1) {
-      source[i] = i + 1;
+    shmem_broadcast64(target, source, npes, 0, 0, 0, npes, pSync);
+
+    if(me == 0){
+      for (i = 0; i < npes; i++) {
+        if( target[i] == -999)
+          success64=0;
+      }
     }
 
-    target = (long *) shmalloc( npes * sizeof(*target) );
+    if(me == npes-1){
+
+      for (i = 0; i < npes; i++) {
+        if( target[i] == (i+1))
+          success64=0;
+      }
+    }
+
+    shmem_barrier_all();
+    if(me==npes-1){
+      shmem_int_get(&success64_root, &success64,1,0);
+      if(success64==0 && success64_root==0)
+        printf("Test shmem_broadcast64: Passed\n");
+      else
+        printf("Test shmem_broadcast64: Failed\n");
+    }
+
+  }
+  else{
+    printf("Number of PEs must be > 1 to test broadcast, test skipped\n");
+  }
+
+  shmem_barrier_all();
+
+  success32 = -9;
+  success64 = -9;
+  success32_root = -9;
+  success64_root = -9;
+
+  if(npes > 2){
     for (i = 0; i < npes; i += 1) {
+      targ[i] = -999;
       target[i] = -999;
     }
 
 
     shmem_barrier_all();
+    if(me%2==0)/*Active set of all even PEs*/
 
-    shmem_broadcast64(target, source, npes, 0, 0, 0, npes, pSync);
-
-    shmem_barrier_all();
-
-    if(me == 1){
-      for (i = 0; i < npes; i++) {
-        if( target[i] != (i+1))
-          success64=1;
-      }
-      if(success64==1)
-        printf("Test shmem_broadcast64: Failed\n");
+      if(npes%2==0)
+        shmem_broadcast32(targ, src, npes, 0, 0, 1, npes/2, pSync);
       else
-        printf("Test shmem_broadcast64: Passed\n");
-    }
-
-    shfree(targ);
-    shfree(src);
-    shfree(target);
-    shfree(source);
-  }
-  else{
-    printf("Number of PEs must be > 1 to test broadcast, test skipped\n");
-  }
-  success32 = 0;
-  success64 = 0;
-
-  if(npes > 3){
-    for (i = 0; i < _SHMEM_BCAST_SYNC_SIZE; i += 1) {
-      pSync[i] = _SHMEM_SYNC_VALUE;
-    }
-
-    /*Test strided shmem_broadcast32*/
-    src = (int *) shmalloc( npes * sizeof(*src) );
-    for (i = 0; i < npes; i += 1) {
-      src[i] = i + 1;
-    }
-
-    targ = (int *) shmalloc( npes * sizeof(*targ) );
-    for (i = 0; i < npes; i += 1) {
-      targ[i] = -999;
-    }
-
-
-    shmem_barrier_all();
-
-    shmem_broadcast32(targ, src, npes, 0, 1, 1, npes/2, pSync);
-
-    shmem_barrier_all();
-
-    if(me == 3){
+        shmem_broadcast32(targ, src, npes, 0, 0, 1, (npes+1)/2, pSync);
+    if(me == 0){
       for (i = 0; i < npes; i++) {
-        if( targ[i] != (i+1))
-          success32=1;
+        if( targ[i] == -999)
+          success32=0;
       }
-      if(success32==1)
-        printf("Test strided shmem_broadcast32: Failed\n");
-      else
+    }
+
+    if(me == 2){
+
+      for (i = 0; i < npes; i++) {
+        if( targ[i] == (i+1))
+          success32=0;
+      }
+    }
+
+    shmem_barrier_all();
+    if(me==2){
+      shmem_int_get(&success32_root, &success32,1,0);
+      if(success32==0 && success32_root==0)
         printf("Test strided shmem_broadcast32: Passed\n");
+      else
+        printf("Test strided shmem_broadcast32: Failed\n");
     }
+
 
     shmem_barrier_all();
 
     /*Test strided shmem_broadcast64*/
 
-    source = (long *) shmalloc( npes * sizeof(*source) );
-    for (i = 0; i < npes; i += 1) {
-      source[i] = i + 1;
-    }
-
-    target = (long *) shmalloc( npes * sizeof(*target) );
-    for (i = 0; i < npes; i += 1) {
-      target[i] = -999;
-    }
-
-
-    shmem_barrier_all();
-
-    shmem_broadcast64(target, source, npes, 0, 1, 1, npes/2, pSync);
-
-    shmem_barrier_all();
-
-    if(me == 3){
-      for (i = 0; i < npes; i++) {
-        if( target[i] != (i+1))
-          success64=1;
-      }
-      if(success64==1)
-        printf("Test strided shmem_broadcast64: Failed\n");
+    if(me%2==0)
+      if(npes%2==0)
+        shmem_broadcast64(target, source, npes, 0, 0, 1, npes/2, pSync);
       else
-        printf("Test strided shmem_broadcast64: Passed\n");
+        shmem_broadcast64(target, source, npes, 0, 0, 1, (npes+1)/2, pSync);
+
+    if(me == 0){
+      for (i = 0; i < npes; i++) {
+        if( target[i] == -999)
+          success64=0;
+      }
     }
 
-    shfree(targ);
-    shfree(src);
-    shfree(target);
-    shfree(source);
+    if(me == 2){
+
+      for (i = 0; i < npes; i++) {
+        if( target[i] == (i+1))
+          success64=0;
+      }
+    }
+
+    shmem_barrier_all();
+    if(me==2){
+      shmem_int_get(&success64_root, &success64,1,0);
+      if(success64==0 && success64_root==0)
+        printf("Test strided shmem_broadcast64: Passed\n");
+      else
+        printf("Test strided shmem_broadcast64: Failed\n");
+
+    }
   }
   else{
-    printf("Number of PEs must be > 3 to test broadcast, test skipped\n");
-    return 0;
+    if(me==0)
+      printf("Number of PEs must be > 2 to test strided broadcast, test skipped\n");
   }
+  shfree(targ);
+  shfree(src);
+  shfree(target);
+  shfree(source);
+
+  return 0;
 }
