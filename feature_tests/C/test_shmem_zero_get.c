@@ -62,13 +62,13 @@ main(int argc, char **argv)
   int me, npes;
   int success1,success2,success3, success4, success5, success6, success7, success8;
 
-  short src1[N];
-  int src2[N];
-  long src3[N];
-  long double src4[N];
-  long long src5[N];
-  double src6[N];
-  float src7[N];
+  static short src1[N];
+  static int src2[N];
+  static long src3[N];
+  static long double src4[N];
+  static long long src5[N];
+  static double src6[N];
+  static float src7[N];
   char *src8;
   short src9;
   int src10;
@@ -105,7 +105,7 @@ main(int argc, char **argv)
     success6 =0;
     success7 =0;
     success8 =0;
-    src8 = (char *)malloc(N*sizeof(char));
+    src8 = (char *)shmalloc(N*sizeof(char));
 
     for (i = 0; i < N; i += 1) {
       src1[i] = (short)me;
@@ -131,7 +131,7 @@ main(int argc, char **argv)
     dest5 = (long long*)shmalloc( N * sizeof(*dest5) );
     dest6 = (double *)shmalloc( N * sizeof(*dest6) );
     dest7 = (float *)shmalloc( N * sizeof(*dest7) );
-    dest8 = (char *)shmalloc( 4 * sizeof(*dest8) );
+    dest8 = (char *)shmalloc( N * sizeof(*dest8) );
     dest9 = (short *)shmalloc( sizeof(*dest9) );
     dest10 = (int *)shmalloc( sizeof(*dest10) );
     dest11 = (long *)shmalloc( sizeof(*dest11) );

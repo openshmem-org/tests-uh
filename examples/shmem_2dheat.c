@@ -310,6 +310,23 @@ main (int argc, char **argv)
 	 t / 1000000.0);
     }
 
+  if (U_Curr)
+  {
+      if (U_Curr[0])
+      {
+        free(U_Curr[0]);
+      }
+	  free(U_Curr);
+  }
+  
+  if (U_Next)
+  {
+      if (U_Next[0])
+      {
+        free(U_Next[0]);
+      }
+	  free(U_Next);
+  }
   //MPI_Finalize();
   exit (EXIT_SUCCESS);
   return 0;
@@ -350,6 +367,11 @@ jacobi (float **current_ptr, float **next_ptr)
   float *U_Curr_Below = (float *) shmalloc ((sizeof (float)) * ((int) floor (WIDTH / H)));	/* 1d array holding values from top row of PE below */
   float *U_Send_Buffer = (float *) shmalloc ((sizeof (float)) * ((int) floor (WIDTH / H)));	/* 1d array holding values that are currently being sent */
 
+  if ( !U_Curr_Above || !U_Curr_Below || !U_Send_Buffer)
+  {
+    printf("error: shmalloc returned NULL (no memory)");
+    exit(1);
+  }
   //MPI_Request request;
   //MPI_Status status;
   //MPI_Comm_size(MPI_COMM_WORLD,&p); 
@@ -425,6 +447,19 @@ jacobi (float **current_ptr, float **next_ptr)
 	  enforce_bc_par (next_ptr, my_rank, i, j);
 	}
     }
+    
+    if (U_Send_Buffer)
+    {
+        shfree(U_Send_Buffer);
+    }
+    if (U_Curr_Above)
+    {
+        shfree(U_Curr_Above);
+    }
+    if (U_Curr_Below)
+    {
+        shfree(U_Curr_Below);
+    }
 }
 
  /* implements parallel g-s method */
@@ -439,6 +474,12 @@ gauss_seidel (float **current_ptr, float **next_ptr)
   //float U_Curr_Above[(int)floor(WIDTH/H)];  /* 1d array holding values from bottom row of PE above */
   //float U_Curr_Below[(int)floor(WIDTH/H)];  /* 1d array holding values from top row of PE below */
   //float U_Send_Buffer[(int)floor(WIDTH/H)]; /* 1d array holding values that are currently being sent */
+  
+  if ( !U_Curr_Above || !U_Curr_Below || !U_Send_Buffer)
+  {
+    printf("error: shmalloc returned NULL (no memory)");
+    exit(1);
+  }
   float W = 1.0;
 
   //MPI_Request request;
@@ -576,6 +617,19 @@ gauss_seidel (float **current_ptr, float **next_ptr)
 	    }
 	}
     }
+    
+    if (U_Send_Buffer)
+    {
+        shfree(U_Send_Buffer);
+    }
+    if (U_Curr_Above)
+    {
+        shfree(U_Curr_Above);
+    }
+    if (U_Curr_Below)
+    {
+        shfree(U_Curr_Below);
+    }
 }
 
 
@@ -591,6 +645,12 @@ sor (float **current_ptr, float **next_ptr)
   //float U_Curr_Above[(int)floor(WIDTH/H)];  /* 1d array holding values from bottom row of PE above */
   //float U_Curr_Below[(int)floor(WIDTH/H)];  /* 1d array holding values from top row of PE below */
   //float U_Send_Buffer[(int)floor(WIDTH/H)]; /* 1d array holding values that are currently being sent */
+  
+  if ( !U_Curr_Above || !U_Curr_Below || !U_Send_Buffer)
+  {
+    printf("error: shmalloc returned NULL (no memory)");
+    exit(1);
+  }
   float W = 1.5;
 
   //MPI_Request request;
@@ -728,6 +788,19 @@ sor (float **current_ptr, float **next_ptr)
 	    }
 	}
     }
+    
+    if (U_Send_Buffer)
+    {
+        shfree(U_Send_Buffer);
+    }
+    if (U_Curr_Above)
+    {
+        shfree(U_Curr_Above);
+    }
+    if (U_Curr_Below)
+    {
+        shfree(U_Curr_Below);
+    }
 }
 
  /* enforces bcs in in serial and parallel */
@@ -824,7 +897,7 @@ init_domain (float **domain_ptr, int rank)
   end = get_end (rank);
   rows = get_num_rows (rank);
 
-  for (j = start; j < end; j++)
+  for (j = start; j <= end; j++)
     {
       for (i = 0; i < (int) floor (WIDTH / H); i++)
 	{

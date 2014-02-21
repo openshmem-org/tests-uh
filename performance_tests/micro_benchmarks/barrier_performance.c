@@ -37,6 +37,7 @@
 /* Performance test for shmem_barrier*/
 
 #include <stdio.h>
+#include <sys/time.h>
 #include <shmem.h>
 
 #define NPES 4

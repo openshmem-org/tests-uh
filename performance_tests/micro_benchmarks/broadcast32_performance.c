@@ -39,6 +39,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <sys/time.h>
 #include <shmem.h>
 long pSyncA[_SHMEM_BCAST_SYNC_SIZE];
 long pSyncB[_SHMEM_BCAST_SYNC_SIZE];
