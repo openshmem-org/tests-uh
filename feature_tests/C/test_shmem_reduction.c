@@ -39,10 +39,14 @@
 /*
  * Tests 
  * shmem_int_and_to_all, shmem_long_and_to_all, shmem_longlong_and_to_all, shmem_short_and_to_all,
- * shmem_double_max_to_all, shmem_float_max_to_all, shmem_int_max_to_all, shmem_long_max_to_all, shmem_longdouble_max_to_all, shmem_longlong_max_to_all, shmem_short_max_to_all, 
- * shmem_double_min_to_all, shmem_float_min_to_all, shmem_int_min_to_all, shmem_long_min_to_all, shmem_longdouble_min_to_all, shmem_longlong_min_to_all, shmem_short_min_to_all,
- * shmem_double_sum_to_all, shmem_float_sum_to_all, shmem_int_sum_to_all, shmem_long_sum_to_all, shmem_longdouble_sum_to_all, shmem_longlong_sum_to_all, shmem_short_sum_to_all,
- * shmem_double_prod_to_all, shmem_float_prod_to_all, shmem_int_prod_to_all, shmem_long_prod_to_all, shmem_longdouble_prod_to_all, shmem_longlong_prod_to_all, shmem_short_prod_to_all,
+ * shmem_double_max_to_all, shmem_float_max_to_all, shmem_int_max_to_all, shmem_long_max_to_all,
+ * shmem_longdouble_max_to_all, shmem_longlong_max_to_all, shmem_short_max_to_all,
+ * shmem_double_min_to_all, shmem_float_min_to_all, shmem_int_min_to_all, shmem_long_min_to_all,
+ * shmem_longdouble_min_to_all, shmem_longlong_min_to_all, shmem_short_min_to_all,
+ * shmem_double_sum_to_all, shmem_float_sum_to_all, shmem_int_sum_to_all, shmem_long_sum_to_all,
+ * shmem_longdouble_sum_to_all, shmem_longlong_sum_to_all, shmem_short_sum_to_all,
+ * shmem_double_prod_to_all, shmem_float_prod_to_all, shmem_int_prod_to_all, shmem_long_prod_to_all,
+ * shmem_longdouble_prod_to_all, shmem_longlong_prod_to_all, shmem_short_prod_to_all,
  * shmem_int_or_to_all, shmem_long_or_to_all, shmem_longlong_or_to_all, shmem_short_or_to_all,
  * shmem_int_xor_to_all, shmem_long_xor_to_all, shmem_longlong_xor_to_all, shmem_short_xor_to_all
  */
@@ -88,12 +92,18 @@ int main()
     int me, npes;
     int success0, success1, success2, success3, success4, success5,
         success6;
-    success0 = success1 = success2 = success3 = success4 = success5 =
-        success6 = 0;
+    int checkpoint0, checkpoint1, checkpoint2, checkpoint3, checkpoint4,
+        checkpoint5, checkpoint6;
 
     start_pes(0);
     me = _my_pe();
     npes = _num_pes();
+
+    success0 = success1 = success2 = success3 = success4 = success5 =
+        success6 = 0;
+
+    checkpoint0 = checkpoint1 = checkpoint2 = checkpoint3 = checkpoint4 =
+        checkpoint5 = checkpoint6 = 0;
 
     for (i = 0; i < _SHMEM_REDUCE_SYNC_SIZE; i += 1) {
         pSync[i] = _SHMEM_SYNC_VALUE;
@@ -105,7 +115,9 @@ int main()
             src6[i] = me + i;
     }
 
-    /*Test MAX: shmem_double_max_to_all, shmem_float_max_to_all, shmem_int_max_to_all, shmem_long_max_to_all, shmem_longdouble_max_to_all, shmem_longlong_max_to_all, shmem_short_max_to_all */
+    /* Test MAX: shmem_double_max_to_all, shmem_float_max_to_all, shmem_int_max_to_all,
+     * shmem_long_max_to_all, shmem_longdouble_max_to_all, shmem_longlong_max_to_all,
+     * shmem_short_max_to_all */
     shmem_barrier_all();
 
     shmem_short_max_to_all(dst0, src0, N, 0, 0, npes, pWrk0, pSync);
@@ -179,7 +191,9 @@ int main()
     }
 
 
-    /*Test MIN: shmem_double_min_to_all, shmem_float_min_to_all, shmem_int_min_to_all, shmem_long_min_to_all, shmem_longdouble_min_to_all, shmem_longlong_min_to_all, shmem_short_min_to_all */
+    /* Test MIN: shmem_double_min_to_all, shmem_float_min_to_all, shmem_int_min_to_all,
+     * shmem_long_min_to_all, shmem_longdouble_min_to_all, shmem_longlong_min_to_all,
+     * shmem_short_min_to_all*/
     success0 = success1 = success2 = success3 = success4 = success5 =
         success6 = 0;
 
@@ -270,7 +284,9 @@ int main()
 
     }
 
-    /*Test SUM: shmem_double_sum_to_all, shmem_float_sum_to_all, shmem_int_sum_to_all, shmem_long_sum_to_all, shmem_longdouble_sum_to_all, shmem_longlong_sum_to_all, shmem_short_sum_to_all */
+    /* Test SUM: shmem_double_sum_to_all, shmem_float_sum_to_all, shmem_int_sum_to_all,
+     * shmem_long_sum_to_all, shmem_longdouble_sum_to_all, shmem_longlong_sum_to_all,
+     * shmem_short_sum_to_all*/
     success0 = success1 = success2 = success3 = success4 = success5 =
         success6 = 0;
     for (i = 0; i < N; i += 1) {
@@ -358,7 +374,8 @@ int main()
 
     }
 
-    /*Test AND: shmem_int_and_to_all, shmem_long_and_to_all, shmem_longlong_and_to_all, shmem_short_and_to_all, */
+    /* Test AND: shmem_int_and_to_all, shmem_long_and_to_all, shmem_longlong_and_to_all,
+     * shmem_short_and_to_all,*/
     success0 = success1 = success2 = success6 = 0;
     for (i = 0; i < N; i += 1) {
         src0[i] = src1[i] = src2[i] = src6[i] = me;
@@ -414,7 +431,9 @@ int main()
 
     }
 
-    /*Test PROD: shmem_double_prod_to_all, shmem_float_prod_to_all, shmem_int_prod_to_all, shmem_long_prod_to_all, shmem_longdouble_prod_to_all, shmem_longlong_prod_to_all, shmem_short_prod_to_all, */
+    /* Test PROD: shmem_double_prod_to_all, shmem_float_prod_to_all, shmem_int_prod_to_all,
+     * shmem_long_prod_to_all, shmem_longdouble_prod_to_all, shmem_longlong_prod_to_all,
+     * shmem_short_prod_to_all, */
 
     success0 = success1 = success2 = success3 = success4 = success5 =
         success6 = 0;
@@ -431,7 +450,6 @@ int main()
         dst5[i] = -9;
         dst6[i] = -9;
     }
-
     expected_result0 = expected_result1 = expected_result2 =
         expected_result3 = expected_result4 = expected_result5 =
         expected_result6 = 1;
@@ -444,7 +462,6 @@ int main()
         expected_result5 = expected_result5 * i;
         expected_result6 = expected_result6 * i;
     }
-
     shmem_barrier_all();
 
     shmem_short_prod_to_all(dst0, src0, N, 0, 0, npes, pWrk0, pSync);
@@ -455,74 +472,119 @@ int main()
     shmem_longdouble_prod_to_all(dst5, src5, N, 0, 0, npes, pWrk5, pSync1);
     shmem_longlong_prod_to_all(dst6, src6, N, 0, 0, npes, pWrk6, pSync);
 
-
     if (me == 0) {
         for (i = 0; i < N; i++) {
-            /*printf("dst2[%d]: %ld, expected val: %ld\n",i, dst2[i], (long)expected_result2); */
             if (dst0[i] != expected_result0)
                 success0 = 1;
+            else if (npes > 8)
+                checkpoint0 = 1;
             if (dst1[i] != expected_result1)
                 success1 = 1;
+            else if (npes > 12)
+                checkpoint1 = 1;
             if (dst2[i] != expected_result2)
                 success2 = 1;
+            else if (npes > 20)
+                checkpoint2 = 1;
+
             if (dst3[i] != expected_result3)
                 success3 = 1;
+            else if (npes > 13)
+                checkpoint3 = 1;
+
             if (dst4[i] != expected_result4)
                 success4 = 1;
+            else if (npes > 22)
+                checkpoint4 = 1;
+
             if (dst5[i] != expected_result5)
                 success5 = 1;
+            else if (npes > 25)
+                checkpoint5 = 1;
+
             if (dst6[i] != expected_result6)
                 success6 = 1;
+            else if (npes > 20)
+                checkpoint6 = 1;
+
         }
         if (success0 == 1) {
             printf
                 ("Reduction operation shmem_short_prod_to_all: Failed\n");
-        } else {
+        } else if (checkpoint0 == 1)
+            printf
+                ("Warning:Reduction operation shmem_short_prod_to_all does not support more than 8 pes\n");
+        else {
             printf
                 ("Reduction operation shmem_short_prod_to_all: Passed\n");
         }
         if (success1 == 1) {
             printf("Reduction operation shmem_int_prod_to_all: Failed\n");
-        } else {
+        } else if (checkpoint1 == 1)
+            printf
+                ("Warning:Reduction operation shmem_int_prod_to_all does not support more than 12 pes\n");
+
+        else {
             printf("Reduction operation shmem_int_prod_to_all: Passed\n");
         }
         if (success2 == 1) {
             printf("Reduction operation shmem_long_prod_to_all: Failed\n");
-        } else {
+        } else if (checkpoint2 == 1)
+            printf
+                ("Warning:Reduction operation shmem_long_prod_to_all does not support more than 20 pes\n");
+
+        else {
             printf("Reduction operation shmem_long_prod_to_all: Passed\n");
         }
         if (success3 == 1) {
             printf
                 ("Reduction operation shmem_float_prod_to_all: Failed\n");
-        } else {
+        } else if (checkpoint3 == 1)
+            printf
+                ("Warning:Reduction operation shmem_float_prod_to_all does not support more than 13 pes\n");
+
+        else {
             printf
                 ("Reduction operation shmem_float_prod_to_all: Passed\n");
         }
         if (success4 == 1) {
             printf
                 ("Reduction operation shmem_double_prod_to_all: Failed\n");
-        } else {
+        } else if (checkpoint4 == 1)
+            printf
+                ("Warning:Reduction operation shmem_double_prod_to_all does not support more than 22 pes\n");
+
+        else {
             printf
                 ("Reduction operation shmem_double_prod_to_all: Passed\n");
         }
         if (success5 == 1) {
             printf
                 ("Reduction operation shmem_longdouble_prod_to_all: Failed\n");
-        } else {
+        } else if (checkpoint5 == 1)
+            printf
+                ("Warning:Reduction operation shmem_longdouble_prod_to_all does not support more than 25 pes\n");
+
+        else {
             printf
                 ("Reduction operation shmem_longdouble_prod_to_all: Passed\n");
         }
         if (success6 == 1) {
             printf
                 ("Reduction operation shmem_longlong_prod_to_all: Failed\n");
-        } else {
+        } else if (checkpoint6 == 1)
+            printf
+                ("Warning:Reduction operation shmem_longlong_prod_to_all does not support more than 20 pes\n");
+
+        else {
             printf
                 ("Reduction operation shmem_longlong_prod_to_all: Passed\n");
         }
 
     }
 
-    /*Test OR: shmem_int_or_to_all, shmem_long_or_to_all, shmem_longlong_or_to_all, shmem_short_or_to_all, */
+    /* Test OR: shmem_int_or_to_all, shmem_long_or_to_all, shmem_longlong_or_to_all,
+     * shmem_short_or_to_all,*/
 
     success0 = success1 = success2 = success6 = 0;
     for (i = 0; i < N; i += 1) {
@@ -579,7 +641,8 @@ int main()
 
     }
 
-    /*Test XOR: shmem_int_xor_to_all, shmem_long_xor_to_all, shmem_longlong_xor_to_all, shmem_short_xor_to_all */
+    /* Test XOR: shmem_int_xor_to_all, shmem_long_xor_to_all, shmem_longlong_xor_to_all,
+     * shmem_short_xor_to_all*/
 
     success0 = success1 = success2 = success6 = 0;
     for (i = 0; i < N; i += 1) {
