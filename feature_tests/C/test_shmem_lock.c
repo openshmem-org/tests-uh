@@ -53,9 +53,9 @@ main(int argc, char **argv)
   int ret_val;
   int new_val;
 
-  start_pes(0);
-  me = _my_pe();
-  npes = _num_pes();
+  shmem_init();
+  me = shmem_my_pe();
+  npes = shmem_n_pes();
   x=0;
   ret_val = -1;
 

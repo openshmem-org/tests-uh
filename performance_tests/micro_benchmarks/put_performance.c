@@ -63,17 +63,17 @@ main(void)
 
   int N_ELEMENTS = (4194304*2)/sizeof(int);
 
-  start_pes(0);
-  me = _my_pe();
-  npes = _num_pes();
+  shmem_init();
+  me = shmem_my_pe();
+  npes = shmem_n_pes();
 
   for (i = 0; i < SHMEM_BCAST_SYNC_SIZE; i += 1)
   {
     pSync[i] = _SHMEM_SYNC_VALUE;
   }
   nxtpe = (me+1)%npes;
-  source = (int *) shmalloc( N_ELEMENTS * sizeof(*source) );
-  target = (int *) shmalloc( N_ELEMENTS * sizeof(*target) );
+  source = (int *) shmem_malloc( N_ELEMENTS * sizeof(*source) );
+  target = (int *) shmem_malloc( N_ELEMENTS * sizeof(*target) );
 
   if(me == 0)
     printf("Put performance test results:\nSize (Bytes)\t\tTime (Microseconds)\t\tBandwidth (Bytes/Second)\n");
@@ -119,7 +119,7 @@ main(void)
   }
   shmem_barrier_all();
 
-  shfree(target);
-  shfree(source);
+  shmem_free(target);
+  shmem_free(source);
   return 0;
 }

@@ -56,18 +56,18 @@ main(void)
   struct timeval start, end;
   long time_taken,start_time,end_time;
 
-  start_pes(0);
-  me = _my_pe();
-  npes = _num_pes();
+  shmem_init();
+  me = shmem_my_pe();
+  npes = shmem_n_pes();
 
-  source = (int *) shmalloc( N_ELEMENTS * sizeof(*source) );
+  source = (int *) shmem_malloc( N_ELEMENTS * sizeof(*source) );
 
   time_taken = 0;
 
   for (i = 0; i < N_ELEMENTS; i += 1) {
     source[i] = (i + 1)*10 + me;
   }
-  target = (int *) shmalloc( N_ELEMENTS * sizeof(*target)*npes );
+  target = (int *) shmem_malloc( N_ELEMENTS * sizeof(*target)*npes );
   for (i = 0; i < N_ELEMENTS * npes ; i += 1) {
     target[i] = -90;
   }
@@ -102,8 +102,8 @@ main(void)
 
   shmem_barrier_all();
  
-  shfree(target);
-  shfree(source);
+  shmem_free(target);
+  shmem_free(source);
   return 0;
 }
 

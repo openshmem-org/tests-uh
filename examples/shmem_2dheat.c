@@ -125,9 +125,9 @@ main (int argc, char **argv)
   double t, tv[2];
 
   /*OpenSHMEM initilization*/
-  start_pes (0);
-  p = _num_pes ();
-  my_rank = _my_pe ();
+  shmem_init();
+  p = shmem_n_pes ();
+  my_rank = shmem_my_pe ();
 
   /* argument processing done by everyone */
   int c, errflg;
@@ -363,13 +363,13 @@ void
 jacobi (float **current_ptr, float **next_ptr)
 {
   int i, j, my_start, my_end, my_num_rows;
-  float *U_Curr_Above = (float *) shmalloc ((sizeof (float)) * ((int) floor (WIDTH / H)));	/* 1d array holding values from bottom row of PE above */
-  float *U_Curr_Below = (float *) shmalloc ((sizeof (float)) * ((int) floor (WIDTH / H)));	/* 1d array holding values from top row of PE below */
-  float *U_Send_Buffer = (float *) shmalloc ((sizeof (float)) * ((int) floor (WIDTH / H)));	/* 1d array holding values that are currently being sent */
+  float *U_Curr_Above = (float *) shmem_malloc ((sizeof (float)) * ((int) floor (WIDTH / H)));	/* 1d array holding values from bottom row of PE above */
+  float *U_Curr_Below = (float *) shmem_malloc ((sizeof (float)) * ((int) floor (WIDTH / H)));	/* 1d array holding values from top row of PE below */
+  float *U_Send_Buffer = (float *) shmem_malloc ((sizeof (float)) * ((int) floor (WIDTH / H)));	/* 1d array holding values that are currently being sent */
 
   if ( !U_Curr_Above || !U_Curr_Below || !U_Send_Buffer)
   {
-    printf("error: shmalloc returned NULL (no memory)");
+    printf("error: shmem_malloc returned NULL (no memory)");
     exit(1);
   }
   //MPI_Request request;
@@ -450,15 +450,15 @@ jacobi (float **current_ptr, float **next_ptr)
     
     if (U_Send_Buffer)
     {
-        shfree(U_Send_Buffer);
+        shmem_free(U_Send_Buffer);
     }
     if (U_Curr_Above)
     {
-        shfree(U_Curr_Above);
+        shmem_free(U_Curr_Above);
     }
     if (U_Curr_Below)
     {
-        shfree(U_Curr_Below);
+        shmem_free(U_Curr_Below);
     }
 }
 
@@ -468,16 +468,16 @@ void
 gauss_seidel (float **current_ptr, float **next_ptr)
 {
   int i, j, my_start, my_end, my_num_rows;
-  float *U_Curr_Above = (float *) shmalloc ((sizeof (float)) * ((int) floor (WIDTH / H)));	/* 1d array holding values from bottom row of PE above */
-  float *U_Curr_Below = (float *) shmalloc ((sizeof (float)) * ((int) floor (WIDTH / H)));	/* 1d array holding values from top row of PE below */
-  float *U_Send_Buffer = (float *) shmalloc ((sizeof (float)) * ((int) floor (WIDTH / H)));	/* 1d array holding values that are currently being sent */
+  float *U_Curr_Above = (float *) shmem_malloc ((sizeof (float)) * ((int) floor (WIDTH / H)));	/* 1d array holding values from bottom row of PE above */
+  float *U_Curr_Below = (float *) shmem_malloc ((sizeof (float)) * ((int) floor (WIDTH / H)));	/* 1d array holding values from top row of PE below */
+  float *U_Send_Buffer = (float *) shmem_malloc ((sizeof (float)) * ((int) floor (WIDTH / H)));	/* 1d array holding values that are currently being sent */
   //float U_Curr_Above[(int)floor(WIDTH/H)];  /* 1d array holding values from bottom row of PE above */
   //float U_Curr_Below[(int)floor(WIDTH/H)];  /* 1d array holding values from top row of PE below */
   //float U_Send_Buffer[(int)floor(WIDTH/H)]; /* 1d array holding values that are currently being sent */
   
   if ( !U_Curr_Above || !U_Curr_Below || !U_Send_Buffer)
   {
-    printf("error: shmalloc returned NULL (no memory)");
+    printf("error: shmem_malloc returned NULL (no memory)");
     exit(1);
   }
   float W = 1.0;
@@ -620,15 +620,15 @@ gauss_seidel (float **current_ptr, float **next_ptr)
     
     if (U_Send_Buffer)
     {
-        shfree(U_Send_Buffer);
+        shmem_free(U_Send_Buffer);
     }
     if (U_Curr_Above)
     {
-        shfree(U_Curr_Above);
+        shmem_free(U_Curr_Above);
     }
     if (U_Curr_Below)
     {
-        shfree(U_Curr_Below);
+        shmem_free(U_Curr_Below);
     }
 }
 
@@ -639,16 +639,16 @@ void
 sor (float **current_ptr, float **next_ptr)
 {
   int i, j, my_start, my_end, my_num_rows;
-  float *U_Curr_Above = (float *) shmalloc ((sizeof (float)) * ((int) floor (WIDTH / H)));	/* 1d array holding values from bottom row of PE above */
-  float *U_Curr_Below = (float *) shmalloc ((sizeof (float)) * ((int) floor (WIDTH / H)));	/* 1d array holding values from top row of PE below */
-  float *U_Send_Buffer = (float *) shmalloc ((sizeof (float)) * ((int) floor (WIDTH / H)));	/* 1d array holding values that are currently being sent */
+  float *U_Curr_Above = (float *) shmem_malloc ((sizeof (float)) * ((int) floor (WIDTH / H)));	/* 1d array holding values from bottom row of PE above */
+  float *U_Curr_Below = (float *) shmem_malloc ((sizeof (float)) * ((int) floor (WIDTH / H)));	/* 1d array holding values from top row of PE below */
+  float *U_Send_Buffer = (float *) shmem_malloc ((sizeof (float)) * ((int) floor (WIDTH / H)));	/* 1d array holding values that are currently being sent */
   //float U_Curr_Above[(int)floor(WIDTH/H)];  /* 1d array holding values from bottom row of PE above */
   //float U_Curr_Below[(int)floor(WIDTH/H)];  /* 1d array holding values from top row of PE below */
   //float U_Send_Buffer[(int)floor(WIDTH/H)]; /* 1d array holding values that are currently being sent */
   
   if ( !U_Curr_Above || !U_Curr_Below || !U_Send_Buffer)
   {
-    printf("error: shmalloc returned NULL (no memory)");
+    printf("error: shmem_malloc returned NULL (no memory)");
     exit(1);
   }
   float W = 1.5;
@@ -791,15 +791,15 @@ sor (float **current_ptr, float **next_ptr)
     
     if (U_Send_Buffer)
     {
-        shfree(U_Send_Buffer);
+        shmem_free(U_Send_Buffer);
     }
     if (U_Curr_Above)
     {
-        shfree(U_Curr_Above);
+        shmem_free(U_Curr_Above);
     }
     if (U_Curr_Below)
     {
-        shfree(U_Curr_Below);
+        shmem_free(U_Curr_Below);
     }
 }
 

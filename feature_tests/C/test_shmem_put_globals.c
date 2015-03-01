@@ -92,9 +92,9 @@ main(int argc, char **argv)
 
 
 
-  start_pes(0);
-  me = _my_pe();
-  npes = _num_pes();
+  shmem_init();
+  me = shmem_my_pe();
+  npes = shmem_n_pes();
 
   if(npes>1){
 

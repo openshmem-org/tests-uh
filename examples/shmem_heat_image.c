@@ -108,9 +108,9 @@ main (int argc, char **argv)
   double t, tv[2];
   double rdx2, rdy2, beta;
 
-  start_pes (0);
-  my_number = _my_pe ();
-  n_of_nodes = _num_pes ();
+  shmem_init();
+  my_number = shmem_my_pe ();
+  n_of_nodes = shmem_n_pes ();
 
   if (argc != 3)
     {
@@ -160,7 +160,7 @@ main (int argc, char **argv)
     typeof (f) pf[2];
     int curf;
 
-    f = (typeof (f)) shmalloc (2 * partmx * sizeof (*f));
+    f = (typeof (f)) shmem_malloc (2 * partmx * sizeof (*f));
     r = (typeof (r)) malloc (mx * sizeof (*r));
     if ((!f) || (!r))
       {

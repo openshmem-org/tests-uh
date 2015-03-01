@@ -42,8 +42,10 @@
  * Calls tested
  * shmem_short_get, shmem_int_get, shmem_long_get, shmem_longdouble_get,
  * shmem_longlong_get, shmem_double_get, shmem_float_get,
- * TODO:shmem_complexf_get, shmem_complexd_get
  * shmem_getmem, shmem_get32, shmem_get64, shmem_get128
+ * shmem_iput8, shmem_iput32, shmem_iput64, shmem_iput128
+ * shmem_double_iput, shmem_float_iput, shmem_int_iput, shmem_long_iput, shmem_short_iput
+ * TODO:shmem_complexf_get, shmem_complexd_get
  *
  *
  * All PEs get an array from right neighbor
@@ -56,21 +58,7 @@
 
 #define N 7
 
-short src1[N];
-int src2[N];
-long src3[N];
-long double src4[N];
-long long src5[N];
-double src6[N];
-float src7[N];
-char src8[N];
-short src9;
-int src10;
-long src11;
-double src12;
-float src13;
-
-  int
+int
 main(int argc, char **argv)
 {
   int i,j;
@@ -92,6 +80,19 @@ main(int argc, char **argv)
   double dest12;
   float dest13;
 
+  short *src1;
+  int *src2;
+  long *src3;
+  long double *src4;
+  long long *src5;
+  double *src6;
+  float *src7;
+  char *src8;
+  short *src9;
+  int *src10;
+  long *src11;
+  double *src12;
+  float *src13;
 
 
   shmem_init();
@@ -126,6 +127,21 @@ main(int argc, char **argv)
     dest12 = -9;
     dest13 = -9;
 
+
+    src1 = (short *)shmem_malloc( N * sizeof(*src1) );
+    src2 = (int *)shmem_malloc( N * sizeof(*src2) );
+    src3 = (long *)shmem_malloc( N * sizeof(*src3) );
+    src4 = (long double *)shmem_malloc( N * sizeof(*src4) );
+    src5 = (long long*)shmem_malloc( N * sizeof(*src5) );
+    src6 = (double *)shmem_malloc( N * sizeof(*src6) );
+    src7 = (float *)shmem_malloc( N * sizeof(*src7) );
+    src8 = (char *)shmem_malloc( 4 * sizeof(*src8) );
+    src9 = (short *)shmem_malloc( sizeof(*src9) );
+    src10 = (int *)shmem_malloc( sizeof(*src10) );
+    src11 = (long *)shmem_malloc( sizeof(*src11) );
+    src12 = (double *)shmem_malloc( sizeof(*src12) );
+    src13 = (float *)shmem_malloc( sizeof(*src13) );
+
     for (i = 0; i < N; i += 1) {
       src1[i] = (short)me;
       src2[i] = me;
@@ -136,11 +152,11 @@ main(int argc, char **argv)
       src7[i] = (float)me;
       src8[i] = (char)me;
     }
-    src9 = (short)me;
-    src10 = me;
-    src11 = (long)me;
-    src12 = (double)me;
-    src13 = (float)me;
+    *src9 = (short)me;
+    *src10 = me;
+    *src11 = (long)me;
+    *src12 = (double)me;
+    *src13 = (float)me;
 
 
 
@@ -317,9 +333,10 @@ main(int argc, char **argv)
           printf("Test shmem_get128: Failed\n");	
       }
     }	
-    /* Testing shmem_iget32, shmem_iget64, shmem_iget128 */
-    shmem_barrier_all();
-    if(sizeof(int)==4){
+	
+	/* Testing shmem_iget32, shmem_iget64, shmem_iget128 */
+	shmem_barrier_all();
+	if(sizeof(int)==4){
       for (i = 0; i < N; i += 1) {
         dest2[i] = -9;
         dest3[i] = -9;
@@ -350,17 +367,17 @@ main(int argc, char **argv)
           }
         }
         if(success2==0)
-          printf("Test shmem_iget32: Passed\n");
+          printf("Test shmem_iget32: Passed\n");  
         else
           printf("Test shmem_iget32: Failed\n");
 
         if(success3==0)
-          printf("Test shmem_iget64: Passed\n");
+          printf("Test shmem_iget64: Passed\n");  
         else
           printf("Test shmem_iget64: Failed\n");
 
         if(success4==0)
-          printf("Test shmem_iget128: Passed\n");
+          printf("Test shmem_iget128: Passed\n");  
         else
           printf("Test shmem_iget128: Failed\n");
       }
@@ -397,36 +414,35 @@ main(int argc, char **argv)
 
         }
         if(success1==0)
-          printf("Test shmem_iget32: Passed\n");
+          printf("Test shmem_iget32: Passed\n");  
         else
           printf("Test shmem_iget32: Failed\n");
         if(success2==0)
-          printf("Test shmem_iget64: Passed\n");
+          printf("Test shmem_iget64: Passed\n");  
         else
           printf("Test shmem_iget64: Failed\n");
 
         if(success3==0)
-          printf("Test shmem_iget128: Passed\n");
+          printf("Test shmem_iget128: Passed\n");  
         else
-          printf("Test shmem_iget128: Failed\n");
+          printf("Test shmem_iget128: Failed\n");	
       }
-    }
-
-    /*Testing shmem_short_iget, shmem_int_iget,
-     * shmem_long_iget, shmem_double_iget, shmem_float_iget */
-    for (i = 0; i < N; i += 1) {
-      dest1[i] = -9;
-      dest2[i] = -9;
-      dest3[i] = -9;
-      dest6[i] = -9;
-      dest7[i] = -9;
-    }
-    success1 = 0;
-    success2 = 0;
-    success3 = 0;
-    success6 = 0;
-    success7 = 0;
-
+    }	
+	
+	/*Testing shmem_short_iget, shmem_int_iget, shmem_long_iget, shmem_double_iget, shmem_float_iget */
+	for (i = 0; i < N; i += 1) {
+	    dest1[i] = -9;
+        dest2[i] = -9;
+        dest3[i] = -9;
+        dest6[i] = -9;
+		dest7[i] = -9;
+      }
+      success1 = 0;
+      success2 = 0;
+      success3 = 0;
+	  success6 = 0;
+      success7 = 0;
+      
     shmem_barrier_all();
 
     shmem_short_iget(dest1, src1, 1, 2, N/2, npes-1);
@@ -434,7 +450,7 @@ main(int argc, char **argv)
     shmem_long_iget(dest3, src3, 1, 2, N/2, npes-1);
     shmem_double_iget(dest6, src6, 1, 2, N/2, npes-1);
     shmem_float_iget(dest7, src7, 1, 2, N/2, npes-1);
-
+    
     shmem_barrier_all();
 
     if(me == 0){
@@ -457,36 +473,38 @@ main(int argc, char **argv)
       }
 
       if(success1==0)
-        printf("Test shmem_short_iget: Passed\n");
+        printf("Test shmem_short_iget: Passed\n");  
       else
         printf("Test shmem_short_iget: Failed\n");
       if(success2==0)
-        printf("Test shmem_int_iget: Passed\n");
+        printf("Test shmem_int_iget: Passed\n");  
       else
         printf("Test shmem_int_iget: Failed\n");
       if(success3==0)
-        printf("Test shmem_long_iget: Passed\n");
+        printf("Test shmem_long_iget: Passed\n");  
       else
         printf("Test shmem_long_iget: Failed\n");
       if(success6==0)
-        printf("Test shmem_double_iget: Passed\n");
+        printf("Test shmem_double_iget: Passed\n");  
       else
         printf("Test shmem_double_iget: Failed\n");
       if(success7==0)
-        printf("Test shmem_float_iget: Passed\n");
+        printf("Test shmem_float_iget: Passed\n");  
       else
         printf("Test shmem_float_iget: Failed\n");
-
+      
     }
+   
+
 
     /* Testing shmem_double_g, shmem_float_g, shmem_int_g, shmem_long_g, shmem_short_g */
     shmem_barrier_all();
 
-    dest9 = shmem_short_g(&src9, nextpe);
-    dest10 = shmem_int_g(&src10, nextpe);
-    dest11 = shmem_long_g(&src11, nextpe);
-    dest12 = shmem_double_g(&src12, nextpe);
-    dest13 = shmem_float_g(&src13, nextpe);
+    dest9 = shmem_short_g(src9, nextpe);
+    dest10 = shmem_int_g(src10, nextpe);
+    dest11 = shmem_long_g(src11, nextpe);
+    dest12 = shmem_double_g(src12, nextpe);
+    dest13 = shmem_float_g(src13, nextpe);
 
     shmem_barrier_all();
 
@@ -516,6 +534,16 @@ main(int argc, char **argv)
     }
 
     shmem_barrier_all();
+
+
+    shmem_free(src1);
+    shmem_free(src2);
+    shmem_free(src3);
+    shmem_free(src4);
+    shmem_free(src5);
+    shmem_free(src6);
+    shmem_free(src7);
+    shmem_free(src8);
   }
   else{
     printf("Number of PEs must be > 1 to test shmem get, test skipped\n");

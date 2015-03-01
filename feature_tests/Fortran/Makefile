@@ -37,7 +37,7 @@
 
 include Makefile.in
 
-MAKECMD=make -C
+MAKECMD=$(MAKE) -C
 
 all:
 	$(MAKECMD) accessibility

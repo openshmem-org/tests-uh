@@ -93,9 +93,9 @@ main(int argc, char **argv)
   float *src13;
 
 
-  start_pes(0);
-  me = _my_pe();
-  npes = _num_pes();
+  shmem_init();
+  me = shmem_my_pe();
+  npes = shmem_n_pes();
 
   if(npes>1){
 
@@ -126,19 +126,19 @@ main(int argc, char **argv)
     dest13 = -9;
 
 
-    src1 = (short *)shmalloc( N * sizeof(*src1) );
-    src2 = (int *)shmalloc( N * sizeof(*src2) );
-    src3 = (long *)shmalloc( N * sizeof(*src3) );
-    src4 = (long double *)shmalloc( N * sizeof(*src4) );
-    src5 = (long long*)shmalloc( N * sizeof(*src5) );
-    src6 = (double *)shmalloc( N * sizeof(*src6) );
-    src7 = (float *)shmalloc( N * sizeof(*src7) );
-    src8 = (char *)shmalloc( 4 * sizeof(*src8) );
-    src9 = (short *)shmalloc( sizeof(*src9) );
-    src10 = (int *)shmalloc( sizeof(*src10) );
-    src11 = (long *)shmalloc( sizeof(*src11) );
-    src12 = (double *)shmalloc( sizeof(*src12) );
-    src13 = (float *)shmalloc( sizeof(*src13) );
+    src1 = (short *)shmem_malloc( N * sizeof(*src1) );
+    src2 = (int *)shmem_malloc( N * sizeof(*src2) );
+    src3 = (long *)shmem_malloc( N * sizeof(*src3) );
+    src4 = (long double *)shmem_malloc( N * sizeof(*src4) );
+    src5 = (long long*)shmem_malloc( N * sizeof(*src5) );
+    src6 = (double *)shmem_malloc( N * sizeof(*src6) );
+    src7 = (float *)shmem_malloc( N * sizeof(*src7) );
+    src8 = (char *)shmem_malloc( 4 * sizeof(*src8) );
+    src9 = (short *)shmem_malloc( sizeof(*src9) );
+    src10 = (int *)shmem_malloc( sizeof(*src10) );
+    src11 = (long *)shmem_malloc( sizeof(*src11) );
+    src12 = (double *)shmem_malloc( sizeof(*src12) );
+    src13 = (float *)shmem_malloc( sizeof(*src13) );
 
     for (i = 0; i < N; i += 1) {
       src1[i] = (short)me;
@@ -371,14 +371,14 @@ main(int argc, char **argv)
     shmem_barrier_all();
 
 
-    shfree(src1);
-    shfree(src2);
-    shfree(src3);
-    shfree(src4);
-    shfree(src5);
-    shfree(src6);
-    shfree(src7);
-    shfree(src8);
+    shmem_free(src1);
+    shmem_free(src2);
+    shmem_free(src3);
+    shmem_free(src4);
+    shmem_free(src5);
+    shmem_free(src6);
+    shmem_free(src7);
+    shmem_free(src8);
   }
   else{
     printf("Number of PEs must be > 1 to test shmem get, test skipped\n");

@@ -46,11 +46,11 @@ program test_shmem_accessible
   common /globalvars/   target
 
   ! SHMEM function definitions
-  integer             :: my_pe, num_pes
+  integer             :: shmem_my_pe, shmem_n_pes
   
-  call start_pes(0)
-  me   = my_pe()
-  npes = num_pes()
+  call shmem_init()
+  me   = shmem_my_pe()
+  npes = shmem_n_pes()
   
   if(npes .lt. 2 ) then
     write(*,*) 'This test requires 2+ PEs to run.'

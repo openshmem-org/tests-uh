@@ -66,13 +66,13 @@ main(void)
     srand( now + getpid() );
   }
 
-  start_pes(0);
-  me = _my_pe();
-  npes = _num_pes();
+  shmem_init();
+  me = shmem_my_pe();
+  npes = shmem_n_pes();
   long src = 9L;
 
   if(npes>1){
-  dest = (long *) shmalloc( sizeof(*dest) );
+  dest = (long *) shmem_malloc( sizeof(*dest) );
 
   *dest = 9L;
   shmem_barrier_all();
