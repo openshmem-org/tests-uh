@@ -43,81 +43,81 @@
 
 #include <stdio.h>
 #include <shmem.h>
-  
+
 static int
-check_it(void *addr)
+check_it (void *addr)
 {
-  return shmem_addr_accessible(addr, 1);
+    return shmem_addr_accessible (addr, 1);
 }
 
 long global_target;
 static int static_target;
 
 int
-main(int argc, char *argv[])
+main (int argc, char *argv[])
 {
-  long local_target;
-  int *shm_target;
-  char *msg = "Test Address Accessible: Passed";
-  int me,npes,i;
-  int pe_acc_success=0;
+    long local_target;
+    int *shm_target;
+    char *msg = "Test Address Accessible: Passed";
+    int me, npes, i;
+    int pe_acc_success = 0;
 
-  shmem_init();
-  me = shmem_my_pe();
-  npes = shmem_n_pes();
+    shmem_init ();
+    me = shmem_my_pe ();
+    npes = shmem_n_pes ();
 
-  shm_target = (int *) shmem_malloc(sizeof(int));
+    shm_target = (int *) shmem_malloc (sizeof (int));
 
-  shmem_barrier_all();
+    shmem_barrier_all ();
 
-  if (me == 0) {
+    if (me == 0) {
 
-    if (! check_it(&global_target)) { /* long global: yes */
-      printf("Test Global Address Accessible: Failed\n");
+        if (!check_it (&global_target)) {   /* long global: yes */
+            printf ("Test Global Address Accessible: Failed\n");
+        }
+        else {
+            printf ("Test Global Address Accessible: Passed\n");
+        }
+        if (!check_it (&static_target)) {   /* static int global: yes */
+            printf ("Test Static Global Address Accessible: Failed\n");
+        }
+        else {
+            printf ("Test Static Global Address Accessible: Passed\n");
+        }
+        if (check_it (&local_target)) { /* main() stack: no */
+            printf ("Test Stack Address Accessible: Failed\n");
+
+        }
+        else {
+            printf ("Test Stack Address Accessible: Passed\n");
+        }
+        if (!check_it (shm_target)) {   /* shmem_malloc: yes */
+
+            printf ("Test Shmalloc-ed Address Accessible: Failed\n");
+        }
+        else {
+            printf ("Test Shmalloc-ed Address Accessible: Passed\n");
+        }
+
+
+        for (i = 1; i < npes; i++) {
+
+            if (shmem_pe_accessible (i) != 1) {
+                pe_acc_success = 1;
+            }
+
+        }
+        if (pe_acc_success == 1) {
+            printf ("Test shmem_pe_accessible: Failed\n");
+        }
+        else {
+            printf ("Test shmem_pe_accessible: Passed\n");
+        }
+
+
     }
-    else{
-      printf("Test Global Address Accessible: Passed\n");  
-    }
-    if (! check_it(&static_target)) { /* static int global: yes */
-      printf("Test Static Global Address Accessible: Failed\n");
-    }
-    else{
-      printf("Test Static Global Address Accessible: Passed\n");  
-    }
-    if (check_it(&local_target)) { /* main() stack: no  */
-      printf("Test Stack Address Accessible: Failed\n");
 
-    }
-    else{
-      printf("Test Stack Address Accessible: Passed\n");  
-    }
-    if (! check_it(shm_target)) { /* shmem_malloc: yes */
+    shmem_free (shm_target);
 
-      printf("Test Shmalloc-ed Address Accessible: Failed\n");
-    }
-    else{
-      printf("Test Shmalloc-ed Address Accessible: Passed\n");  
-    }
-
-
-    for(i=1;i<npes;i++){
-
-      if(shmem_pe_accessible(i)!=1){
-        pe_acc_success=1;
-      }
-
-    }
-    if(pe_acc_success==1){
-      printf("Test shmem_pe_accessible: Failed\n");
-    }
-    else{
-      printf("Test shmem_pe_accessible: Passed\n");  
-    }
-
-
-  }
-
-  shmem_free(shm_target);
-
-  return 0;
+    return 0;
 }

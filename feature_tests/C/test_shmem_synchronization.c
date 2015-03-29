@@ -55,79 +55,80 @@
 #include <sys/types.h>
 #include <unistd.h>
 int
-main(void)
+main (void)
 {
-  int me, npes;
-  long *dest;
+    int me, npes;
+    long *dest;
 
-  {
-    time_t now;
-    time(&now);
-    srand( now + getpid() );
-  }
-
-  shmem_init();
-  me = shmem_my_pe();
-  npes = shmem_n_pes();
-  long src = 9L;
-
-  if(npes>1){
-  dest = (long *) shmem_malloc( sizeof(*dest) );
-
-  *dest = 9L;
-  shmem_barrier_all();
-
-  if (me == 0) {
-    int i;
-    for (i = 0; i < 4; i += 1) {
-      
-      shmem_long_put(dest, &src, 1, 1);
+    {
+        time_t now;
+        time (&now);
+        srand (now + getpid ());
     }
-    for (i = 0; i < 10; i += 1) {
-      long src = rand() % 10;
-      shmem_long_put(dest, &src, 1, 1);
-      if (src != 9L)
-        break;
+
+    shmem_init ();
+    me = shmem_my_pe ();
+    npes = shmem_n_pes ();
+    long src = 9L;
+
+    if (npes > 1) {
+        dest = (long *) shmem_malloc (sizeof (*dest));
+
+        *dest = 9L;
+        shmem_barrier_all ();
+
+        if (me == 0) {
+            int i;
+            for (i = 0; i < 4; i += 1) {
+
+                shmem_long_put (dest, &src, 1, 1);
+            }
+            for (i = 0; i < 10; i += 1) {
+                long src = rand () % 10;
+                shmem_long_put (dest, &src, 1, 1);
+                if (src != 9L)
+                    break;
+            }
+        }
+
+        shmem_barrier_all ();
+
+        if (me == 1) {
+            shmem_long_wait (dest, 9L);
+            printf ("Test for conditional wait: Passed\n");
+        }
+
+        shmem_barrier_all ();
+
+        *dest = 9L;
+        shmem_barrier_all ();
+
+        if (me == 0) {
+            int i;
+            for (i = 0; i < 4; i += 1) {
+                long src = 9L;
+                shmem_long_put (dest, &src, 1, 1);
+            }
+            for (i = 0; i < 10; i += 1) {
+                long src = rand () % 10;
+                shmem_long_put (dest, &src, 1, 1);
+                if (src != 9L)
+                    break;
+            }
+        }
+
+        shmem_barrier_all ();
+
+        if (me == 1) {
+            shmem_long_wait_until (dest, _SHMEM_CMP_NE, 9L);
+            printf ("Test for explicit conditional wait: Passed\n");
+        }
+
+        shmem_barrier_all ();
     }
-  }
+    else
+        printf
+            ("Test for conditional wait requires more than 1 PE, test skipped\n");
 
-  shmem_barrier_all();
-
-  if (me == 1) {
-    shmem_long_wait(dest, 9L);
-    printf("Test for conditional wait: Passed\n");
-  }
-
-  shmem_barrier_all();
-  
-  *dest = 9L;
-  shmem_barrier_all();
-
-  if (me == 0) {
-    int i;
-    for (i = 0; i < 4; i += 1) {
-      long src = 9L;
-      shmem_long_put(dest, &src, 1, 1);
-    }
-    for (i = 0; i < 10; i += 1) {
-      long src = rand() % 10;
-      shmem_long_put(dest, &src, 1, 1);
-      if (src != 9L)
-        break;
-    }
-  }
-
-  shmem_barrier_all();
-
-  if (me == 1) {
-    shmem_long_wait_until(dest, SHMEM_CMP_NE, 9L);
-    printf("Test for explicit conditional wait: Passed\n");
-  }
-
-  shmem_barrier_all();
-  }
-  else
-    printf("Test for conditional wait requires more than 1 PE, test skipped\n");
-
-  return 0;
+    return 0;
 }

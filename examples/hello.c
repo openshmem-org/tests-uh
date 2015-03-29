@@ -43,14 +43,14 @@
 int
 main (int argc, char **argv)
 {
-  int me, npes;
+    int me, npes;
 
-  shmem_init();
+    shmem_init ();
 
-  me = shmem_my_pe ();
-  npes = shmem_n_pes ();
+    me = shmem_my_pe ();
+    npes = shmem_n_pes ();
 
-  printf ("Hello from node %4d of %4d\n", me, npes);
+    printf ("Hello from node %4d of %4d\n", me, npes);
 
-  return 0;
+    return 0;
 }
