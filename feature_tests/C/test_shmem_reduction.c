@@ -86,18 +86,18 @@ double pWrk4[_SHMEM_REDUCE_MIN_WRKDATA_SIZE];
 long double pWrk5[_SHMEM_REDUCE_MIN_WRKDATA_SIZE];
 long long pWrk6[_SHMEM_REDUCE_MIN_WRKDATA_SIZE];
 
-int main()
+int
+main ()
 {
     int i, j;
     int me, npes;
-    int success0, success1, success2, success3, success4, success5,
-        success6;
+    int success0, success1, success2, success3, success4, success5, success6;
     int checkpoint0, checkpoint1, checkpoint2, checkpoint3, checkpoint4,
         checkpoint5, checkpoint6;
 
-    start_pes(0);
-    me = _my_pe();
-    npes = _num_pes();
+    start_pes (0);
+    me = _my_pe ();
+    npes = _num_pes ();
 
     success0 = success1 = success2 = success3 = success4 = success5 =
         success6 = 0;
@@ -115,18 +115,19 @@ int main()
             src6[i] = me + i;
     }
 
-    /* Test MAX: shmem_double_max_to_all, shmem_float_max_to_all, shmem_int_max_to_all,
-     * shmem_long_max_to_all, shmem_longdouble_max_to_all, shmem_longlong_max_to_all,
-     * shmem_short_max_to_all */
-    shmem_barrier_all();
+    /* Test MAX: shmem_double_max_to_all, shmem_float_max_to_all,
+       shmem_int_max_to_all, shmem_long_max_to_all,
+       shmem_longdouble_max_to_all, shmem_longlong_max_to_all,
+       shmem_short_max_to_all */
+    shmem_barrier_all ();
 
-    shmem_short_max_to_all(dst0, src0, N, 0, 0, npes, pWrk0, pSync);
-    shmem_int_max_to_all(dst1, src1, N, 0, 0, npes, pWrk1, pSync1);
-    shmem_long_max_to_all(dst2, src2, N, 0, 0, npes, pWrk2, pSync);
-    shmem_float_max_to_all(dst3, src3, N, 0, 0, npes, pWrk3, pSync1);
-    shmem_double_max_to_all(dst4, src4, N, 0, 0, npes, pWrk4, pSync);
-    shmem_longdouble_max_to_all(dst5, src5, N, 0, 0, npes, pWrk5, pSync1);
-    shmem_longlong_max_to_all(dst6, src6, N, 0, 0, npes, pWrk6, pSync);
+    shmem_short_max_to_all (dst0, src0, N, 0, 0, npes, pWrk0, pSync);
+    shmem_int_max_to_all (dst1, src1, N, 0, 0, npes, pWrk1, pSync1);
+    shmem_long_max_to_all (dst2, src2, N, 0, 0, npes, pWrk2, pSync);
+    shmem_float_max_to_all (dst3, src3, N, 0, 0, npes, pWrk3, pSync1);
+    shmem_double_max_to_all (dst4, src4, N, 0, 0, npes, pWrk4, pSync);
+    shmem_longdouble_max_to_all (dst5, src5, N, 0, 0, npes, pWrk5, pSync1);
+    shmem_longlong_max_to_all (dst6, src6, N, 0, 0, npes, pWrk6, pSync);
 
 
     if (me == 0) {
@@ -147,53 +148,57 @@ int main()
                 success6 = 1;
         }
         if (success0 == 1) {
-            printf("Reduction operation shmem_short_max_to_all: Failed\n");
-        } else {
-            printf("Reduction operation shmem_short_max_to_all: Passed\n");
+            printf ("Reduction operation shmem_short_max_to_all: Failed\n");
+        }
+        else {
+            printf ("Reduction operation shmem_short_max_to_all: Passed\n");
         }
         if (success1 == 1) {
-            printf("Reduction operation shmem_int_max_to_all: Failed\n");
-        } else {
-            printf("Reduction operation shmem_int_max_to_all: Passed\n");
+            printf ("Reduction operation shmem_int_max_to_all: Failed\n");
+        }
+        else {
+            printf ("Reduction operation shmem_int_max_to_all: Passed\n");
         }
         if (success2 == 1) {
-            printf("Reduction operation shmem_long_max_to_all: Failed\n");
-        } else {
-            printf("Reduction operation shmem_long_max_to_all: Passed\n");
+            printf ("Reduction operation shmem_long_max_to_all: Failed\n");
+        }
+        else {
+            printf ("Reduction operation shmem_long_max_to_all: Passed\n");
         }
         if (success3 == 1) {
-            printf("Reduction operation shmem_float_max_to_all: Failed\n");
-        } else {
-            printf("Reduction operation shmem_float_max_to_all: Passed\n");
+            printf ("Reduction operation shmem_float_max_to_all: Failed\n");
+        }
+        else {
+            printf ("Reduction operation shmem_float_max_to_all: Passed\n");
         }
         if (success4 == 1) {
-            printf
-                ("Reduction operation shmem_double_max_to_all: Failed\n");
-        } else {
-            printf
-                ("Reduction operation shmem_double_max_to_all: Passed\n");
+            printf ("Reduction operation shmem_double_max_to_all: Failed\n");
+        }
+        else {
+            printf ("Reduction operation shmem_double_max_to_all: Passed\n");
         }
         if (success5 == 1) {
             printf
                 ("Reduction operation shmem_longdouble_max_to_all: Failed\n");
-        } else {
+        }
+        else {
             printf
                 ("Reduction operation shmem_longdouble_max_to_all: Passed\n");
         }
         if (success6 == 1) {
-            printf
-                ("Reduction operation shmem_longlong_max_to_all: Failed\n");
-        } else {
-            printf
-                ("Reduction operation shmem_longlong_max_to_all: Passed\n");
+            printf ("Reduction operation shmem_longlong_max_to_all: Failed\n");
+        }
+        else {
+            printf ("Reduction operation shmem_longlong_max_to_all: Passed\n");
         }
 
     }
 
 
-    /* Test MIN: shmem_double_min_to_all, shmem_float_min_to_all, shmem_int_min_to_all,
-     * shmem_long_min_to_all, shmem_longdouble_min_to_all, shmem_longlong_min_to_all,
-     * shmem_short_min_to_all*/
+    /* Test MIN: shmem_double_min_to_all, shmem_float_min_to_all,
+       shmem_int_min_to_all, shmem_long_min_to_all,
+       shmem_longdouble_min_to_all, shmem_longlong_min_to_all,
+       shmem_short_min_to_all */
     success0 = success1 = success2 = success3 = success4 = success5 =
         success6 = 0;
 
@@ -212,15 +217,15 @@ int main()
         dst6[i] = -9;
     }
 
-    shmem_barrier_all();
+    shmem_barrier_all ();
 
-    shmem_short_min_to_all(dst0, src0, N, 0, 0, npes, pWrk0, pSync);
-    shmem_int_min_to_all(dst1, src1, N, 0, 0, npes, pWrk1, pSync1);
-    shmem_long_min_to_all(dst2, src2, N, 0, 0, npes, pWrk2, pSync);
-    shmem_float_min_to_all(dst3, src3, N, 0, 0, npes, pWrk3, pSync1);
-    shmem_double_min_to_all(dst4, src4, N, 0, 0, npes, pWrk4, pSync);
-    shmem_longdouble_min_to_all(dst5, src5, N, 0, 0, npes, pWrk5, pSync1);
-    shmem_longlong_min_to_all(dst6, src6, N, 0, 0, npes, pWrk6, pSync);
+    shmem_short_min_to_all (dst0, src0, N, 0, 0, npes, pWrk0, pSync);
+    shmem_int_min_to_all (dst1, src1, N, 0, 0, npes, pWrk1, pSync1);
+    shmem_long_min_to_all (dst2, src2, N, 0, 0, npes, pWrk2, pSync);
+    shmem_float_min_to_all (dst3, src3, N, 0, 0, npes, pWrk3, pSync1);
+    shmem_double_min_to_all (dst4, src4, N, 0, 0, npes, pWrk4, pSync);
+    shmem_longdouble_min_to_all (dst5, src5, N, 0, 0, npes, pWrk5, pSync1);
+    shmem_longlong_min_to_all (dst6, src6, N, 0, 0, npes, pWrk6, pSync);
 
 
     if (me == 0) {
@@ -241,52 +246,56 @@ int main()
                 success6 = 1;
         }
         if (success0 == 1) {
-            printf("Reduction operation shmem_short_min_to_all: Failed\n");
-        } else {
-            printf("Reduction operation shmem_short_min_to_all: Passed\n");
+            printf ("Reduction operation shmem_short_min_to_all: Failed\n");
+        }
+        else {
+            printf ("Reduction operation shmem_short_min_to_all: Passed\n");
         }
         if (success1 == 1) {
-            printf("Reduction operation shmem_int_min_to_all: Failed\n");
-        } else {
-            printf("Reduction operation shmem_int_min_to_all: Passed\n");
+            printf ("Reduction operation shmem_int_min_to_all: Failed\n");
+        }
+        else {
+            printf ("Reduction operation shmem_int_min_to_all: Passed\n");
         }
         if (success2 == 1) {
-            printf("Reduction operation shmem_long_min_to_all: Failed\n");
-        } else {
-            printf("Reduction operation shmem_long_min_to_all: Passed\n");
+            printf ("Reduction operation shmem_long_min_to_all: Failed\n");
+        }
+        else {
+            printf ("Reduction operation shmem_long_min_to_all: Passed\n");
         }
         if (success3 == 1) {
-            printf("Reduction operation shmem_float_min_to_all: Failed\n");
-        } else {
-            printf("Reduction operation shmem_float_min_to_all: Passed\n");
+            printf ("Reduction operation shmem_float_min_to_all: Failed\n");
+        }
+        else {
+            printf ("Reduction operation shmem_float_min_to_all: Passed\n");
         }
         if (success4 == 1) {
-            printf
-                ("Reduction operation shmem_double_min_to_all: Failed\n");
-        } else {
-            printf
-                ("Reduction operation shmem_double_min_to_all: Passed\n");
+            printf ("Reduction operation shmem_double_min_to_all: Failed\n");
+        }
+        else {
+            printf ("Reduction operation shmem_double_min_to_all: Passed\n");
         }
         if (success5 == 1) {
             printf
                 ("Reduction operation shmem_longdouble_min_to_all: Failed\n");
-        } else {
+        }
+        else {
             printf
                 ("Reduction operation shmem_longdouble_min_to_all: Passed\n");
         }
         if (success6 == 1) {
-            printf
-                ("Reduction operation shmem_longlong_min_to_all: Failed\n");
-        } else {
-            printf
-                ("Reduction operation shmem_longlong_min_to_all: Passed\n");
+            printf ("Reduction operation shmem_longlong_min_to_all: Failed\n");
+        }
+        else {
+            printf ("Reduction operation shmem_longlong_min_to_all: Passed\n");
         }
 
     }
 
-    /* Test SUM: shmem_double_sum_to_all, shmem_float_sum_to_all, shmem_int_sum_to_all,
-     * shmem_long_sum_to_all, shmem_longdouble_sum_to_all, shmem_longlong_sum_to_all,
-     * shmem_short_sum_to_all*/
+    /* Test SUM: shmem_double_sum_to_all, shmem_float_sum_to_all,
+       shmem_int_sum_to_all, shmem_long_sum_to_all,
+       shmem_longdouble_sum_to_all, shmem_longlong_sum_to_all,
+       shmem_short_sum_to_all */
     success0 = success1 = success2 = success3 = success4 = success5 =
         success6 = 0;
     for (i = 0; i < N; i += 1) {
@@ -302,15 +311,15 @@ int main()
         dst5[i] = -9;
         dst6[i] = -9;
     }
-    shmem_barrier_all();
+    shmem_barrier_all ();
 
-    shmem_short_sum_to_all(dst0, src0, N, 0, 0, npes, pWrk0, pSync);
-    shmem_int_sum_to_all(dst1, src1, N, 0, 0, npes, pWrk1, pSync1);
-    shmem_long_sum_to_all(dst2, src2, N, 0, 0, npes, pWrk2, pSync);
-    shmem_float_sum_to_all(dst3, src3, N, 0, 0, npes, pWrk3, pSync1);
-    shmem_double_sum_to_all(dst4, src4, N, 0, 0, npes, pWrk4, pSync);
-    shmem_longdouble_sum_to_all(dst5, src5, N, 0, 0, npes, pWrk5, pSync1);
-    shmem_longlong_sum_to_all(dst6, src6, N, 0, 0, npes, pWrk6, pSync);
+    shmem_short_sum_to_all (dst0, src0, N, 0, 0, npes, pWrk0, pSync);
+    shmem_int_sum_to_all (dst1, src1, N, 0, 0, npes, pWrk1, pSync1);
+    shmem_long_sum_to_all (dst2, src2, N, 0, 0, npes, pWrk2, pSync);
+    shmem_float_sum_to_all (dst3, src3, N, 0, 0, npes, pWrk3, pSync1);
+    shmem_double_sum_to_all (dst4, src4, N, 0, 0, npes, pWrk4, pSync);
+    shmem_longdouble_sum_to_all (dst5, src5, N, 0, 0, npes, pWrk5, pSync1);
+    shmem_longlong_sum_to_all (dst6, src6, N, 0, 0, npes, pWrk6, pSync);
 
 
     if (me == 0) {
@@ -331,51 +340,54 @@ int main()
                 success6 = 1;
         }
         if (success0 == 1) {
-            printf("Reduction operation shmem_short_sum_to_all: Failed\n");
-        } else {
-            printf("Reduction operation shmem_short_sum_to_all: Passed\n");
+            printf ("Reduction operation shmem_short_sum_to_all: Failed\n");
+        }
+        else {
+            printf ("Reduction operation shmem_short_sum_to_all: Passed\n");
         }
         if (success1 == 1) {
-            printf("Reduction operation shmem_int_sum_to_all: Failed\n");
-        } else {
-            printf("Reduction operation shmem_int_sum_to_all: Passed\n");
+            printf ("Reduction operation shmem_int_sum_to_all: Failed\n");
+        }
+        else {
+            printf ("Reduction operation shmem_int_sum_to_all: Passed\n");
         }
         if (success2 == 1) {
-            printf("Reduction operation shmem_long_sum_to_all: Failed\n");
-        } else {
-            printf("Reduction operation shmem_long_sum_to_all: Passed\n");
+            printf ("Reduction operation shmem_long_sum_to_all: Failed\n");
+        }
+        else {
+            printf ("Reduction operation shmem_long_sum_to_all: Passed\n");
         }
         if (success3 == 1) {
-            printf("Reduction operation shmem_float_sum_to_all: Failed\n");
-        } else {
-            printf("Reduction operation shmem_float_sum_to_all: Passed\n");
+            printf ("Reduction operation shmem_float_sum_to_all: Failed\n");
+        }
+        else {
+            printf ("Reduction operation shmem_float_sum_to_all: Passed\n");
         }
         if (success4 == 1) {
-            printf
-                ("Reduction operation shmem_double_sum_to_all: Failed\n");
-        } else {
-            printf
-                ("Reduction operation shmem_double_sum_to_all: Passed\n");
+            printf ("Reduction operation shmem_double_sum_to_all: Failed\n");
+        }
+        else {
+            printf ("Reduction operation shmem_double_sum_to_all: Passed\n");
         }
         if (success5 == 1) {
             printf
                 ("Reduction operation shmem_longdouble_sum_to_all: Failed\n");
-        } else {
+        }
+        else {
             printf
                 ("Reduction operation shmem_longdouble_sum_to_all: Passed\n");
         }
         if (success6 == 1) {
-            printf
-                ("Reduction operation shmem_longlong_sum_to_all: Failed\n");
-        } else {
-            printf
-                ("Reduction operation shmem_longlong_sum_to_all: Passed\n");
+            printf ("Reduction operation shmem_longlong_sum_to_all: Failed\n");
+        }
+        else {
+            printf ("Reduction operation shmem_longlong_sum_to_all: Passed\n");
         }
 
     }
 
-    /* Test AND: shmem_int_and_to_all, shmem_long_and_to_all, shmem_longlong_and_to_all,
-     * shmem_short_and_to_all,*/
+    /* Test AND: shmem_int_and_to_all, shmem_long_and_to_all,
+       shmem_longlong_and_to_all, shmem_short_and_to_all, */
     success0 = success1 = success2 = success6 = 0;
     for (i = 0; i < N; i += 1) {
         src0[i] = src1[i] = src2[i] = src6[i] = me;
@@ -387,12 +399,12 @@ int main()
         dst6[i] = -9;
     }
 
-    shmem_barrier_all();
+    shmem_barrier_all ();
 
-    shmem_short_and_to_all(dst0, src0, N, 0, 0, npes, pWrk0, pSync);
-    shmem_int_and_to_all(dst1, src1, N, 0, 0, npes, pWrk1, pSync1);
-    shmem_long_and_to_all(dst2, src2, N, 0, 0, npes, pWrk2, pSync);
-    shmem_longlong_and_to_all(dst6, src6, N, 0, 0, npes, pWrk6, pSync1);
+    shmem_short_and_to_all (dst0, src0, N, 0, 0, npes, pWrk0, pSync);
+    shmem_int_and_to_all (dst1, src1, N, 0, 0, npes, pWrk1, pSync1);
+    shmem_long_and_to_all (dst2, src2, N, 0, 0, npes, pWrk2, pSync);
+    shmem_longlong_and_to_all (dst6, src6, N, 0, 0, npes, pWrk6, pSync1);
 
 
     if (me == 0) {
@@ -407,33 +419,36 @@ int main()
                 success6 = 1;
         }
         if (success0 == 1) {
-            printf("Reduction operation shmem_short_and_to_all: Failed\n");
-        } else {
-            printf("Reduction operation shmem_short_and_to_all: Passed\n");
+            printf ("Reduction operation shmem_short_and_to_all: Failed\n");
+        }
+        else {
+            printf ("Reduction operation shmem_short_and_to_all: Passed\n");
         }
         if (success1 == 1) {
-            printf("Reduction operation shmem_int_and_to_all: Failed\n");
-        } else {
-            printf("Reduction operation shmem_int_and_to_all: Passed\n");
+            printf ("Reduction operation shmem_int_and_to_all: Failed\n");
+        }
+        else {
+            printf ("Reduction operation shmem_int_and_to_all: Passed\n");
         }
         if (success2 == 1) {
-            printf("Reduction operation shmem_long_and_to_all: Failed\n");
-        } else {
-            printf("Reduction operation shmem_long_and_to_all: Passed\n");
+            printf ("Reduction operation shmem_long_and_to_all: Failed\n");
+        }
+        else {
+            printf ("Reduction operation shmem_long_and_to_all: Passed\n");
         }
         if (success6 == 1) {
-            printf
-                ("Reduction operation shmem_longlong_and_to_all: Failed\n");
-        } else {
-            printf
-                ("Reduction operation shmem_longlong_and_to_all: Passed\n");
+            printf ("Reduction operation shmem_longlong_and_to_all: Failed\n");
+        }
+        else {
+            printf ("Reduction operation shmem_longlong_and_to_all: Passed\n");
         }
 
     }
 
-    /* Test PROD: shmem_double_prod_to_all, shmem_float_prod_to_all, shmem_int_prod_to_all,
-     * shmem_long_prod_to_all, shmem_longdouble_prod_to_all, shmem_longlong_prod_to_all,
-     * shmem_short_prod_to_all, */
+    /* Test PROD: shmem_double_prod_to_all, shmem_float_prod_to_all,
+       shmem_int_prod_to_all, shmem_long_prod_to_all,
+       shmem_longdouble_prod_to_all, shmem_longlong_prod_to_all,
+       shmem_short_prod_to_all, */
 
     success0 = success1 = success2 = success3 = success4 = success5 =
         success6 = 0;
@@ -462,15 +477,15 @@ int main()
         expected_result5 = expected_result5 * i;
         expected_result6 = expected_result6 * i;
     }
-    shmem_barrier_all();
+    shmem_barrier_all ();
 
-    shmem_short_prod_to_all(dst0, src0, N, 0, 0, npes, pWrk0, pSync);
-    shmem_int_prod_to_all(dst1, src1, N, 0, 0, npes, pWrk1, pSync1);
-    shmem_long_prod_to_all(dst2, src2, N, 0, 0, npes, pWrk2, pSync);
-    shmem_float_prod_to_all(dst3, src3, N, 0, 0, npes, pWrk3, pSync1);
-    shmem_double_prod_to_all(dst4, src4, N, 0, 0, npes, pWrk4, pSync);
-    shmem_longdouble_prod_to_all(dst5, src5, N, 0, 0, npes, pWrk5, pSync1);
-    shmem_longlong_prod_to_all(dst6, src6, N, 0, 0, npes, pWrk6, pSync);
+    shmem_short_prod_to_all (dst0, src0, N, 0, 0, npes, pWrk0, pSync);
+    shmem_int_prod_to_all (dst1, src1, N, 0, 0, npes, pWrk1, pSync1);
+    shmem_long_prod_to_all (dst2, src2, N, 0, 0, npes, pWrk2, pSync);
+    shmem_float_prod_to_all (dst3, src3, N, 0, 0, npes, pWrk3, pSync1);
+    shmem_double_prod_to_all (dst4, src4, N, 0, 0, npes, pWrk4, pSync);
+    shmem_longdouble_prod_to_all (dst5, src5, N, 0, 0, npes, pWrk5, pSync1);
+    shmem_longlong_prod_to_all (dst6, src6, N, 0, 0, npes, pWrk6, pSync);
 
     if (me == 0) {
         for (i = 0; i < N; i++) {
@@ -509,59 +524,59 @@ int main()
 
         }
         if (success0 == 1) {
-            printf
-                ("Reduction operation shmem_short_prod_to_all: Failed\n");
-        } else if (checkpoint0 == 1)
+            printf ("Reduction operation shmem_short_prod_to_all: Failed\n");
+        }
+        else if (checkpoint0 == 1)
             printf
                 ("Warning:Reduction operation shmem_short_prod_to_all does not support more than 8 pes\n");
         else {
-            printf
-                ("Reduction operation shmem_short_prod_to_all: Passed\n");
+            printf ("Reduction operation shmem_short_prod_to_all: Passed\n");
         }
         if (success1 == 1) {
-            printf("Reduction operation shmem_int_prod_to_all: Failed\n");
-        } else if (checkpoint1 == 1)
+            printf ("Reduction operation shmem_int_prod_to_all: Failed\n");
+        }
+        else if (checkpoint1 == 1)
             printf
                 ("Warning:Reduction operation shmem_int_prod_to_all does not support more than 12 pes\n");
 
         else {
-            printf("Reduction operation shmem_int_prod_to_all: Passed\n");
+            printf ("Reduction operation shmem_int_prod_to_all: Passed\n");
         }
         if (success2 == 1) {
-            printf("Reduction operation shmem_long_prod_to_all: Failed\n");
-        } else if (checkpoint2 == 1)
+            printf ("Reduction operation shmem_long_prod_to_all: Failed\n");
+        }
+        else if (checkpoint2 == 1)
             printf
                 ("Warning:Reduction operation shmem_long_prod_to_all does not support more than 20 pes\n");
 
         else {
-            printf("Reduction operation shmem_long_prod_to_all: Passed\n");
+            printf ("Reduction operation shmem_long_prod_to_all: Passed\n");
         }
         if (success3 == 1) {
-            printf
-                ("Reduction operation shmem_float_prod_to_all: Failed\n");
-        } else if (checkpoint3 == 1)
+            printf ("Reduction operation shmem_float_prod_to_all: Failed\n");
+        }
+        else if (checkpoint3 == 1)
             printf
                 ("Warning:Reduction operation shmem_float_prod_to_all does not support more than 13 pes\n");
 
         else {
-            printf
-                ("Reduction operation shmem_float_prod_to_all: Passed\n");
+            printf ("Reduction operation shmem_float_prod_to_all: Passed\n");
         }
         if (success4 == 1) {
-            printf
-                ("Reduction operation shmem_double_prod_to_all: Failed\n");
-        } else if (checkpoint4 == 1)
+            printf ("Reduction operation shmem_double_prod_to_all: Failed\n");
+        }
+        else if (checkpoint4 == 1)
             printf
                 ("Warning:Reduction operation shmem_double_prod_to_all does not support more than 22 pes\n");
 
         else {
-            printf
-                ("Reduction operation shmem_double_prod_to_all: Passed\n");
+            printf ("Reduction operation shmem_double_prod_to_all: Passed\n");
         }
         if (success5 == 1) {
             printf
                 ("Reduction operation shmem_longdouble_prod_to_all: Failed\n");
-        } else if (checkpoint5 == 1)
+        }
+        else if (checkpoint5 == 1)
             printf
                 ("Warning:Reduction operation shmem_longdouble_prod_to_all does not support more than 25 pes\n");
 
@@ -570,21 +585,20 @@ int main()
                 ("Reduction operation shmem_longdouble_prod_to_all: Passed\n");
         }
         if (success6 == 1) {
-            printf
-                ("Reduction operation shmem_longlong_prod_to_all: Failed\n");
-        } else if (checkpoint6 == 1)
+            printf ("Reduction operation shmem_longlong_prod_to_all: Failed\n");
+        }
+        else if (checkpoint6 == 1)
             printf
                 ("Warning:Reduction operation shmem_longlong_prod_to_all does not support more than 20 pes\n");
 
         else {
-            printf
-                ("Reduction operation shmem_longlong_prod_to_all: Passed\n");
+            printf ("Reduction operation shmem_longlong_prod_to_all: Passed\n");
         }
 
     }
 
-    /* Test OR: shmem_int_or_to_all, shmem_long_or_to_all, shmem_longlong_or_to_all,
-     * shmem_short_or_to_all,*/
+    /* Test OR: shmem_int_or_to_all, shmem_long_or_to_all,
+       shmem_longlong_or_to_all, shmem_short_or_to_all, */
 
     success0 = success1 = success2 = success6 = 0;
     for (i = 0; i < N; i += 1) {
@@ -597,12 +611,12 @@ int main()
         dst6[i] = -9;
     }
 
-    shmem_barrier_all();
+    shmem_barrier_all ();
 
-    shmem_short_or_to_all(dst0, src0, N, 0, 0, npes, pWrk0, pSync);
-    shmem_int_or_to_all(dst1, src1, N, 0, 0, npes, pWrk1, pSync1);
-    shmem_long_or_to_all(dst2, src2, N, 0, 0, npes, pWrk2, pSync);
-    shmem_longlong_or_to_all(dst6, src6, N, 0, 0, npes, pWrk6, pSync1);
+    shmem_short_or_to_all (dst0, src0, N, 0, 0, npes, pWrk0, pSync);
+    shmem_int_or_to_all (dst1, src1, N, 0, 0, npes, pWrk1, pSync1);
+    shmem_long_or_to_all (dst2, src2, N, 0, 0, npes, pWrk2, pSync);
+    shmem_longlong_or_to_all (dst6, src6, N, 0, 0, npes, pWrk6, pSync1);
 
 
     if (me == 0) {
@@ -617,32 +631,34 @@ int main()
                 success6 = 1;
         }
         if (success0 == 1) {
-            printf("Reduction operation shmem_short_or_to_all: Failed\n");
-        } else {
-            printf("Reduction operation shmem_short_or_to_all: Passed\n");
+            printf ("Reduction operation shmem_short_or_to_all: Failed\n");
+        }
+        else {
+            printf ("Reduction operation shmem_short_or_to_all: Passed\n");
         }
         if (success1 == 1) {
-            printf("Reduction operation shmem_int_or_to_all: Failed\n");
-        } else {
-            printf("Reduction operation shmem_int_or_to_all: Passed\n");
+            printf ("Reduction operation shmem_int_or_to_all: Failed\n");
+        }
+        else {
+            printf ("Reduction operation shmem_int_or_to_all: Passed\n");
         }
         if (success2 == 1) {
-            printf("Reduction operation shmem_long_or_to_all: Failed\n");
-        } else {
-            printf("Reduction operation shmem_long_or_to_all: Passed\n");
+            printf ("Reduction operation shmem_long_or_to_all: Failed\n");
+        }
+        else {
+            printf ("Reduction operation shmem_long_or_to_all: Passed\n");
         }
         if (success6 == 1) {
-            printf
-                ("Reduction operation shmem_longlong_or_to_all: Failed\n");
-        } else {
-            printf
-                ("Reduction operation shmem_longlong_or_to_all: Passed\n");
+            printf ("Reduction operation shmem_longlong_or_to_all: Failed\n");
+        }
+        else {
+            printf ("Reduction operation shmem_longlong_or_to_all: Passed\n");
         }
 
     }
 
-    /* Test XOR: shmem_int_xor_to_all, shmem_long_xor_to_all, shmem_longlong_xor_to_all,
-     * shmem_short_xor_to_all*/
+    /* Test XOR: shmem_int_xor_to_all, shmem_long_xor_to_all,
+       shmem_longlong_xor_to_all, shmem_short_xor_to_all */
 
     success0 = success1 = success2 = success6 = 0;
     for (i = 0; i < N; i += 1) {
@@ -657,12 +673,12 @@ int main()
     int expected_result = ((int) (npes / 2) % 2);
 
 
-    shmem_barrier_all();
+    shmem_barrier_all ();
 
-    shmem_short_xor_to_all(dst0, src0, N, 0, 0, npes, pWrk0, pSync);
-    shmem_int_xor_to_all(dst1, src1, N, 0, 0, npes, pWrk1, pSync1);
-    shmem_long_xor_to_all(dst2, src2, N, 0, 0, npes, pWrk2, pSync);
-    shmem_longlong_xor_to_all(dst6, src6, N, 0, 0, npes, pWrk6, pSync1);
+    shmem_short_xor_to_all (dst0, src0, N, 0, 0, npes, pWrk0, pSync);
+    shmem_int_xor_to_all (dst1, src1, N, 0, 0, npes, pWrk1, pSync1);
+    shmem_long_xor_to_all (dst2, src2, N, 0, 0, npes, pWrk2, pSync);
+    shmem_longlong_xor_to_all (dst6, src6, N, 0, 0, npes, pWrk6, pSync1);
 
     if (me == 0) {
         for (i = 0; i < N; i++) {
@@ -676,26 +692,28 @@ int main()
                 success6 = 1;
         }
         if (success0 == 1) {
-            printf("Reduction operation shmem_short_xor_to_all: Failed\n");
-        } else {
-            printf("Reduction operation shmem_short_xor_to_all: Passed\n");
+            printf ("Reduction operation shmem_short_xor_to_all: Failed\n");
+        }
+        else {
+            printf ("Reduction operation shmem_short_xor_to_all: Passed\n");
         }
         if (success1 == 1) {
-            printf("Reduction operation shmem_int_xor_to_all: Failed\n");
-        } else {
-            printf("Reduction operation shmem_int_xor_to_all: Passed\n");
+            printf ("Reduction operation shmem_int_xor_to_all: Failed\n");
+        }
+        else {
+            printf ("Reduction operation shmem_int_xor_to_all: Passed\n");
         }
         if (success2 == 1) {
-            printf("Reduction operation shmem_long_xor_to_all: Failed\n");
-        } else {
-            printf("Reduction operation shmem_long_xor_to_all: Passed\n");
+            printf ("Reduction operation shmem_long_xor_to_all: Failed\n");
+        }
+        else {
+            printf ("Reduction operation shmem_long_xor_to_all: Passed\n");
         }
         if (success6 == 1) {
-            printf
-                ("Reduction operation shmem_longlong_xor_to_all: Failed\n");
-        } else {
-            printf
-                ("Reduction operation shmem_longlong_xor_to_all: Passed\n");
+            printf ("Reduction operation shmem_longlong_xor_to_all: Failed\n");
+        }
+        else {
+            printf ("Reduction operation shmem_longlong_xor_to_all: Passed\n");
         }
 
     }

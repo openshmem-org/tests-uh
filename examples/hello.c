@@ -43,14 +43,14 @@
 int
 main (int argc, char **argv)
 {
-  int me, npes;
+    int me, npes;
 
-  start_pes (0);
+    start_pes (0);
 
-  me = _my_pe ();
-  npes = _num_pes ();
+    me = _my_pe ();
+    npes = _num_pes ();
 
-  printf ("Hello from node %4d of %4d\n", me, npes);
+    printf ("Hello from node %4d of %4d\n", me, npes);
 
-  return 0;
+    return 0;
 }
