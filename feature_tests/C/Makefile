@@ -1,8 +1,6 @@
-#
  #
  # Copyright (c) 2011, 2012 
- # University of Houston System and Oak Ridge National
- # Laboratory.
+ # University of Houston System and Oak Ridge National Laboratory.
  # 
  # All rights reserved.
  # 
@@ -78,16 +76,21 @@ run:	all $(EXES)
 	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_barrier.x
 	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_broadcast.x
 	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_collects.x
+	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_finalize.x
+	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_get.x
 	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_get_globals.x
 	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_get_shmem_malloc.x
 	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_lock.x
+	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_put.x
 	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_put_globals.x
 	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_put_shmem_malloc.x
+	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_query.x
 	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_reduction.x
 	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_synchronization.x
-
+	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_zero_get.x
+	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_zero_put.x
+	 bash ./remove_orphan_procs.sh # execute ./test_shmem_global_exit.x 
 
 clean:
 	        rm -f $(EXES)
-
 
