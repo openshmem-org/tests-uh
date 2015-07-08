@@ -45,12 +45,14 @@ main (int argc, char **argv)
 {
     int me, npes;
 
-    start_pes (0);
+    shmem_init ();
 
-    me = _my_pe ();
-    npes = _num_pes ();
+    me = shmem_my_pe ();
+    npes = shmem_n_pes ();
 
     printf ("Hello from node %4d of %4d\n", me, npes);
+
+    shmem_finalize();
 
     return 0;
 }

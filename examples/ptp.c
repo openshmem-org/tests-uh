@@ -66,9 +66,9 @@ main (int argc, char **argv)
     struct timeval now;
     long t_start, t_end;
 
-    start_pes (0);
-    me = _my_pe ();
-    npes = _num_pes ();
+    shmem_init ();
+    me = shmem_my_pe ();
+    npes = shmem_n_pes ();
 
     if (npes < 4) {
         if (me == 0)
@@ -139,6 +139,8 @@ main (int argc, char **argv)
         fprintf (stderr, "[%d] elapsed usecs %ld A %d\n", me, t_end, A);
 
     shmem_barrier_all ();
+    
+    shmem_finalize();
 
     return 0;
 }

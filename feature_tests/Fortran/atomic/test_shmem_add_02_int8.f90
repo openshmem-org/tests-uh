@@ -51,13 +51,13 @@ program test_shmem_atomics
   integer                   :: me, npes
 
   ! Function definitions
-  integer                   :: my_pe, num_pes
+  integer                   :: shmem_my_pe, shmem_n_pes
 
   common   /globalvars/  target
 
-  call start_pes(0)
-  me = my_pe()
-  npes = num_pes()
+  call shmem_init()
+  me = shmem_my_pe()
+  npes = shmem_n_pes()
 
   call shmem_barrier_all()
 
@@ -111,5 +111,7 @@ program test_shmem_atomics
   else
     write (*,*) "Number of PEs must be > 1 to test shmem atomics, test skipped"
   end if 
+
+  call shmem_finalize()
 
 end program test_shmem_atomics

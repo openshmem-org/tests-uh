@@ -78,9 +78,9 @@ main ()
     int success4_p1;
     int success5_p1;
 
-    start_pes (0);
-    me = _my_pe ();
-    npes = _num_pes ();
+    shmem_init ();
+    me = shmem_my_pe ();
+    npes = shmem_n_pes ();
 
     shmem_barrier_all ();
 
@@ -88,11 +88,11 @@ main ()
 
     if (npes > 1) {
 
-        target1 = (int *) shmalloc (sizeof (*target1));
-        target2 = (float *) shmalloc (sizeof (*target2));
-        target3 = (long *) shmalloc (sizeof (*target3));
-        target4 = (double *) shmalloc (sizeof (*target4));
-        target5 = (long long *) shmalloc (sizeof (*target5));
+        target1 = (int *) shmem_malloc (sizeof (*target1));
+        target2 = (float *) shmem_malloc (sizeof (*target2));
+        target3 = (long *) shmem_malloc (sizeof (*target3));
+        target4 = (double *) shmem_malloc (sizeof (*target4));
+        target5 = (long long *) shmem_malloc (sizeof (*target5));
 
         *target1 = *target2 = *target3 = *target4 = *target5 = me;
         new_val1 = new_val2 = new_val3 = new_val4 = new_val5 = me;
@@ -411,16 +411,19 @@ main ()
         }
         shmem_barrier_all ();
 
-        shfree (target1);
-        shfree (target2);
-        shfree (target3);
-        shfree (target4);
-        shfree (target5);
+        shmem_free (target1);
+        shmem_free (target2);
+        shmem_free (target3);
+        shmem_free (target4);
+        shmem_free (target5);
 
     }
     else {
         printf
             ("Number of PEs must be > 1 to test shmem atomics, test skipped\n");
     }
+
+    shmem_finalize ();
+
     return 0;
 }

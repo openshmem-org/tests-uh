@@ -55,12 +55,12 @@ program test_shmem_get
   integer          :: errcode, abort
 
 ! Function definitions
-  integer                   :: my_pe, num_pes
+  integer                   :: shmem_my_pe, shmem_n_pes
 
-  call start_pes(0)
+  call shmem_init()
   
-  me   = my_pe();
-  npes = num_pes();
+  me   = shmem_my_pe();
+  npes = shmem_n_pes();
 
   if(npes .gt. 1) then
 
@@ -105,4 +105,7 @@ program test_shmem_get
   else
     write(*,*) "Number of PEs must be > 1 to test shmem get, test skipped"
   end if
+
+  call shmem_finalize()
+
 end program

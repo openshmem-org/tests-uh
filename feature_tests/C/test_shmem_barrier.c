@@ -52,9 +52,9 @@ main ()
     int me, npes;
     int i;
 
-    start_pes (0);
-    me = _my_pe ();
-    npes = _num_pes ();
+    shmem_init ();
+    me = shmem_my_pe ();
+    npes = shmem_n_pes ();
 
     for (i = 0; i < _SHMEM_BCAST_SYNC_SIZE; i += 1) {
         pSync[i] = _SHMEM_SYNC_VALUE;
@@ -95,5 +95,8 @@ main ()
         printf ("Number of PEs must be > 1 to test barrier, test skipped\n");
 
     }
+
+    shmem_finalize ();
+
     return 0;
 }

@@ -53,11 +53,11 @@ program test_shmem_put
   integer                 :: errcode, abort
 
 ! Function definitions
-  integer                 :: my_pe, num_pes  
+  integer                 :: shmem_my_pe, shmem_n_pes  
 
-  call start_pes(0)
-  me   = my_pe()
-  npes = num_pes()
+  call shmem_init()
+  me   = shmem_my_pe()
+  npes = shmem_n_pes()
 
 ! Make sure this job is running on at least 2 PEs
   if(npes .gt. 1) then
@@ -99,4 +99,7 @@ program test_shmem_put
   else
     write(*,*) "Number of PEs must be > 1 to test shmem get, test skipped"
   end if
+
+  call shmem_finalize()
+
 end program

@@ -70,7 +70,7 @@ main (int argc, char *argv[])
     static long pSync1[_SHMEM_REDUCE_SYNC_SIZE];
     static double dpWrk[_SHMEM_REDUCE_MIN_WRKDATA_SIZE];
     static float el, es;
-    int my_pe, num_pes;
+    int my_pe, n_pes;
 
     for (i = 0; i < _SHMEM_REDUCE_SYNC_SIZE; i += 1) {
         pSync[i] = _SHMEM_SYNC_VALUE;
@@ -79,16 +79,16 @@ main (int argc, char *argv[])
 
     tv[0] = gettime ();
 
-    start_pes (0);
-    num_pes = _num_pes ();
-    my_pe = _my_pe ();
-    int nn = (n - 1) / num_pes;
+    shmem_init ();
+    n_pes = shmem_n_pes ();
+    my_pe = shmem_my_pe ();
+    int nn = (n - 1) / n_pes;
     int n_local0 = 1 + my_pe * nn;
     int n_local1 = 1 + (my_pe + 1) * nn;
     // allocate only local part + ghost zone of the arrays x,y
     float *x, *y;
-    x = (float *) shmalloc ((n_local1 - n_local0 + 2) * sizeof (float));
-    y = (float *) shmalloc ((n_local1 - n_local0 + 2) * sizeof (float));
+    x = (float *) shmem_malloc ((n_local1 - n_local0 + 2) * sizeof (float));
+    y = (float *) shmem_malloc ((n_local1 - n_local0 + 2) * sizeof (float));
     x -= (n_local0 - 1);
     y -= (n_local0 - 1);
     shmem_barrier_all ();
@@ -102,7 +102,7 @@ main (int argc, char *argv[])
     // fill ghost zone
     if (my_pe > 0)
         shmem_float_put (&y[n_local1], &y[n_local0], 1, my_pe - 1);
-    if (my_pe < num_pes - 1)
+    if (my_pe < n_pes - 1)
         shmem_float_put (&y[n_local0 - 1], &y[n_local1 - 1], 1, my_pe + 1);
     shmem_barrier_all ();
 
@@ -114,7 +114,7 @@ main (int argc, char *argv[])
     }
 
     el = e;
-    shmem_float_sum_to_all (&es, &el, 1, 0, 0, num_pes, pWork, pSync);
+    shmem_float_sum_to_all (&es, &el, 1, 0, 0, n_pes, pWork, pSync);
 
     e = es;
 
@@ -128,17 +128,19 @@ main (int argc, char *argv[])
 
     x += (n_local0 - 1);        // x=x,x=x+3
     y += (n_local0 - 1);        // y=y,y=y+3
-    shfree (x);
-    shfree (y);
+    shmem_free (x);
+    shmem_free (y);
 
     tv[1] = gettime ();
     t = dt (&tv[1], &tv[0]);
-    shmem_double_max_to_all (&maxtime, &t, 1, 0, 0, num_pes, dpWrk, pSync1);
+    shmem_double_max_to_all (&maxtime, &t, 1, 0, 0, n_pes, dpWrk, pSync1);
 
     if (my_pe == 1) {
         printf ("Execution time in seconds=%f\n", maxtime / 1000000.0);
         printf ("Execution time in micro seconds=%f\n", maxtime / 1000.0);
     }
+
+    shmem_finalize();
 
     return 0;
 }

@@ -51,13 +51,13 @@ program test_shmem_barrier
   integer       :: me, npes, i
 
 ! Function definitions
-  integer       :: my_pe, num_pes
+  integer       :: shmem_my_pe, shmem_n_pes
   integer       :: errcode, abort
 
   
-  call start_pes(0);
-  me   = my_pe();
-  npes = num_pes();
+  call shmem_init();
+  me   = shmem_my_pe();
+  npes = shmem_n_pes();
   
   if(npes .gt. 4) then
 
@@ -84,7 +84,7 @@ program test_shmem_barrier
 
     if(me .eq. 0) then
       call shmem_int4_wait_until(flag(1), SHMEM_CMP_EQ, (npes - 1) )
-      write (*,*) "test_shmem_barrier_01.f90: Passed" 
+      write (*,*) "test_shmem_barrier_02.f90: Passed" 
     end if
 
     call shpdeallc(pSync_ptr, errcode, abort)
@@ -93,4 +93,7 @@ program test_shmem_barrier
   else
     write (*,*) 'Number of PEs must be 5+ to test barrier, test skipped'
   end if  
+
+  call shmem_finalize()
+
 end program test_shmem_barrier

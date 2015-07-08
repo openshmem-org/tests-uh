@@ -98,22 +98,22 @@ main (int argc, char **argv)
     for (i = 0; i < _SHMEM_REDUCE_SYNC_SIZE; i += 1)
         pSync[i] = _SHMEM_SYNC_VALUE;
     tv[0] = gettime ();
-    start_pes (0);
-    rank = _my_pe ();
-    size = _num_pes ();
+    shmem_init ();
+    rank = shmem_my_pe ();
+    size = shmem_n_pes ();
     np = size;                  // number of processes
     blocksize = COLUMNS / np;   // block size
     B_matrix_displacement = rank * blocksize;
 
     // initialize the input arrays
     shmem_barrier_all ();
-    a_local = (double **) shmalloc (ROWS * sizeof (double *));
-    b_local = (double **) shmalloc (ROWS * sizeof (double *));
-    c_local = (double **) shmalloc (ROWS * sizeof (double *));
+    a_local = (double **) shmem_malloc (ROWS * sizeof (double *));
+    b_local = (double **) shmem_malloc (ROWS * sizeof (double *));
+    c_local = (double **) shmem_malloc (ROWS * sizeof (double *));
     for (i = 0; i < ROWS; i++) {
-        a_local[i] = (double *) shmalloc (blocksize * sizeof (double));
-        b_local[i] = (double *) shmalloc (blocksize * sizeof (double));
-        c_local[i] = (double *) shmalloc (blocksize * sizeof (double));
+        a_local[i] = (double *) shmem_malloc (blocksize * sizeof (double));
+        b_local[i] = (double *) shmem_malloc (blocksize * sizeof (double));
+        c_local[i] = (double *) shmem_malloc (blocksize * sizeof (double));
         for (j = 0; j < blocksize; j++) {
             a_local[i][j] = i + 1 * j + 1 * rank + 1;   // random values
             b_local[i][j] = i + 2 * j + 2 * rank + 1;   // random values
@@ -188,5 +188,8 @@ main (int argc, char **argv)
         printf ("Execution time in seconds =%4.2f \n", maxtime / 1000000.0);
         printf ("Execution time in milli seconds =%4.2f \n", maxtime / 1000.0);
     }
+
+    shmem_finalize();
+
     return (0);
 }

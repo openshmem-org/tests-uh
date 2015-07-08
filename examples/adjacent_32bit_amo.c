@@ -60,11 +60,11 @@ main ()
         locktype b;
     } *twovars;
     int numfail = 0;
-     start_pes (0);
+     shmem_init ();
     tpe = 0;
-    other = _num_pes () - 1;
-     twovars = shmalloc (sizeof (*twovars));
-    if (_my_pe () == 0) {
+    other = shmem_n_pes () - 1;
+     twovars = shmem_malloc (sizeof (*twovars));
+    if (shmem_my_pe () == 0) {
         printf ("Element size: %ld bytes\n", sizeof (locktype));
         printf ("Addresses: 1st element %p\n", &twovars->a);
         printf ("           2nd element %p\n", &twovars->b);
@@ -74,7 +74,7 @@ main ()
     twovars->a = 0;
     twovars->b = 0;
      shmem_barrier_all ();
-      if (_my_pe () == 0) {
+      if (shmem_my_pe () == 0) {
         
             // put two values alternately to the 1st 32 bit word
         long expect, check;
@@ -98,9 +98,9 @@ main ()
                 }
             }
         }
-        printf ("PE %d done doing puts and gets\n", _my_pe ());
+        printf ("PE %d done doing puts and gets\n", shmem_my_pe ());
       }
-    else if (_my_pe () == other) {
+    else if (shmem_my_pe () == other) {
         
             // keep on atomically incrementing the 2nd 32 bit word
         long oldval;
@@ -121,16 +121,17 @@ main ()
                 }
             }
         }
-        printf ("PE %d done doing fincs\n", _my_pe ());
+        printf ("PE %d done doing fincs\n", shmem_my_pe ());
     }
     shmem_barrier_all ();
     if (numfail) {
         printf ("FAIL\n");
     }
     shmem_barrier_all ();
-    if (_my_pe () == 0) {
+    if (shmem_my_pe () == 0) {
         printf ("test complete\n");
     }
+    shmem_finalize();
     return 0;
 }
 

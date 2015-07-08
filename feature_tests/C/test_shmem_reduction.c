@@ -95,9 +95,9 @@ main ()
     int checkpoint0, checkpoint1, checkpoint2, checkpoint3, checkpoint4,
         checkpoint5, checkpoint6;
 
-    start_pes (0);
-    me = _my_pe ();
-    npes = _num_pes ();
+    shmem_init ();
+    me = shmem_my_pe ();
+    npes = shmem_n_pes ();
 
     success0 = success1 = success2 = success3 = success4 = success5 =
         success6 = 0;
@@ -717,6 +717,8 @@ main ()
         }
 
     }
+
+    shmem_finalize ();
 
     return 0;
 }

@@ -45,13 +45,13 @@ program test_shmem_synchronization
   integer         :: i
 
 ! Function definitions
-  integer    :: my_pe, num_pes
+  integer    :: shmem_my_pe, shmem_n_pes
 
   src = 9
 
-  call start_pes(0)
-  me   = my_pe()
-  npes = num_pes()
+  call shmem_init()
+  me   = shmem_my_pe()
+  npes = shmem_n_pes()
   
   if(npes .gt. 1) then
   
@@ -142,5 +142,7 @@ contains
 
     deallocate(seed)
   end subroutine
+
+  call shmem_finalize()
 
 end program test_shmem_synchronization

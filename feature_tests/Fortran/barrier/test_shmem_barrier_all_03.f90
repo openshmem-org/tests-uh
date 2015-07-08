@@ -44,14 +44,14 @@ program test_shmem_barrier
   integer       :: me, npes, i
 
 ! Function definitions
-  integer                   :: my_pe, num_pes
+  integer                   :: shmem_my_pe, shmem_n_pes
 
   flag = 10101
   
-  call start_pes(0);
+  call shmem_init();
 
-  me   = my_pe();
-  npes = num_pes();
+  me   = shmem_my_pe();
+  npes = shmem_n_pes();
 
   if (npes .gt. 1) then
     
@@ -67,4 +67,7 @@ program test_shmem_barrier
   else
     write (*,*) 'Number of PEs must be > 1 to test barrier, test skipped'
   end if  
+
+  call shmem_finalize()
+
 end program test_shmem_barrier

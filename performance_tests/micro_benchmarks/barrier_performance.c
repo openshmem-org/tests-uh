@@ -57,9 +57,9 @@ main ()
         pSync[i] = _SHMEM_SYNC_VALUE;
     }
 
-    start_pes (0);
-    me = _my_pe ();
-    npes = _num_pes ();
+    shmem_init ();
+    me = shmem_my_pe ();
+    npes = shmem_n_pes ();
     src = me - 1;
     time_taken = 0;
 
@@ -86,6 +86,8 @@ main ()
         printf
             ("Time required for a barrier, with %d PEs is %ld microseconds\n",
              npes, time_taken / 10000);
+
+    shmem_finalize ();
 
     return 0;
 }

@@ -45,13 +45,13 @@ program test_shmem_accessible
   integer               :: me, npes, errcode
   
   ! SHMEM function definitions
-  integer               :: my_pe, num_pes
+  integer               :: shmem_my_pe, shmem_n_pes
   ! --
   
-  call start_pes(0)
+  call shmem_init()
 
-  me   = my_pe()
-  npes = num_pes()  
+  me   = shmem_my_pe()
+  npes = shmem_n_pes()  
  
   if(npes .lt. 2 ) then
     write(*,*) 'This test requires 2+ PEs to run.'
@@ -78,5 +78,7 @@ program test_shmem_accessible
   call shmem_barrier_all()
   
   deallocate(remote_target)
-  
+    
+  call shmem_finalize()
+
 end program test_shmem_accessible
