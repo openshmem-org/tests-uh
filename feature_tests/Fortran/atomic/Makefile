@@ -1,4 +1,4 @@
-include ../Makefile.in
+include ../Makefile.opts
 
 F90_TESTS        = $(wildcard *.f90)
 

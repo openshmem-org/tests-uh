@@ -1,7 +1,7 @@
 /*
  *
  * Copyright (c) 2011 - 2015
- *   University of Houston System and Oak Ridge National Laboratory.
+ *   University of Houston System and UT-Battelle, LLC.
  * 
  * All rights reserved.
  * 
@@ -62,11 +62,11 @@ main (int argc, char *argv[])
     int me, npes, i;
     int pe_acc_success = 0;
 
-    start_pes (0);
-    me = _my_pe ();
-    npes = _num_pes ();
+    shmem_init ();
+    me = shmem_my_pe ();
+    npes = shmem_n_pes ();
 
-    shm_target = (int *) shmalloc (sizeof (int));
+    shm_target = (int *) shmem_malloc (sizeof (int));
 
     shmem_barrier_all ();
 
@@ -91,7 +91,7 @@ main (int argc, char *argv[])
         else {
             printf ("Test Stack Address Accessible: Passed\n");
         }
-        if (!check_it (shm_target)) {   /* shmalloc: yes */
+        if (!check_it (shm_target)) {   /* shmem_malloc: yes */
 
             printf ("Test Shmalloc-ed Address Accessible: Failed\n");
         }
@@ -117,7 +117,9 @@ main (int argc, char *argv[])
 
     }
 
-    shfree (shm_target);
+    shmem_free (shm_target);
+
+    shmem_finalize ();
 
     return 0;
 }

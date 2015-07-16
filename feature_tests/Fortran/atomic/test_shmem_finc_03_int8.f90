@@ -1,7 +1,7 @@
 !
 !
 ! Copyright (c) 2011 - 2015
-!   University of Houston System and Oak Ridge National Laboratory.
+!   University of Houston System and UT-Battelle, LLC.
 ! 
 ! All rights reserved.
 ! 
@@ -53,12 +53,12 @@ program test_shmem_atomics
   integer                   :: me, npes
 
   ! Function definitions
-  integer                   :: my_pe, num_pes
+  integer                   :: shmem_my_pe, shmem_n_pes
   integer*8                  :: shmem_int8_finc
 
-  call start_pes(0)
-  me = my_pe()
-  npes = num_pes()
+  call shmem_init()
+  me = shmem_my_pe()
+  npes = shmem_n_pes()
 
   call shmem_barrier_all()
 
@@ -99,9 +99,9 @@ program test_shmem_atomics
 
     if(me .eq. 0) then
       if(success1 .eqv. .TRUE. .and. success2 .eqv. .TRUE.) then
-        write (*,*) "Test 01 shmem_int8_finc: Passed"
+        write (*,*) "Test 03 shmem_int8_finc: Passed"
       else
-        write (*,*) "Test 01 shmem_int8_finc: Failed"
+        write (*,*) "Test 03 shmem_int8_finc: Failed"
       end if
     end if
 
@@ -112,5 +112,7 @@ program test_shmem_atomics
   else
     write (*,*) "Number of PEs must be > 1 to test shmem atomics, test skipped"
   end if 
+
+  call shmem_finalize()
 
 end program test_shmem_atomics

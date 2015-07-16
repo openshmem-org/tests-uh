@@ -1,7 +1,7 @@
 !
 !
 ! Copyright (c) 2011 - 2015
-!   University of Houston System and Oak Ridge National Laboratory.
+!   University of Houston System and UT-Battelle, LLC.
 ! 
 ! All rights reserved.
 ! 
@@ -58,15 +58,15 @@ program test_shmem_collects
   integer              :: errcode, abort
 
 ! Function definitions
-  integer              :: my_pe, num_pes
+  integer              :: shmem_my_pe, shmem_n_pes
   
 
   common /globalvars/ src, target
 
-  call start_pes(0)
+  call shmem_init()
 
-  npes = num_pes()
-  me   = my_pe()
+  npes = shmem_n_pes()
+  me   = shmem_my_pe()
 
   pSync(:) = SHMEM_SYNC_VALUE
 
@@ -137,5 +137,7 @@ program test_shmem_collects
   else
     write (*,*) "This test requires ", min_npes, " or more PEs." 
   end if
+
+  call shmem_finalize()
 
 end program test_shmem_collects

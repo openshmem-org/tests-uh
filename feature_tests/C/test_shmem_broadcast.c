@@ -1,7 +1,7 @@
 /*
  *
  * Copyright (c) 2011 - 2015
- *   University of Houston System and Oak Ridge National Laboratory.
+ *   University of Houston System and UT-Battelle, LLC.
  * 
  * All rights reserved.
  * 
@@ -38,7 +38,7 @@
 
 /*Tests shmem_broadcast32 shmem_broadcast64 calls
  * PE 0 broadcasts to all other PEs
- * source and destination arrays are shmalloc-ed
+ * source and destination arrays are shmem_malloc-ed
  * Strided tests use active sets of all even PEs
  * PE 0 is the root,
  * and require a minimum of 3 PEs to test.
@@ -63,9 +63,9 @@ main (void)
     long *source;
     int i, me, npes;
 
-    start_pes (0);
-    me = _my_pe ();
-    npes = _num_pes ();
+    shmem_init ();
+    me = shmem_my_pe ();
+    npes = shmem_n_pes ();
     success32 = -9;
     success64 = -9;
     success32_root = -9;
@@ -73,10 +73,10 @@ main (void)
     for (i = 0; i < _SHMEM_BCAST_SYNC_SIZE; i += 1) {
         pSync[i] = _SHMEM_SYNC_VALUE;
     }
-    src = (int *) shmalloc (npes * sizeof (*src));
-    targ = (int *) shmalloc (npes * sizeof (*targ));
-    source = (long *) shmalloc (npes * sizeof (*source));
-    target = (long *) shmalloc (npes * sizeof (*target));
+    src = (int *) shmem_malloc (npes * sizeof (*src));
+    targ = (int *) shmem_malloc (npes * sizeof (*targ));
+    source = (long *) shmem_malloc (npes * sizeof (*source));
+    target = (long *) shmem_malloc (npes * sizeof (*target));
     for (i = 0; i < npes; i += 1) {
         src[i] = i + 1;
         targ[i] = -999;
@@ -240,10 +240,12 @@ main (void)
             printf
                 ("Number of PEs must be > 2 to test strided broadcast, test skipped\n");
     }
-    shfree (targ);
-    shfree (src);
-    shfree (target);
-    shfree (source);
+    shmem_free (targ);
+    shmem_free (src);
+    shmem_free (target);
+    shmem_free (source);
+
+    shmem_finalize ();
 
     return 0;
 }

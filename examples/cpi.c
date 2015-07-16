@@ -1,7 +1,7 @@
 /*
  *
  * Copyright (c) 2011 - 2015 
- *   University of Houston System and Oak Ridge National Laboratory.
+ *   University of Houston System and UT-Battelle, LLC.
  * 
  * All rights reserved.
  * 
@@ -80,9 +80,9 @@ main (int argc, char *argv[])
     double h, sum, x;
     struct timeval startwtime, endwtime;
 
-    start_pes (0);
-    numprocs = _num_pes ();
-    myid = _my_pe ();
+    shmem_init ();
+    numprocs = shmem_n_pes ();
+    myid = shmem_my_pe ();
 
     if (myid == 0) {
         if (argc > 1)
@@ -131,6 +131,8 @@ main (int argc, char *argv[])
         printf ("run time = %f ms\n", elapsed);
         fflush (stdout);
     }
+
+    shmem_finalize();
 
     return 0;
 }

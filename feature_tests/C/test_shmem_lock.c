@@ -1,7 +1,7 @@
 /*
  *
  * Copyright (c) 2011 - 2015 
- *   University of Houston System and Oak Ridge National Laboratory.
+ *   University of Houston System and UT-Battelle, LLC.
  * 
  * All rights reserved.
  * 
@@ -53,9 +53,9 @@ main (int argc, char **argv)
     int ret_val;
     int new_val;
 
-    start_pes (0);
-    me = _my_pe ();
-    npes = _num_pes ();
+    shmem_init ();
+    me = shmem_my_pe ();
+    npes = shmem_n_pes ();
     x = 0;
     ret_val = -1;
 
@@ -108,5 +108,8 @@ main (int argc, char **argv)
     }
     else
         printf ("Number of PEs must be > 1 to test locks, test skipped\n");
+
+    shmem_finalize ();
+
     return 0;
 }

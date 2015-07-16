@@ -1,7 +1,7 @@
 !
 !
 ! Copyright (c) 2011 - 2015
-!   University of Houston System and Oak Ridge National Laboratory.
+!   University of Houston System and UT-Battelle, LLC.
 ! 
 ! All rights reserved.
 ! 
@@ -49,12 +49,12 @@ program test_shmem_barrier
   integer     :: errcode, abort
 
 ! Function definitions
-  integer                   :: my_pe, num_pes
+  integer                   :: shmem_my_pe, shmem_n_pes
 
-  call start_pes(0);
+  call shmem_init();
 
-  me   = my_pe();
-  npes = num_pes();
+  me   = shmem_my_pe();
+  npes = shmem_n_pes();
 
   if (npes .gt. 1) then
 
@@ -82,5 +82,8 @@ program test_shmem_barrier
     if(me .eq. 0) then
       write (*,*) 'This test requirest ', min_npes, ' or more PEs.'
     end if
-  end if  
+  end if 
+
+  call shmem_finalize()
+ 
 end program test_shmem_barrier

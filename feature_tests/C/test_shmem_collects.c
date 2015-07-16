@@ -1,7 +1,7 @@
 /*
  *
  * Copyright (c) 2011 - 2015
- *   University of Houston System and Oak Ridge National Laboratory.
+ *   University of Houston System and UT-Battelle, LLC.
  * 
  * All rights reserved.
  * 
@@ -70,9 +70,9 @@ main (void)
     int *compare_dst1, *compare_dst3;
     long *compare_dst2, *compare_dst4;
 
-    start_pes (0);
-    npes = _num_pes ();
-    me = _my_pe ();
+    shmem_init ();
+    npes = shmem_n_pes ();
+    me = shmem_my_pe ();
 
     for (i = 0; i < _SHMEM_BCAST_SYNC_SIZE; i += 1) {
         pSync[i] = _SHMEM_SYNC_VALUE;
@@ -81,13 +81,13 @@ main (void)
     if (npes > 1) {
 
 
-        dst1 = (int *) shmalloc (npes * 4 * sizeof (dst1));
+        dst1 = (int *) shmem_malloc (npes * 4 * sizeof (dst1));
         compare_dst1 = (int *) malloc (npes * 4 * sizeof (dst1));
-        dst2 = (long *) shmalloc (npes * 4 * sizeof (dst2));
+        dst2 = (long *) shmem_malloc (npes * 4 * sizeof (dst2));
         compare_dst2 = (long *) malloc (npes * 4 * sizeof (dst2));
-        dst3 = (int *) shmalloc (npes * 4 * sizeof (dst3));
+        dst3 = (int *) shmem_malloc (npes * 4 * sizeof (dst3));
         compare_dst3 = (int *) malloc (npes * 4 * sizeof (dst3));
-        dst4 = (long *) shmalloc (npes * 4 * sizeof (dst4));
+        dst4 = (long *) shmem_malloc (npes * 4 * sizeof (dst4));
         compare_dst4 = (long *) malloc (npes * 4 * sizeof (dst4));
 
         /* Test shmem_fcollect32 */
@@ -258,6 +258,7 @@ main (void)
     else
         printf ("Number of PEs must be > 1 to test collects, test skipped\n");
 
+    shmem_finalize ();
 
     return 0;
 }

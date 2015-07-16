@@ -2,25 +2,25 @@
  *
  * Copyright (c) 2011 - 2015
  *   University of Houston System and UT-Battelle, LLC.
- * 
+ *
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * o Redistributions of source code must retain the above copyright notice,
  *   this list of conditions and the following disclaimer.
- * 
+ *
  * o Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * 
+ *
  * o Neither the name of the University of Houston System, Oak Ridge
  *   National Laboratory nor the names of its contributors may be used to
  *   endorse or promote products derived from this software without specific
  *   prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -34,58 +34,64 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
-/* Performance test for shmem_barrier*/
+
+
+
+/*
+ * Test for the info/query interfaces
+ * Compare the values with the supported OpenSHMEM constants: 
+ * _SHMEM_MAJOR_VERSION, _SHMEM_MINOR_VERSION, and 
+ * _SHMEM_MAX_NAME_LEN
+ *
+ */
 
 #include <stdio.h>
-#include <sys/time.h>
 #include <shmem.h>
+#include <string.h>
 
-#define NPES 4
+#define PRINT_VER(arg,result) \
+    printf("Test shmem_info_get_version (%s):%s\n",\
+            arg,result); 
 
-long pSync[_SHMEM_BCAST_SYNC_SIZE];
-int x = 10101;
+#define PRINT_NAME(arg) \
+    printf("Test shmem_info_get_name: %s\n",arg);
 
 int
 main ()
 {
-    int me, npes, src;
-    int i, j;
-    struct timeval start, end;
-    long time_taken, start_time, end_time;
-
-    for (i = 0; i < _SHMEM_BCAST_SYNC_SIZE; i += 1) {
-        pSync[i] = _SHMEM_SYNC_VALUE;
-    }
+    char name[_SHMEM_MAX_NAME_LEN];
+    int major_ver, minor_ver;
+    int me;
 
     shmem_init ();
     me = shmem_my_pe ();
-    npes = shmem_n_pes ();
-    src = me - 1;
-    time_taken = 0;
 
-    for (i = 0; i < 10000; i++) {
-        if (me != 0) {
-            shmem_int_p (&x, src * (i + 1), me - 1);
-        }
-        else
-            shmem_int_p (&x, src * (i + 1), npes - 1);
-        shmem_barrier_all ();
+    if(me == 0){
 
-        gettimeofday (&start, NULL);
-        start_time = (start.tv_sec * 1000000.0) + start.tv_usec;
+      shmem_info_get_version (&major_ver, &minor_ver);
+      shmem_info_get_name (name);
 
-        shmem_barrier (0, 0, npes, pSync);
+      if (major_ver == _SHMEM_MAJOR_VERSION) {
+          PRINT_VER("Major","Passed")
+      }
+      else {
+          PRINT_VER("Major","Failed")
+      }
 
-        gettimeofday (&end, NULL);
-        end_time = (end.tv_sec * 1000000.0) + end.tv_usec;
-        time_taken = time_taken + (end_time - start_time);
+      if (minor_ver == _SHMEM_MINOR_VERSION) {
+          PRINT_VER("Minor","Passed")
+      }
+      else {
+          PRINT_VER("Minor","Failed")
+      }
 
+      if (strlen (name) < _SHMEM_MAX_NAME_LEN) {
+          PRINT_NAME("Passed")
+      }
+      else {
+          PRINT_NAME("Undefined")
+      }
     }
-    /* printf("%d: x = %d\n", me, x); */
-    if (me == 0)
-        printf
-            ("Time required for a barrier, with %d PEs is %ld microseconds\n",
-             npes, time_taken / 10000);
 
     shmem_finalize ();
 

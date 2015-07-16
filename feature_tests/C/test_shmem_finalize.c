@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2011 - 2015
+ * Copyright (c) 2011 - 2015 
  *   University of Houston System and UT-Battelle, LLC.
  * 
  * All rights reserved.
@@ -34,58 +34,56 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
-/* Performance test for shmem_barrier*/
+
+
+/*
+ * Calls tested
+ * shmem_finalize
+ *
+ * All PEs put a 64-bit value to its right neighbor and expect the 
+ * transfer to complete after shmem_finalize
+ */
 
 #include <stdio.h>
-#include <sys/time.h>
+#include <time.h>
+#include <stdlib.h>
 #include <shmem.h>
+#include <stdint.h>
 
-#define NPES 4
-
-long pSync[_SHMEM_BCAST_SYNC_SIZE];
-int x = 10101;
+uint64_t dest;
 
 int
-main ()
+main (int argc, char **argv)
 {
-    int me, npes, src;
-    int i, j;
-    struct timeval start, end;
-    long time_taken, start_time, end_time;
-
-    for (i = 0; i < _SHMEM_BCAST_SYNC_SIZE; i += 1) {
-        pSync[i] = _SHMEM_SYNC_VALUE;
-    }
+    int nextpe;
+    int me, npes;
+    uint64_t src;
 
     shmem_init ();
     me = shmem_my_pe ();
     npes = shmem_n_pes ();
-    src = me - 1;
-    time_taken = 0;
+    dest = -9;
 
-    for (i = 0; i < 10000; i++) {
-        if (me != 0) {
-            shmem_int_p (&x, src * (i + 1), me - 1);
+    if (npes > 1) {
+
+        src = (uint64_t)((me+1)%npes);
+        nextpe = (me+1)%npes;
+        shmem_put64 (&dest, &src, 1, nextpe);
+
+        shmem_finalize ();
+
+        if (me == 0) {
+          /* Check for completion of all communication */
+          if ((int)dest == me)
+              printf ("Test shmem_finalize: Passed\n");
+          else 
+              printf ("Test shmem_finalize: Failed\n");
         }
-        else
-            shmem_int_p (&x, src * (i + 1), npes - 1);
-        shmem_barrier_all ();
-
-        gettimeofday (&start, NULL);
-        start_time = (start.tv_sec * 1000000.0) + start.tv_usec;
-
-        shmem_barrier (0, 0, npes, pSync);
-
-        gettimeofday (&end, NULL);
-        end_time = (end.tv_sec * 1000000.0) + end.tv_usec;
-        time_taken = time_taken + (end_time - start_time);
+    }
+    else {
+        printf ("Number of PEs must be > 1 to test shmem finalize, test skipped\n");
 
     }
-    /* printf("%d: x = %d\n", me, x); */
-    if (me == 0)
-        printf
-            ("Time required for a barrier, with %d PEs is %ld microseconds\n",
-             npes, time_taken / 10000);
 
     shmem_finalize ();
 

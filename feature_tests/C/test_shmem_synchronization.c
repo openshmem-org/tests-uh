@@ -1,7 +1,7 @@
 /*
  *
  * Copyright (c) 2011 - 2015
- *   University of Houston System and Oak Ridge National Laboratory.
+ *   University of Houston System and UT-Battelle, LLC.
  * 
  * All rights reserved.
  * 
@@ -66,13 +66,13 @@ main (void)
         srand (now + getpid ());
     }
 
-    start_pes (0);
-    me = _my_pe ();
-    npes = _num_pes ();
+    shmem_init ();
+    me = shmem_my_pe ();
+    npes = shmem_n_pes ();
     long src = 9L;
 
     if (npes > 1) {
-        dest = (long *) shmalloc (sizeof (*dest));
+        dest = (long *) shmem_malloc (sizeof (*dest));
 
         *dest = 9L;
         shmem_barrier_all ();
@@ -129,6 +129,8 @@ main (void)
     else
         printf
             ("Test for conditional wait requires more than 1 PE, test skipped\n");
+
+    shmem_finalize ();
 
     return 0;
 }

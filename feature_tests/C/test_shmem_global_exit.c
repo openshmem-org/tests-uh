@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2011 - 2015
+ * Copyright (c) 2011 - 2015 
  *   University of Houston System and UT-Battelle, LLC.
  * 
  * All rights reserved.
@@ -34,58 +34,44 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
-/* Performance test for shmem_barrier*/
+
+
+/*
+ * Calls tested
+ * shmem_global_exit
+ *
+ * All PEs sleep for a finite number of seconds while PE0 
+ * calls shmem_global_exit.
+ */
 
 #include <stdio.h>
-#include <sys/time.h>
+#include <time.h>
+#include <stdlib.h>
 #include <shmem.h>
-
-#define NPES 4
-
-long pSync[_SHMEM_BCAST_SYNC_SIZE];
-int x = 10101;
-
+#include <unistd.h>
 int
-main ()
+main (int argv, char **argc)
 {
-    int me, npes, src;
-    int i, j;
-    struct timeval start, end;
-    long time_taken, start_time, end_time;
-
-    for (i = 0; i < _SHMEM_BCAST_SYNC_SIZE; i += 1) {
-        pSync[i] = _SHMEM_SYNC_VALUE;
-    }
+    int nextpe;
+    int me, npes;
+    int status=99;
 
     shmem_init ();
     me = shmem_my_pe ();
     npes = shmem_n_pes ();
-    src = me - 1;
-    time_taken = 0;
-
-    for (i = 0; i < 10000; i++) {
-        if (me != 0) {
-            shmem_int_p (&x, src * (i + 1), me - 1);
-        }
-        else
-            shmem_int_p (&x, src * (i + 1), npes - 1);
-        shmem_barrier_all ();
-
-        gettimeofday (&start, NULL);
-        start_time = (start.tv_sec * 1000000.0) + start.tv_usec;
-
-        shmem_barrier (0, 0, npes, pSync);
-
-        gettimeofday (&end, NULL);
-        end_time = (end.tv_sec * 1000000.0) + end.tv_usec;
-        time_taken = time_taken + (end_time - start_time);
-
+    
+    if(me==0) {
+        shmem_global_exit(status);
     }
-    /* printf("%d: x = %d\n", me, x); */
-    if (me == 0)
-        printf
-            ("Time required for a barrier, with %d PEs is %ld microseconds\n",
-             npes, time_taken / 10000);
+    else {
+        sleep(me*3);
+    }
+    shmem_barrier_all();
+
+    /* PE-0 reach this point if shmem_global_exit is a no-op */
+    if(me==0) {
+      printf ("Test shmem_global_exit: Failed\n");
+    }
 
     shmem_finalize ();
 

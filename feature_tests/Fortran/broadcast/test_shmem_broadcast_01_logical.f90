@@ -1,7 +1,7 @@
 !
 !
 ! Copyright (c) 2011 - 2015
-!   University of Houston System and Oak Ridge National Laboratory.
+!   University of Houston System and UT-Battelle, LLC.
 ! 
 ! All rights reserved.
 ! 
@@ -53,11 +53,11 @@ program test_shmem_broadcast
   integer            :: me, npes
 
 ! Function definitions
-  integer            :: my_pe, num_pes
+  integer            :: shmem_my_pe, shmem_n_pes
 
-  call start_pes(0)
-  me = my_pe()
-  npes = num_pes()
+  call shmem_init()
+  me = shmem_my_pe()
+  npes = shmem_n_pes()
   
   success = .TRUE.
 
@@ -99,5 +99,7 @@ program test_shmem_broadcast
   end if 
 
   stop
+
+  call shmem_finalize()
 
 end program test_shmem_broadcast
