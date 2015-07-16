@@ -1,7 +1,6 @@
 /*
  *
- * Copyright (c) 2011, University of Houston System and Oak Ridge National
- * Laboratory.
+ * Copyright (c) 2011, University of Houston System and UT-Battelle.
  * 
  * All rights reserved.
  * 
@@ -43,7 +42,7 @@ the main 'test_suite' directory.
 2.1 Feature Tests
 The following lists of tests can be found in the folder 'feature_tests' for
 both C and Fortran;
-i.  test_shmem_put_shmalloc , test_shmem_put_globals
+i.  test_shmem_put_shmem_malloc , test_shmem_put_globals
 This tests 
 a.  elemental put calls
 C/C++ only:
@@ -75,7 +74,7 @@ depends on a reliable implementation of the shmem_barrier_all() OpenSHMEM
 call.
 
 
-ii. test_shmem_get_shmalloc, test_shmem_get_globals 
+ii. test_shmem_get_shmem_malloc, test_shmem_get_globals 
 This tests 
 a.  elemental get calls
 C/C++ only:
@@ -101,7 +100,7 @@ C/C++ and Fortran:
 shmem_getmem
 
 Additional information:
-Test test_shmem_get_shmalloc uses shmalloc-ed variables that are allocated and
+Test test_shmem_get_shmem_malloc uses shmalloc-ed variables that are allocated and
 managed by the OpenSHMEM library while the test_shmem_get_globals checks that
 the same calls work with global variables. Correct output for this test also
 depends on a reliable implementation of the shmem_barrier_all() OpenSHMEM

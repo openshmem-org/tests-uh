@@ -1,4 +1,4 @@
-#
+ #
  #
  # Copyright (c) 2011 - 2015 
  # University of Houston System and Oak Ridge National
@@ -36,7 +36,7 @@
  #
 SHELL = /bin/sh
 
-SHMEM_CFLAGS=-ggdb -O0
+SHMEM_CFLAGS=-g -O0
 
 GCC=gcc
 

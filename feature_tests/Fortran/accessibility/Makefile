@@ -13,7 +13,7 @@ all default:    $(EXES)
 .SUFFIXES: .x
 
 %.x:    %.f90
-	$(SHMEM_F90) $(SHMEM_F90CFLAGS) $(SHMEM_F90LFLAGS) -o $@ $^
+	$(SHMEM_F90) $(SHMEM_F90CFLAGS) -o $@ $^
 
 clean:
 	rm -f $(EXES)

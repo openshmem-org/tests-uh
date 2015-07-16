@@ -35,7 +35,7 @@
  #
 SHELL = /bin/sh
 
-SHMEM_CFLAGS=
+SHMEM_CFLAGS=-g -O0
 
 GCC=gcc
 
