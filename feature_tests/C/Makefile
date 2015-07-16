@@ -36,7 +36,7 @@
  #
 SHELL = /bin/sh
 
-SHMEM_CFLAGS=
+SHMEM_CFLAGS=-ggdb -O0
 
 GCC=gcc
 
@@ -79,10 +79,10 @@ run:	all $(EXES)
 	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_broadcast.x
 	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_collects.x
 	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_get_globals.x
-	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_get_shmalloc.x
+	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_get_shmem_alloc.x
 	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_lock.x
 	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_put_globals.x
-	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_put_shmalloc.x
+	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_put_shmem_alloc.x
 	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_reduction.x
 	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_synchronization.x
 

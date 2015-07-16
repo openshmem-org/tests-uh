@@ -1,7 +1,7 @@
 #
 #
 # Copyright (c) 2011 - 2015
-#   University of Houston System and Oak Ridge National Laboratory.
+#   University of Houston System and UT-Battelle, LLC.
 # 
 # All rights reserved.
 # 
@@ -35,7 +35,7 @@
 #
 #
 
-include Makefile.in
+include Makefile.opts
 
 MAKECMD=make -C
 
