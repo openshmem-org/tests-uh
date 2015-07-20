@@ -18,7 +18,7 @@
 #   documentation and/or other materials provided with the distribution.
 # 
 # o Neither the name of the University of Houston System, UT-Battelle, LLC
-#   National Laboratory nor the names of its contributors may be used to
+#    nor the names of its contributors may be used to
 #   endorse or promote products derived from this software without specific
 #   prior written permission.
 # 

@@ -18,7 +18,7 @@
  #   documentation and/or other materials provided with the distribution.
  # 
  # o Neither the name of the University of Houston System, UT-Battelle, LLC
- #   National Laboratory nor the names of its contributors may be used to
+ #    nor the names of its contributors may be used to
  #   endorse or promote products derived from this software without specific
  #   prior written permission.
  # 
@@ -79,10 +79,10 @@ run:	all $(EXES)
 	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_broadcast.x
 	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_collects.x
 	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_get_globals.x
-	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_get_shmem_alloc.x
+	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_get_shmem_malloc.x
 	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_lock.x
 	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_put_globals.x
-	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_put_shmem_alloc.x
+	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_put_shmem_malloc.x
 	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_reduction.x
 	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_synchronization.x
 
