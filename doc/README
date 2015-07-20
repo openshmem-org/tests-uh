@@ -15,10 +15,10 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  * 
- * o Neither the name of the University of Houston System, Oak Ridge
- *   National Laboratory nor the names of its contributors may be used to
- *   endorse or promote products derived from this software without specific
- *   prior written permission.
+ * o Neither the name of the University of Houston System, and UT-Battelle
+ *   nor the names of its contributors may be used to endorse or promote 
+ *   producs derived from this software without specific prior written 
+ *   permission.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -67,12 +67,11 @@ d.  byte-granularity block put calls
 C/C++ and Fortran:
 shmem_putmem
 Additional information:
-Test test_shmem_put_shmalloc uses shmalloc-ed variables that are allocated and
-managed by the OpenSHMEM library while the test_shmem_put_globals checks that
-the same calls work with global variables. Correct output for this test also
-depends on a reliable implementation of the shmem_barrier_all() OpenSHMEM
-call.
-
+Test test_shmem_put_shmem_malloc uses shmem_malloc-ed variables that are 
+allocated and managed by the OpenSHMEM library while the test_shmem_put_globals
+checks that the same calls work with global variables. Correct output for this
+test also depends on a reliable implementation of the shmem_barrier_all()
+OpenSHMEM call.
 
 ii. test_shmem_get_shmem_malloc, test_shmem_get_globals 
 This tests 
@@ -100,11 +99,11 @@ C/C++ and Fortran:
 shmem_getmem
 
 Additional information:
-Test test_shmem_get_shmem_malloc uses shmalloc-ed variables that are allocated and
-managed by the OpenSHMEM library while the test_shmem_get_globals checks that
-the same calls work with global variables. Correct output for this test also
-depends on a reliable implementation of the shmem_barrier_all() OpenSHMEM
-call.
+Test test_shmem_get_shmem_malloc uses shmem_malloc-ed variables that are 
+allocated and managed by the OpenSHMEM library while the test_shmem_get_globals
+checks that the same calls work with global variables. Correct output for this
+test also depends on a reliable implementation of the shmem_barrier_all()
+OpenSHMEM call.
 
 iii.  test_shmem_broadcast  
 This tests shmem_broadcast32, shmem_broadcast64 calls available for C/C++ and
@@ -123,50 +122,32 @@ shmem_int_p() OpenSHMEM call.
 
 v.  test_shmem_reductions  
 This  tests;
-C/C++ only:
-shmem_int_and_to_all, shmem_long_and_to_all, shmem_longlong_and_to_all,
-shmem_short_and_to_all,  shmem_double_max_to_all,  shmem_float_max_to_all,
-shmem_int_max_to_all,  shmem_long_max_to_all,  shmem_longdouble_max_to_all,
-shmem_longlong_max_to_all,  shmem_short_max_to_all,  shmem_double_min_to_all,
-shmem_float_min_to_all, shmem_int_min_to_all, smem_long_min_to_all,
-shmem_longdouble_min_to_all,  shmem_longlong_min_to_all,
-shmem_short_min_to_all,
-shmem_double_sum_to_all,  shmem_float_sum_to_all,  shmem_int_sum_to_all,
-shmem_long_sum_to_all,  shmem_longdouble_sum_to_all,
-shmem_longlong_sum_to_all,
-shmem_short_sum_to_all, shmem_double_prod_to_all,  shmem_float_prod_to_all,
-shmem_int_prod_to_all,  shmem_long_prod_to_all, shmem_longdouble_prod_to_all,
-shmem_longlong_prod_to_all, shmem_short_prod_to_all, shmem_int_or_to_all,
-shmem_long_or_to_all, shmem_longlong_or_to_all, shmem_short_or_to_all,
-shmem_int_xor_to_all, shmem_long_xor_to_all, shmem_longlong_xor_to_all,
-shmem_short_xor_to_all
-
 Fortran only:
-shmem_int4_and_to_all, shmem_int8_and_to_all, shmem_real4_max_to_all,
-shmem_real8_max_to_all, shmem_real16_max_to_all, shmem_int4_max_to_all,
-shmem_int8_max_to_all, shmem_real4_min_to_all, shmem_real8_min_to_all,
-shmem_real16_min_to_all, shmem_int4_min_to_all, shmem_int8_min_to_all,
-shmem_real4_sum_to_all, shmem_real8_sum_to_all, shmem_real16_sum_to_all,
-shmem_int4_sum_to_all, shmem_int8_sum_to_all, shmem_real4_prod_to_all,
-shmem_real8_prod_to_all, shmem_real16_prod_to_all, shmem_int4_prod_to_all,
-shmem_int8_prod_to_all, shmem_int4_or_to_all, shmem_int8_or_to_all,
-shmem_int4_xor_to_all, shmem_int8_xor_to_all
+test_shmem_max_01_int8, test_shmem_min_01_real4, test_shmem_prod_01_int8, 
+test_shmem_sum_01_real4, test_shmem_max_01_real4, test_shmem_min_01_real8, 
+test_shmem_prod_01_real4, test_shmem_sum_01_real80, test_shmem_and_01_int4, 
+test_shmem_max_01_real8, test_shmem_or_01_int4, test_shmem_prod_01_real8, 
+test_shmem_xor_01_int4, test_shmem_and_01_int8, test_shmem_min_01_int4,
+test_shmem_or_01_int8, test_shmem_sum_01_int4, test_shmem_xor_01_int8,
+test_shmem_max_01_int4  test_shmem_min_01_int8, test_shmem_prod_01_int4, test_shmem_sum_01_int8,
 Additional information:
 Correct output for this test also depends on a reliable implementation of the
 shmem_barrier_all() OpenSHMEM call.
 
 vi. test_shmem_atomic  
 This tests;
-C/C++ only:
-shmem_double_swap, shmem_float_swap, shmem_int_cswap, shmem_int_fadd, 
-shmem_int_finc, shmem_int_swap, shmem_long_cswap, shmem_long_fadd,
-shmem_long_finc, shmem_long_swap, shmem_longlong_cswap, shmem_longlong_fadd,
-shmem_longlong_finc, shmem_longlong_swap
-
 Fortran only:
-shmem_int4_cswap, shmem_int4_fadd, shmem_int4_finc, shmem_int4_swap,
-shmem_int8_swap, shmem_real4_swap, shmem_real8_swap, shmem_int8_cswap
-shmem_int4_add, shmem_int4_inc
+test_shmem_cswap_01_int4, test_shmem_finc_01_int8, test_shmem_inc_02_int4, test_shmem_swap_02_int8,
+test_shmem_cswap_01_int8, test_shmem_finc_02_int4, test_shmem_inc_02_int8,  test_shmem_swap_03_int4,
+test_shmem_cswap_02_int4, test_shmem_finc_02_int8, test_shmem_inc_03_int4,  test_shmem_swap_03_int8,
+test_shmem_add_01_int4, test_shmem_cswap_02_int8, test_shmem_finc_03_int4, test_shmem_inc_03_int8, test_shmem_swap_04_int4,
+test_shmem_add_01_int8, test_shmem_cswap_03_int4, test_shmem_finc_03_int8, test_shmem_inc_04_int4, test_shmem_swap_04_int8,
+test_shmem_add_02_int4, test_shmem_cswap_03_int8, test_shmem_finc_04_int4, test_shmem_inc_04_int8, test_shmem_swap_05_int4,
+test_shmem_add_02_int8, test_shmem_cswap_04_int4, test_shmem_finc_04_int8, test_shmem_inc_05_int4, test_shmem_swap_05_int8,
+test_shmem_add_03_int4, test_shmem_cswap_04_int8, test_shmem_finc_05_int4, test_shmem_inc_05_int8,
+test_shmem_add_03_int8, test_shmem_fadd_01_int4, test_shmem_finc_05_int8, test_shmem_swap_01_int4,
+test_shmem_add_04_int4, test_shmem_fadd_01_int8, test_shmem_inc_01_int4, test_shmem_swap_01_int8,
+test_shmem_add_04_int8, test_shmem_finc_01_int4, test_shmem_inc_01_int8, test_shmem_swap_02_int4,
 Additional information:
 Correct output for this test also depends on a reliable implementation of the
 shmem_barrier_all() and shmem_int_put OpenSHMEM calls.
@@ -185,22 +166,33 @@ shmem_barrier_all(), shmem_long_put and shmem_long_wait OpenSHMEM calls.
 
 viii. test_shmem_accessible
 This tests;
-C/C++ and Fortran:
-shmem_pe_accessible, shmem_addr_accessible
+Fortran:
+test_shmem_acc_mem_01_real8, test_shmem_acc_mem_03_int4, test_shmem_acc_mem_04_real4,
+test_shmem_acc_mem_02_char, test_shmem_acc_mem_03_int8, test_shmem_acc_mem_04_real8,
+test_shmem_acc_01, test_shmem_acc_mem_02_double,test_shmem_acc_mem_03_logical, test_shmem_acc_mem_05_char,
+test_shmem_acc_02, test_shmem_acc_mem_02_int4, test_shmem_acc_mem_03_real4, test_shmem_acc_mem_05_double,
+test_shmem_acc_mem_01_char, test_shmem_acc_mem_02_int8, test_shmem_acc_mem_03_real8, test_shmem_acc_mem_05_int4,
+test_shmem_acc_mem_01_double, test_shmem_acc_mem_02_logical, test_shmem_acc_mem_04_char, test_shmem_acc_mem_05_int8,
+test_shmem_acc_mem_01_int4, test_shmem_acc_mem_02_real4, test_shmem_acc_mem_04_double, test_shmem_acc_mem_05_logical,
+test_shmem_acc_mem_01_int8, test_shmem_acc_mem_02_real8, test_shmem_acc_mem_04_int4, test_shmem_acc_mem_05_real4,
+test_shmem_acc_mem_01_logical, test_shmem_acc_mem_03_char, test_shmem_acc_mem_04_int8, test_shmem_acc_mem_05_real8,
+test_shmem_acc_mem_01_real4, test_shmem_acc_mem_03_double, test_shmem_acc_mem_04_logical,
 Additional information:
 Correct output for this test also depends on a reliable implementation of the
 shmem_barrier_all() OpenSHMEM call.
 
 ix. test_shmem_collects  
 This tests;
-C/C++ only:
-shmem_collect32, shmem_collect64, shmem_fcollect32, shmem_fcollect64
 Fortran only:
-shmem_collect4, shmem_collect8, shmem_collect32, shmem_collect64,
-shmem_fcollect4, shmem_fcollect8, shmem_fcollect32, shmem_fcollect64
+test_shmem_collect_02_int8, test_shmem_fcollect_01_int4, test_shmem_fcollect_03_int8,
+test_shmem_collect_03_int4, test_shmem_fcollect_01_int8, test_shmem_fcollect_04_int4,
+test_shmem_collect_01_int4, test_shmem_collect_03_int8, test_shmem_fcollect_02_int4, 
+test_shmem_fcollect_04_int8,
+test_shmem_collect_01_int8, test_shmem_collect_04_int4, test_shmem_fcollect_02_int8,
+test_shmem_collect_02_int4, test_shmem_collect_04_int8, test_shmem_fcollect_03_int4,
 Additional information:
 Correct output for this test also depends on a reliable implementation of the
-shmem_barrier_all() OpenSHMEM call.
+shmem_barrier_all() OpenSHMEM call.	  
 
 x.  test_shmem_lock
 This tests;
@@ -280,24 +272,64 @@ To compile use 'make all' and to execute use 'make run'.
 
 4.  Expected Results and their interpretation
 Example: Feature test for atomic operations
-Execute test_shmem_atomics.c
+Execute: make run
 Expected Result:
-Test shmem_int_swap: Passed
-Test shmem_float_swap: Passed
-Test shmem_long_swap: Passed
-Test shmem_double_swap: Passed
-Test shmem_longlong_swap: Passed
-Test shmem_int_cswap: Passed
-Test shmem_long_cswap: Passed
-Test shmem_longlong_cswap: Passed
-Test shmem_int_fadd: Passed
-Test shmem_long_fadd: Passed
-Test shmem_longlong_fadd: Passed
-Test shmem_int_finc: Passed
-Test shmem_long_finc: Passed
-Test shmem_longlong_finc: Passed
+(test_001) Running test_shmem_swap_01_int4.x: shmem_swap with SAVE variables... OK
+(test_002) Running test_shmem_swap_01_int8.x: shmem_swap with SAVE variables... OK
+(test_003) Running test_shmem_swap_02_int4.x: shmem_swap with COMMON variables... OK
+(test_004) Running test_shmem_swap_02_int8.x: shmem_swap with COMMON variables... OK
+(test_005) Running test_shmem_swap_03_int4.x: shmem_swap with shpalloc'ed variables... OK
+(test_006) Running test_shmem_swap_03_int8.x: shmem_swap with shpalloc'ed variables... OK
+(test_007) Running test_shmem_swap_04_int4.x: shmem_swap with non remotely accessible variables... OK
+(test_008) Running test_shmem_swap_04_int8.x: shmem_swap with non remotely accessible variables... OK
+(test_009) Running test_shmem_swap_05_int4.x: shmem_swap with non remotely accessible variables (ALLOCATABLE)... OK
+(test_010) Running test_shmem_swap_05_int8.x: shmem_swap with non remotely accessible variables (ALLOCATABLE)... OK
+(test_011) Running test_shmem_cswap_01_int4.x: shmem_cswap with SAVE variables... OK
+(test_012) Running test_shmem_cswap_01_int8.x: shmem_cswap with SAVE variables... OK
+(test_013) Running test_shmem_cswap_02_int4.x: shmem_cswap with COMMON variables... OK
+(test_014) Running test_shmem_cswap_02_int8.x: shmem_cswap with COMMON variables... OK
+(test_015) Running test_shmem_cswap_03_int4.x: shmem_cswap with shpalloc'ed variables... OK
+(test_016) Running test_shmem_cswap_03_int8.x: shmem_cswap with shpalloc'ed variables... OK
+(test_017) Running test_shmem_cswap_04_int4.x: shmem_cswap with non remotely accessible variables... OK
+(test_018) Running test_shmem_cswap_04_int8.x: shmem_cswap with non remotely accessible variables... OK
+(test_019) Running test_shmem_add_01_int4.x: shmem_add with SAVE variables... OK
+(test_020) Running test_shmem_add_01_int8.x: shmem_add with SAVE variables... OK
+(test_021) Running test_shmem_add_02_int4.x: shmem_add with COMMON variables... OK
+(test_022) Running test_shmem_add_02_int8.x: shmem_add with COMMON variables... OK
+(test_023) Running test_shmem_add_03_int4.x: shmem_add with shpalloc'ed variables... OK
+(test_024) Running test_shmem_add_03_int8.x: shmem_add with shpalloc'ed variables... OK
+(test_025) Running test_shmem_add_04_int4.x: shmem_add with non remotely accessible variables... OK
+(test_026) Running test_shmem_add_04_int8.x: shmem_add with non remotely accessible variables... OK
+(test_027) Running test_shmem_fadd_01_int4.x: shmem_fadd with SAVE variables... OK
+(test_028) Running test_shmem_fadd_01_int8.x: shmem_fadd with SAVE variables... OK
+(test_029) Running test_shmem_inc_01_int4.x: shmem_inc with SAVE variables... OK
+(test_030) Running test_shmem_inc_01_int8.x: shmem_inc with SAVE variables... OK
+(test_031) Running test_shmem_inc_02_int4.x: shmem_inc with COMMON variables... OK
+(test_032) Running test_shmem_inc_02_int8.x: shmem_inc with COMMON variables... OK
+(test_033) Running test_shmem_inc_03_int4.x: shmem_inc with shpalloc'ed variables... OK
+(test_034) Running test_shmem_inc_03_int8.x: shmem_inc with shpalloc'ed variables... OK
+(test_035) Running test_shmem_inc_04_int4.x: shmem_inc with non remotely accessible variables... OK
+(test_036) Running test_shmem_inc_04_int8.x: shmem_inc with non remotely accessible variables... OK
+(test_037) Running test_shmem_inc_05_int4.x: shmem_inc with non remotely accessible variables (ALLOCATABLE)... OK
+(test_038) Running test_shmem_inc_05_int8.x: shmem_inc with non remotely accessible variables (ALLOCATABLE)... OK
+(test_039) Running test_shmem_finc_01_int4.x: shmem_finc with SAVE variables... OK
+(test_040) Running test_shmem_finc_01_int8.x: shmem_finc with SAVE variables... OK
+(test_041) Running test_shmem_finc_02_int4.x: shmem_finc with COMMON variables... OK
+(test_042) Running test_shmem_finc_02_int8.x: shmem_finc with COMMON variables... OK
+(test_043) Running test_shmem_finc_02_int4.x: shmem_finc with COMMON variables... OK
+(test_044) Running test_shmem_finc_02_int8.x: shmem_finc with COMMON variables... OK
+(test_045) Running test_shmem_finc_03_int4.x: shmem_finc with shpalloc'ed variables... OK
+(test_046) Running test_shmem_finc_03_int8.x: shmem_finc with shpalloc'ed variables... OK
+(test_047) Running test_shmem_finc_04_int4.x: shmem_finc with non remotely accessible variables... OK
+(test_048) Running test_shmem_finc_04_int8.x: shmem_finc with non remotely accessible variables... OK
+(test_049) Running test_shmem_finc_05_int4.x: shmem_finc with non remotely accessible variables (ALLOCATABLE)... OK
+(test_050) Running test_shmem_finc_05_int8.x: shmem_finc with non remotely accessible variables (ALLOCATABLE)... OK
+
+Done testing.
+Summary:
+- 50/50 Passed.
+- 0/50 Failed.
 
 If the test says 'Passed' then the routines that are being tested behave in
-accordance with OpenSHMEM Specification 1.0 and the result produced (if
-applicable) is correct. 
+accordance with OpenSHMEM Specification 1.2 and the result produced (if applicable) is correct. 
 
