@@ -33,7 +33,9 @@
 ! NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 ! SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 !
-!
+! This test checks if the OpenSHMEM implementation returns
+! the correct error code when memory requested is more than the 
+! size of the symmetric heap.
 
 program test_shmem_shpalloc
   implicit none
@@ -56,11 +58,11 @@ program test_shmem_shpalloc
   me = shmem_my_pe()
   npes = shmem_n_pes()
 
-  ! allocate remotely accessible block
+  ! try to allocate a huge remotely accessible block
   call shpalloc(array_addr, nelems, errcode, abort)
 
   if(me .eq. 0) then
-    if(.not.errcode .ne. -1) then
+    if(errcode .ne. -2) then
       write (*,*) TEST_NAME, ': Failed'
     else
       write (*,*) TEST_NAME, ': Passed'

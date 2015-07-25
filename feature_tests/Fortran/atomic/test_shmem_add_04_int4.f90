@@ -64,9 +64,9 @@ program test_shmem_atomics
   if (npes .gt. 1) then
     success1 = .FALSE.
 
-    target = INT(5678, KIND=4)
+    target = 5678
 
-    new_val = INT(5678, KIND=4)
+    new_val = 51234
 
     call shmem_barrier_all()
 
@@ -80,7 +80,7 @@ program test_shmem_atomics
     !  as well as the target PE
 
     if(me .eq. npes - 1) then
-      if(target .eq. INT(5678, KIND=4) + 51234) then
+      if(target .eq. (5678 + 51234)) then
         call shmem_logical_put(success1, true_val, 1, 0)
       end if
     end if
@@ -89,9 +89,9 @@ program test_shmem_atomics
 
     if(me .eq. 0) then
       if(success1 .eqv. .TRUE.) then
-        write (*,*) "Test 04 shmem_int4_add: Failed"
-      else
         write (*,*) "Test 04 shmem_int4_add: Passed"
+      else
+        write (*,*) "Test 04 shmem_int4_add: Failed"
       end if
     end if
 

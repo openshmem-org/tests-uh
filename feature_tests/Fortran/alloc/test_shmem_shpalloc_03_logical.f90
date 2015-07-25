@@ -60,7 +60,7 @@ program test_shmem_shpalloc
   call shpalloc(array_addr, nelems, errcode, abort)
 
   if(me .eq. 0) then
-    if(.not.errcode .ne. -1) then
+    if(errcode .ne. -2) then
       write (*,*) TEST_NAME, ': Failed'
     else
       write (*,*) TEST_NAME, ': Passed'

@@ -45,7 +45,7 @@ program test_shmem_broadcast
    
   integer            :: i
   logical            :: success
-  integer*8, save    :: target(nelems)
+  integer*8, save    :: dest(nelems)
   integer*8, save    :: src(nelems)
 
   integer            :: abort, errcode
@@ -69,18 +69,18 @@ program test_shmem_broadcast
     end do 
 
     do i = 1, nelems, 1
-      target(i) = -9
+      dest(i) = -9
     end do
 
     call shmem_barrier_all()
 
-    call shmem_broadcast8(target, src, nelems, 0, 0, 0, npes, pSync)
+    call shmem_broadcast8(dest, src, nelems, 0, 0, 0, npes, pSync)
 
     call shmem_barrier_all()
 
     if(me .eq. 1) then
       do i = 1, nelems, 1
-        if(target(i) .ne. INT(54321 + i, KIND=8)) then
+        if(dest(i) .ne. INT(54321 + i, KIND=8)) then
           success = .FALSE.
         end if
       end do

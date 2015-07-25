@@ -66,9 +66,9 @@ program test_shmem_atomics
     success1 = .FALSE.
     success2 = .FALSE.
 
-    target = INT(me, KIND=4)
+    target = me
 
-    new_val = INT(me, KIND=4)
+    new_val = me
 
     call shmem_barrier_all()
 
@@ -96,10 +96,10 @@ program test_shmem_atomics
     call shmem_barrier_all()
 
     if(me .eq. 0) then
-      if(success1 .eqv. .TRUE. .or. success2 .eqv. .TRUE.) then
-        write (*,*) "Test 04 shmem_int4_cswap: Failed"
-      else
+      if(success1 .eqv. .TRUE. .and. success2 .eqv. .TRUE.) then
         write (*,*) "Test 04 shmem_int4_cswap: Passed"
+      else
+        write (*,*) "Test 04 shmem_int4_cswap: Failed"
       end if
     end if
 

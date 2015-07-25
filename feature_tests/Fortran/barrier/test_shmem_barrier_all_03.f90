@@ -40,8 +40,12 @@ program test_shmem_barrier
 
   include 'shmem.fh'
 
-  integer, save :: flag
-  integer       :: me, npes, i
+  integer*4               :: dest
+  integer*8               :: dest_ptr
+  pointer                    (dest_ptr, dest)
+  integer*4               :: src
+  integer, save           :: flag
+  integer                 :: me, npes, i, errcode, abort
 
 ! Function definitions
   integer                   :: shmem_my_pe, shmem_n_pes
@@ -53,6 +57,10 @@ program test_shmem_barrier
   me   = shmem_my_pe();
   npes = shmem_n_pes();
 
+  dest = 0
+
+  call shpalloc(dest_ptr, 1, errcode, abort)
+
   if (npes .gt. 1) then
     
     if(me .eq. npes - 1) then
@@ -60,8 +68,20 @@ program test_shmem_barrier
     end if
 
 ! All PEs should call shmem_barrier_all before leaving the barrier
-    if(me .eq. npes - 1) then
-      write (*,*) 'Test shmem_barrier_all: Failed'
+! Atomic increment of destination on 0
+
+    call shmem_int4_inc(dest, 0)
+
+    if(me .eq. 0) then
+      if(dest .eq. npes - 1) then
+        write (*,*) 'Test shmem_barrier_all: Passed'
+      else
+        write (*,*) 'Test shmem_barrier_all: Failed'
+      end if
+    end if
+
+    if(me .ne. npes - 1) then
+      call shmem_barrier_all()
     end if
 
   else

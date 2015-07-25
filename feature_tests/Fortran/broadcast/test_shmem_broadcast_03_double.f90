@@ -46,9 +46,9 @@ program test_shmem_broadcast
   integer            :: i
   logical            :: success
 
-  double precision           :: target(1)
-  integer*8          :: target_addr
-  pointer            (target_addr, target)
+  double precision           :: dest(1)
+  integer*8          :: dest_addr
+  pointer            (dest_addr, dest)
 
   double precision           :: src(1)
   integer*8          :: src_addr
@@ -70,7 +70,7 @@ program test_shmem_broadcast
   if(npes .ge. min_npes) then
     pSync(:) = SHMEM_SYNC_VALUE
 
-    call shpalloc(target_addr, nelems, errcode, abort)
+    call shpalloc(dest_addr, nelems, errcode, abort)
     call shpalloc(src_addr, nelems, errcode, abort)
 
     do i = 1, nelems, 1      
@@ -78,18 +78,18 @@ program test_shmem_broadcast
     end do 
 
     do i = 1, nelems, 1
-      target(i) = -9
+      dest(i) = -9
     end do
 
     call shmem_barrier_all()
 
-    call shmem_broadcast8(target, src, nelems, 0, 0, 0, npes, pSync)
+    call shmem_broadcast8(dest, src, nelems, 0, 0, 0, npes, pSync)
 
     call shmem_barrier_all()
 
     if(me .eq. 1) then
       do i = 1, nelems, 1
-        if(target(i) .ne. 54321.67 + DBLE(i)) then
+        if(dest(i) .ne. 54321.67 + DBLE(i)) then
           success = .FALSE.
         end if
       end do
@@ -103,7 +103,7 @@ program test_shmem_broadcast
 
     call shmem_barrier_all()
 
-    call shpdeallc(target_addr, errcode, abort)
+    call shpdeallc(dest_addr, errcode, abort)
     call shpdeallc(src_addr, errcode, abort)
 
   else

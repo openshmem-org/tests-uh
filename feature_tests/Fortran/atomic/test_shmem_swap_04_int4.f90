@@ -96,9 +96,9 @@ program test_shmem_atomics
 
     if(me .eq. 0) then
       if((success1 .eqv. .TRUE.) .or. (success2 .eqv. .TRUE.)) then
-        write (*,*) "Test 04 shmem_int4_swap: Failed"
-      else
         write (*,*) "Test 04 shmem_int4_swap: Passed"
+      else
+        write (*,*) "Test 04 shmem_int4_swap: Failed"
       end if
     end if
 

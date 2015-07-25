@@ -41,6 +41,9 @@ program test_shmem_shpalloc
 
   integer, parameter :: nelems = 1024000000
 
+  integer            :: symm_size=0
+  character*50            :: symm_s
+
   integer*8          :: array_addr
   double precision           :: array(1)    
   pointer            (array_addr, array)
@@ -60,10 +63,10 @@ program test_shmem_shpalloc
   call shpalloc(array_addr, nelems, errcode, abort)
 
   if(me .eq. 0) then
-    if(.not.errcode .ne. -1) then
-      write (*,*) TEST_NAME, ': Failed'
-    else
+    if(errcode .eq. -2) then
       write (*,*) TEST_NAME, ': Passed'
+    else
+      write (*,*) TEST_NAME, ': Failed'
     end if
   end if
 

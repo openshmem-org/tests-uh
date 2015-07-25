@@ -99,9 +99,9 @@ program test_shmem_atomics
 
     if(me .eq. 0) then
       if(success1 .eqv. .TRUE. .and. success2 .eqv. .TRUE.) then
-        write (*,*) "Test 05 shmem_int8_finc: Failed"
-      else
         write (*,*) "Test 05 shmem_int8_finc: Passed"
+      else
+        write (*,*) "Test 05 shmem_int8_finc: Failed"
       end if
     end if
 

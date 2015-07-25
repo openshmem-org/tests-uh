@@ -45,7 +45,7 @@ program test_shmem_broadcast
    
   integer            :: i
   logical            :: success
-  logical           :: target(nelems)
+  logical           :: dest(nelems)
   logical           :: src(nelems)
 
   integer            :: abort, errcode
@@ -55,7 +55,7 @@ program test_shmem_broadcast
 ! Function definitions
   integer            :: shmem_my_pe, shmem_n_pes
 
-  common /globalvars/ target, src
+  common /globalvars/ dest, src
 
   call shmem_init()
   me = shmem_my_pe()
@@ -71,18 +71,18 @@ program test_shmem_broadcast
     end do 
 
     do i = 1, nelems, 1
-      target(i) = .FALSE.
+      dest(i) = .FALSE.
     end do
 
     call shmem_barrier_all()
 
-    call shmem_broadcast4(target, src, nelems, 0, 0, 0, npes, pSync)
+    call shmem_broadcast4(dest, src, nelems, 0, 0, 0, npes, pSync)
 
     call shmem_barrier_all()
 
     if(me .eq. 1) then
       do i = 1, nelems, 1
-        if(target(i) .neqv. .TRUE.) then
+        if(dest(i) .neqv. .TRUE.) then
           success = .FALSE.
         end if
       end do
