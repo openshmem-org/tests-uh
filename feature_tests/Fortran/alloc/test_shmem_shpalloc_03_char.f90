@@ -63,9 +63,9 @@ program test_shmem_shpalloc
 
   if(me .eq. 0) then
     if(errcode .ne. -2) then
-      write (*,*) TEST_NAME, ': Failed'
-    else
       write (*,*) TEST_NAME, ': Passed'
+    else
+      write (*,*) TEST_NAME, ': Failed'
     end if
   end if
 

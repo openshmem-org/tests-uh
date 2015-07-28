@@ -59,7 +59,7 @@ main (void)
 {
     int *targ;
     int *src;
-    long *target;
+    long *dest;
     long *source;
     int i, me, npes;
 
@@ -76,12 +76,12 @@ main (void)
     src = (int *) shmem_malloc (npes * sizeof (*src));
     targ = (int *) shmem_malloc (npes * sizeof (*targ));
     source = (long *) shmem_malloc (npes * sizeof (*source));
-    target = (long *) shmem_malloc (npes * sizeof (*target));
+    dest = (long *) shmem_malloc (npes * sizeof (*dest));
     for (i = 0; i < npes; i += 1) {
         src[i] = i + 1;
         targ[i] = -999;
         source[i] = i + 1;
-        target[i] = -999;
+        dest[i] = -999;
     }
 
     shmem_barrier_all ();
@@ -120,11 +120,11 @@ main (void)
         shmem_barrier_all ();
         /* Test shmem_broadcast64 */
 
-        shmem_broadcast64 (target, source, npes, 0, 0, 0, npes, pSync);
+        shmem_broadcast64 (dest, source, npes, 0, 0, 0, npes, pSync);
 
         if (me == 0) {
             for (i = 0; i < npes; i++) {
-                if (target[i] == -999)
+                if (dest[i] == -999)
                     success64 = 0;
             }
         }
@@ -132,7 +132,7 @@ main (void)
         if (me == npes - 1) {
 
             for (i = 0; i < npes; i++) {
-                if (target[i] == (i + 1))
+                if (dest[i] == (i + 1))
                     success64 = 0;
             }
         }
@@ -161,7 +161,7 @@ main (void)
     if (npes > 2) {
         for (i = 0; i < npes; i += 1) {
             targ[i] = -999;
-            target[i] = -999;
+            dest[i] = -999;
         }
 
 
@@ -204,15 +204,15 @@ main (void)
 
         if (me % 2 == 0)
             if (npes % 2 == 0)
-                shmem_broadcast64 (target, source, npes, 0, 0, 1, npes / 2,
+                shmem_broadcast64 (dest, source, npes, 0, 0, 1, npes / 2,
                                    pSync);
             else
-                shmem_broadcast64 (target, source, npes, 0, 0, 1,
+                shmem_broadcast64 (dest, source, npes, 0, 0, 1,
                                    (npes + 1) / 2, pSync);
 
         if (me == 0) {
             for (i = 0; i < npes; i++) {
-                if (target[i] == -999)
+                if (dest[i] == -999)
                     success64 = 0;
             }
         }
@@ -220,7 +220,7 @@ main (void)
         if (me == 2) {
 
             for (i = 0; i < npes; i++) {
-                if (target[i] == (i + 1))
+                if (dest[i] == (i + 1))
                     success64 = 0;
             }
         }
@@ -242,7 +242,7 @@ main (void)
     }
     shmem_free (targ);
     shmem_free (src);
-    shmem_free (target);
+    shmem_free (dest);
     shmem_free (source);
 
     shmem_finalize ();

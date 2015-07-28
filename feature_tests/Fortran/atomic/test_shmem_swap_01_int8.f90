@@ -43,7 +43,7 @@ program test_shmem_atomics
   logical, save             :: success1
   logical, save             :: success2
 
-  integer*8,        save    :: target
+  integer*8,        save    :: dest
 
   integer*8                  :: swapped_val, new_val
 
@@ -67,19 +67,19 @@ program test_shmem_atomics
     success1 = .FALSE.
     success2 = .FALSE.
 
-    target = INT(me, KIND=8)
+    dest = INT(me, KIND=8)
 
     new_val = INT(me, KIND=8)
 
 
     call shmem_barrier_all()
 
-    swapped_val = shmem_int8_swap(target, new_val, mod((me + 1), npes))
+    swapped_val = shmem_int8_swap(dest, new_val, mod((me + 1), npes))
 
     call shmem_barrier_all()
 
     ! To validate the working of swap we need to check the value received at the PE that initiated the swap 
-    !  as well as the target PE
+    !  as well as the dest PE
 
     if(me .eq. 0) then
       if(swapped_val .eq. INT(1, KIND=8)) then
@@ -88,7 +88,7 @@ program test_shmem_atomics
     end if
 
     if(me .eq. 1) then
-      if(target .eq. 0) then
+      if(dest .eq. 0) then
         call shmem_logical_put(success2, true_val, 1, 0)
       end if
     end if

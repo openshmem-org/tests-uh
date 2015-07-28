@@ -40,7 +40,7 @@ program test_shmem_accessible
   include 'shmem.fh'
   integer, parameter  :: length = 4
 
-  character            :: remote_target(2)
+  character            :: remote_dest(2)
   
   integer             :: me, npes
   integer             :: errcode, abort
@@ -60,7 +60,7 @@ program test_shmem_accessible
   call shmem_barrier_all()
   
   if (me .eq. 0) then
-    if(.not.shmem_addr_accessible(remote_target, 1) ) then
+    if(.not.shmem_addr_accessible(remote_dest, 1) ) then
       write(*,*) 'test_shmem_acc_mem_04_character: Passed'
     else
       write(*,*) 'test_shmem_acc_mem_04_character: Failed'

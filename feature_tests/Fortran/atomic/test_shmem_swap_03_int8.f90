@@ -47,9 +47,9 @@ program test_shmem_atomics
   integer*8                 :: success2_ptr
   pointer                   (success2_ptr, success2)
 
-  integer*8                  :: target(1)
-  integer*8                 :: target_ptr
-  pointer                   (target_ptr, target)
+  integer*8                  :: dest(1)
+  integer*8                 :: dest_ptr
+  pointer                   (dest_ptr, dest)
 
   integer*8                  :: swapped_val, new_val
 
@@ -70,25 +70,25 @@ program test_shmem_atomics
 
   if (npes .gt. 1) then
 
-    call shpalloc(target_ptr, 1, errcode, abort)
+    call shpalloc(dest_ptr, 1, errcode, abort)
     call shpalloc(success2_ptr, 1, errcode, abort)
 
     success1 = .FALSE.
     success2(1) = .FALSE.
 
-    target(1) = INT(me, KIND=8)
+    dest(1) = INT(me, KIND=8)
 
     new_val = INT(me, KIND=8)
 
 
     call shmem_barrier_all()
 
-    swapped_val = shmem_int8_swap(target, new_val, mod((me + 1), npes))
+    swapped_val = shmem_int8_swap(dest, new_val, mod((me + 1), npes))
 
     call shmem_barrier_all()
 
     ! To validate the working of swap we need to check the value received at the PE that initiated the swap 
-    !  as well as the target PE
+    !  as well as the dest PE
 
     if(me .eq. 0) then
       if(swapped_val .eq. INT(1, KIND=8)) then
@@ -97,7 +97,7 @@ program test_shmem_atomics
     end if
 
     if(me .eq. 1) then
-      if(target(1) .eq. 0) then
+      if(dest(1) .eq. 0) then
         call shmem_logical_put(success2, true_val, 1, 0)
       end if
     end if
@@ -114,7 +114,7 @@ program test_shmem_atomics
 
     call shmem_barrier_all()
 
-    call shpdeallc(target_ptr, errcode, abort)
+    call shpdeallc(dest_ptr, errcode, abort)
     call shpdeallc(success2_ptr, errcode, abort)
 
   else

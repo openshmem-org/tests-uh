@@ -43,7 +43,7 @@ program test_shmem_atomics
   logical, save             :: success1
   logical, ALLOCATABLE      :: success2(:)
 
-  integer*4, ALLOCATABLE     :: target(:)
+  integer*4, ALLOCATABLE     :: dest(:)
 
   integer*4                  :: swapped_val, new_val
 
@@ -63,24 +63,24 @@ program test_shmem_atomics
   ! Make sure this job is running with at least 2 PEs.
 
   if (npes .gt. 1) then
-    ALLOCATE(target(1))
+    ALLOCATE(dest(1))
     ALLOCATE(success2(1))
    
     success1 = .FALSE.
     success2(1) = .FALSE.
 
-    target(1) = INT(me, KIND=4)
+    dest(1) = INT(me, KIND=4)
 
     new_val = INT(me, KIND=4)
 
     call shmem_barrier_all()
 
-    swapped_val = shmem_int4_swap(target(1), new_val, mod((me + 1), npes))
+    swapped_val = shmem_int4_swap(dest(1), new_val, mod((me + 1), npes))
 
     call shmem_barrier_all()
 
     ! To validate the working of swap we need to check the value received at the PE that initiated the swap 
-    !  as well as the target PE
+    !  as well as the dest PE
 
     if(me .eq. 0) then
       if(swapped_val .eq. INT(1, KIND=4)) then
@@ -89,7 +89,7 @@ program test_shmem_atomics
     end if
 
     if(me .eq. 1) then
-      if(target(1) .eq. 0) then
+      if(dest(1) .eq. 0) then
         call shmem_logical_put(success2, true_val, 1, 0)
       end if
     end if
@@ -106,7 +106,7 @@ program test_shmem_atomics
 
     call shmem_barrier_all()
 
-    DEALLOCATE(target)
+    DEALLOCATE(dest)
     DEALLOCATE(success2)
 
   else

@@ -43,9 +43,9 @@ program test_shmem_atomics
   logical, save             :: success1
   logical, save             :: success2
 
-  integer*4                 :: target(1)
-  integer*8                :: target_ptr
-  pointer (target_ptr, target)
+  integer*4                 :: dest(1)
+  integer*8                :: dest_ptr
+  pointer (dest_ptr, dest)
 
   integer*4                 :: swapped_val, new_val
 
@@ -66,23 +66,23 @@ program test_shmem_atomics
   if (npes .gt. 1) then
     success1 = .FALSE.
 
-    call shpalloc(target_ptr, 1, errcode, abort)
+    call shpalloc(dest_ptr, 1, errcode, abort)
 
-    target(1) = 51234
+    dest(1) = 51234
 
     call shmem_barrier_all()
 
     if(me .eq. 0) then
-      call shmem_int4_inc(target, npes - 1) 
+      call shmem_int4_inc(dest, npes - 1) 
     end if
 
     call shmem_barrier_all()
 
     ! To validate the working of swap we need to check the value received at the PE that initiated the swap 
-    !  as well as the target PE
+    !  as well as the dest PE
 
     if(me .eq. npes - 1) then
-      if(target(1) .eq. 51234 + 1) then
+      if(dest(1) .eq. 51234 + 1) then
         call shmem_logical_put(success1, true_val, 1, 0)
       end if
     end if
@@ -99,7 +99,7 @@ program test_shmem_atomics
 
     call shmem_barrier_all()
 
-    call shpdeallc(target_ptr, errcode, abort)
+    call shpdeallc(dest_ptr, errcode, abort)
 
   else
     write (*,*) "Number of PEs must be > 1 to test shmem atomics, test skipped"

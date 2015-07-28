@@ -59,11 +59,11 @@ main ()
 {
     int me, npes;
 
-    int *target1;
-    float *target2;
-    long *target3;
-    double *target4;
-    long long *target5;
+    int *dest1;
+    float *dest2;
+    long *dest3;
+    double *dest4;
+    long long *dest5;
 
     int swapped_val1, new_val1;
     float swapped_val2, new_val2;
@@ -88,13 +88,13 @@ main ()
 
     if (npes > 1) {
 
-        target1 = (int *) shmem_malloc (sizeof (*target1));
-        target2 = (float *) shmem_malloc (sizeof (*target2));
-        target3 = (long *) shmem_malloc (sizeof (*target3));
-        target4 = (double *) shmem_malloc (sizeof (*target4));
-        target5 = (long long *) shmem_malloc (sizeof (*target5));
+        dest1 = (int *) shmem_malloc (sizeof (*dest1));
+        dest2 = (float *) shmem_malloc (sizeof (*dest2));
+        dest3 = (long *) shmem_malloc (sizeof (*dest3));
+        dest4 = (double *) shmem_malloc (sizeof (*dest4));
+        dest5 = (long long *) shmem_malloc (sizeof (*dest5));
 
-        *target1 = *target2 = *target3 = *target4 = *target5 = me;
+        *dest1 = *dest2 = *dest3 = *dest4 = *dest5 = me;
         new_val1 = new_val2 = new_val3 = new_val4 = new_val5 = me;
         success1_p1 = success1_p2 = success2_p1 = success2_p2 = success3_p1 =
             success3_p2 = success4_p1 = success4_p2 = success5_p1 =
@@ -102,15 +102,15 @@ main ()
 
         shmem_barrier_all ();
 
-        swapped_val1 = shmem_int_swap (target1, new_val1, (me + 1) % npes);
-        swapped_val2 = shmem_float_swap (target2, new_val2, (me + 1) % npes);
-        swapped_val3 = shmem_long_swap (target3, new_val3, (me + 1) % npes);
-        swapped_val4 = shmem_double_swap (target4, new_val4, (me + 1) % npes);
-        swapped_val5 = shmem_longlong_swap (target5, new_val5, (me + 1) % npes);
+        swapped_val1 = shmem_int_swap (dest1, new_val1, (me + 1) % npes);
+        swapped_val2 = shmem_float_swap (dest2, new_val2, (me + 1) % npes);
+        swapped_val3 = shmem_long_swap (dest3, new_val3, (me + 1) % npes);
+        swapped_val4 = shmem_double_swap (dest4, new_val4, (me + 1) % npes);
+        swapped_val5 = shmem_longlong_swap (dest5, new_val5, (me + 1) % npes);
 
 
         /* To validate the working of swap we need to check the value received
-           at the PE that initiated the swap as well as the target PE */
+           at the PE that initiated the swap as well as the dest PE */
 
         if (me == 0) {
             if (swapped_val1 == 1) {
@@ -131,19 +131,19 @@ main ()
         }
 
         if (me == 1) {
-            if (target1 == 0) {
+            if (dest1 == 0) {
                 shmem_int_put (&success1_p2, &success, 1, 0);
             }
-            if (target2 == 0) {
+            if (dest2 == 0) {
                 shmem_int_put (&success2_p2, &success, 1, 0);
             }
-            if (target3 == 0) {
+            if (dest3 == 0) {
                 shmem_int_put (&success3_p2, &success, 1, 0);
             }
-            if (target4 == 0) {
+            if (dest4 == 0) {
                 shmem_int_put (&success4_p2, &success, 1, 0);
             }
-            if (target5 == 0) {
+            if (dest5 == 0) {
                 shmem_int_put (&success5_p2, &success, 1, 0);
             }
         }
@@ -194,21 +194,21 @@ main ()
         /* Test conditional swaps shmem_longlong_cswap, shmem_long_cswap,
            shmem_int_cswap, */
 
-        *target1 = *target3 = *target5 = me;
+        *dest1 = *dest3 = *dest5 = me;
         new_val1 = new_val3 = new_val5 = me;
         success1_p1 = success1_p2 = success3_p1 = success3_p2 = success5_p1 =
             success5_p2 = -1;
 
         shmem_barrier_all ();
 
-        swapped_val1 = shmem_int_cswap (target1, me + 1, (long) me, 1);
-        swapped_val3 = shmem_long_cswap (target3, me + 1, (long) me, 1);
-        swapped_val5 = shmem_longlong_cswap (target5, me + 1, (long) me, 1);
+        swapped_val1 = shmem_int_cswap (dest1, me + 1, (long) me, 1);
+        swapped_val3 = shmem_long_cswap (dest3, me + 1, (long) me, 1);
+        swapped_val5 = shmem_longlong_cswap (dest5, me + 1, (long) me, 1);
 
 
         /* To validate the working of conditionalswap we need to check the
            value received at the PE that initiated the conditional swap as
-           well as the target PE */
+           well as the dest PE */
 
         if (me == 0) {
             if (swapped_val1 == 1) {
@@ -225,15 +225,15 @@ main ()
         }
 
         if (me == 1) {
-            if (*target1 == 0) {
+            if (*dest1 == 0) {
                 shmem_int_put (&success1_p2, &success, 1, 0);
             }
 
-            if (*target3 == 0) {
+            if (*dest3 == 0) {
                 shmem_int_put (&success3_p2, &success, 1, 0);
             }
 
-            if (*target5 == 0) {
+            if (*dest5 == 0) {
                 shmem_int_put (&success5_p2, &success, 1, 0);
             }
         }
@@ -267,21 +267,21 @@ main ()
 
         /* Test shmem_long_fadd, shmem_int_fadd, shmem_longlong_fadd */
 
-        *target1 = *target3 = *target5 = me;
+        *dest1 = *dest3 = *dest5 = me;
         new_val1 = new_val3 = new_val5 = me;
         success1_p1 = success1_p2 = success3_p1 = success3_p2 = success5_p1 =
             success5_p2 = -1;
 
         shmem_barrier_all ();
 
-        swapped_val1 = shmem_int_fadd (target1, 1, 0);
-        swapped_val3 = shmem_long_fadd (target3, 1, 0);
-        swapped_val5 = shmem_longlong_fadd (target5, 1, 0);
+        swapped_val1 = shmem_int_fadd (dest1, 1, 0);
+        swapped_val3 = shmem_long_fadd (dest3, 1, 0);
+        swapped_val5 = shmem_longlong_fadd (dest5, 1, 0);
 
 
         /* To validate the working of fetch and add we need to check the old
            value received at the PE that initiated the fetch and increment as
-           well as the new value on the target PE */
+           well as the new value on the dest PE */
 
         if (me != 0) {
             if (swapped_val1 == 0) {
@@ -298,15 +298,15 @@ main ()
         }
 
         if (me == 0) {
-            if (*target1 == npes - 1) {
+            if (*dest1 == npes - 1) {
                 shmem_int_put (&success1_p2, &success, 1, npes - 1);
             }
 
-            if (*target3 == npes - 1) {
+            if (*dest3 == npes - 1) {
                 shmem_int_put (&success3_p2, &success, 1, npes - 1);
             }
 
-            if (*target5 == npes - 1) {
+            if (*dest5 == npes - 1) {
                 shmem_int_put (&success5_p2, &success, 1, npes - 1);
             }
         }
@@ -340,21 +340,21 @@ main ()
 
         /* Test shmem_long_finc, shmem_int_finc, shmem_longlong_finc */
 
-        *target1 = *target3 = *target5 = me;
+        *dest1 = *dest3 = *dest5 = me;
         new_val1 = new_val3 = new_val5 = me;
         success1_p1 = success1_p2 = success3_p1 = success3_p2 = success5_p1 =
             success5_p2 = -1;
 
         shmem_barrier_all ();
 
-        swapped_val1 = shmem_int_finc (target1, 0);
-        swapped_val3 = shmem_long_finc (target3, 0);
-        swapped_val5 = shmem_longlong_finc (target5, 0);
+        swapped_val1 = shmem_int_finc (dest1, 0);
+        swapped_val3 = shmem_long_finc (dest3, 0);
+        swapped_val5 = shmem_longlong_finc (dest5, 0);
 
 
         /* To validate the working of fetch and increment we need to check the
            old value received at the PE that initiated the fetch and increment 
-           as well as the new value on the target PE */
+           as well as the new value on the dest PE */
 
         if (me != 0) {
             if (swapped_val1 == 0) {
@@ -371,15 +371,15 @@ main ()
         }
 
         if (me == 0) {
-            if (*target1 == npes - 1) {
+            if (*dest1 == npes - 1) {
                 shmem_int_put (&success1_p2, &success, 1, npes - 1);
             }
 
-            if (*target3 == npes - 1) {
+            if (*dest3 == npes - 1) {
                 shmem_int_put (&success3_p2, &success, 1, npes - 1);
             }
 
-            if (*target5 == npes - 1) {
+            if (*dest5 == npes - 1) {
                 shmem_int_put (&success5_p2, &success, 1, npes - 1);
             }
         }
@@ -411,11 +411,11 @@ main ()
         }
         shmem_barrier_all ();
 
-        shmem_free (target1);
-        shmem_free (target2);
-        shmem_free (target3);
-        shmem_free (target4);
-        shmem_free (target5);
+        shmem_free (dest1);
+        shmem_free (dest2);
+        shmem_free (dest3);
+        shmem_free (dest4);
+        shmem_free (dest5);
 
     }
     else {

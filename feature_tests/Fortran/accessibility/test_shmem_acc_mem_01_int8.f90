@@ -39,7 +39,7 @@ program test_shmem_accessible
   implicit none
   include 'shmem.fh'
 
-  integer*8, save     :: target(2)
+  integer*8, save     :: dest(2)
   
   integer             :: me, npes
   
@@ -58,7 +58,7 @@ program test_shmem_accessible
   call shmem_barrier_all()
   
   if (me .eq. 0) then
-    if( shmem_addr_accessible(target, 1) ) then
+    if( shmem_addr_accessible(dest, 1) ) then
       write(*,*) 'test_shmem_acc_mem_01_integer*8: Passed'
     else
       write(*,*) 'test_shmem_acc_mem_01_integer*8: Failed'

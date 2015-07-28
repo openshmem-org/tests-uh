@@ -39,11 +39,11 @@ program test_shmem_accessible
   implicit none
   include 'shmem.fh'
 
-  integer*8           :: target(2)
+  integer*8           :: dest(2)
   
   integer             :: me, npes
   
-  common /globalvars/   target
+  common /globalvars/   dest
 
   ! SHMEM function definitions
   integer             :: shmem_my_pe, shmem_n_pes
@@ -60,7 +60,7 @@ program test_shmem_accessible
   call shmem_barrier_all()
   
   if (me .eq. 0) then
-    if( shmem_addr_accessible(target, 1) ) then
+    if( shmem_addr_accessible(dest, 1) ) then
       write(*,*) 'test_shmem_acc_mem_02_integer*8: Passed'
     else
       write(*,*) 'test_shmem_acc_mem_02_integer*8: Failed'

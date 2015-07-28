@@ -43,8 +43,8 @@ program test_shmem_reduction
   integer,   parameter :: nelems = 10
 
   real*8, save      :: src(nelems)
-  real*8, save      :: target(nelems)
-  real*8  , save    :: target_expected(nelems)
+  real*8, save      :: dest(nelems)
+  real*8  , save    :: dest_expected(nelems)
 
   integer,   save      :: pSync(SHMEM_REDUCE_SYNC_SIZE)
   integer  , save      :: pWrk(SHMEM_REDUCE_MIN_WRKDATA_SIZE)
@@ -69,17 +69,17 @@ program test_shmem_reduction
     pSync(:) = SHMEM_SYNC_VALUE
 
     do i = 1, nelems, 1
-      target(i) = 0
+      dest(i) = 0
       src(i) = REAL(me + i, KIND=8)
-      target_expected(i) = REAL((npes - 1) + i, KIND=8)
+      dest_expected(i) = REAL((npes - 1) + i, KIND=8)
     end do
 
     call shmem_barrier_all()
     
-    call shmem_real8_max_to_all(target, src, nelems, 0, 0, npes, pWrk, pSync)
+    call shmem_real8_max_to_all(dest, src, nelems, 0, 0, npes, pWrk, pSync)
 
     do i = 1, nelems, 1
-      if(target(i) .ne. target_expected(i)) then
+      if(dest(i) .ne. dest_expected(i)) then
         success = .FALSE.
       end if 
     end do

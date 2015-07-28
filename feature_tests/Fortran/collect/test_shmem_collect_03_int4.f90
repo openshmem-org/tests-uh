@@ -43,17 +43,17 @@ program test_shmem_collects
 
   integer,   parameter :: min_npes = 2
   integer,   parameter :: nelems = 10 
-  integer,   parameter :: target_nelems = nelems * min_npes ! assuming 2 pes ( 2 x 4 elements)
+  integer,   parameter :: dest_nelems = nelems * min_npes ! assuming 2 pes ( 2 x 4 elements)
 
   integer*4             :: src(nelems)
   integer*8            :: src_addr
   pointer              (src_addr, src)
 
-  integer*4             :: target(target_nelems)
-  integer*8            :: target_addr
-  pointer              (target_addr, target)
+  integer*4             :: dest(dest_nelems)
+  integer*8            :: dest_addr
+  pointer              (dest_addr, dest)
 
-  integer*4             :: target_expected(target_nelems)
+  integer*4             :: dest_expected(dest_nelems)
 
   integer, save        :: flag
   integer              :: npes, me
@@ -78,15 +78,15 @@ program test_shmem_collects
     success = .TRUE.
     flag = 0
 
-    call shpalloc (target_addr, target_nelems, errcode, abort)
+    call shpalloc (dest_addr, dest_nelems, errcode, abort)
     call shpalloc(src_addr, nelems, errcode, abort)
 
 ! The number of elements to collect from each PE
     collect_nelems = nelems / npes
 
-    do i = 1, target_nelems, 1
-      target(i) = -9
-      target_expected = -9
+    do i = 1, dest_nelems, 1
+      dest(i) = -9
+      dest_expected = -9
     end do
 
     do i = 1, nelems, 1
@@ -101,7 +101,7 @@ program test_shmem_collects
        tmp = collect_nelems
      end if
       do i = 1, collect_nelems, 1
-        target_expected(k) = i * 100 + pe  
+        dest_expected(k) = i * 100 + pe  
         k = k + 1
       end do
     end do
@@ -112,12 +112,12 @@ program test_shmem_collects
  
     call shmem_barrier_all()
 
-    call shmem_collect32(target, src, collect_nelems, &
+    call shmem_collect32(dest, src, collect_nelems, &
       0, 0, npes, &
       pSync)
 
     do i = 1, collect_nelems * npes, 1
-      if(target(i) .ne. target_expected(i)) then
+      if(dest(i) .ne. dest_expected(i)) then
         if(me .ne. 0) then
           call shmem_int4_inc(flag, 0)
         end if
@@ -140,7 +140,7 @@ program test_shmem_collects
 
     call shmem_barrier_all()
 
-    call shpdeallc (target_addr, errcode, abort)
+    call shpdeallc (dest_addr, errcode, abort)
     call shpdeallc(src_addr, errcode, abort)
 
   else

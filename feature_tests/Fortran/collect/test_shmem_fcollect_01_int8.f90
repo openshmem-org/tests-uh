@@ -44,11 +44,11 @@ program test_shmem_collects
 
   integer,   parameter :: min_npes = 2
   integer,   parameter :: nelems = 10 
-  integer,   parameter :: target_nelems = nelems * min_npes ! assuming 2 pes ( 2 x 4 elements)
+  integer,   parameter :: dest_nelems = nelems * min_npes ! assuming 2 pes ( 2 x 4 elements)
 
   integer*8,       save :: src(nelems)
-  integer*8,       save :: target(target_nelems)
-  integer*8             :: target_expected(target_nelems)
+  integer*8,       save :: dest(dest_nelems)
+  integer*8             :: dest_expected(dest_nelems)
 
   integer, save        :: flag
   integer              :: npes, me
@@ -75,9 +75,9 @@ program test_shmem_collects
 
     collect_nelems = nelems / npes
 
-    do i = 1, target_nelems, 1
-      target(i) = -9
-      target_expected = -9
+    do i = 1, dest_nelems, 1
+      dest(i) = -9
+      dest_expected = -9
     end do
 
     do i = 1, nelems, 1
@@ -87,19 +87,19 @@ program test_shmem_collects
     k = 1
     do pe = 0, npes - 1, 1
       do i = 1, collect_nelems, 1
-        target_expected(k) = i * 100 + pe  
+        dest_expected(k) = i * 100 + pe  
         k = k + 1
       end do
     end do
     
     call shmem_barrier_all()
 
-    call shmem_fcollect64(target, src, collect_nelems, &
+    call shmem_fcollect64(dest, src, collect_nelems, &
       0, 0, npes, &
       pSync)
 
     do i = 1, collect_nelems * npes, 1
-      if(target(i) .ne. target_expected(i)) then
+      if(dest(i) .ne. dest_expected(i)) then
         if(me .ne. 0) then
           call shmem_int4_inc(flag, 0)
         end if

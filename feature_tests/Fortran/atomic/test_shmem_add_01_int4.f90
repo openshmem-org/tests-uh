@@ -43,7 +43,7 @@ program test_shmem_atomics
   logical, save             :: success1
   logical, save             :: success2
 
-  integer*4,        save    :: target
+  integer*4,        save    :: dest
 
   integer*4                 :: swapped_val, new_val
 
@@ -64,23 +64,23 @@ program test_shmem_atomics
   if (npes .gt. 1) then
     success1 = .FALSE.
 
-    target = 51234
+    dest = 51234
 
     new_val = INT(5678, KIND=4)
 
     call shmem_barrier_all()
 
     if(me .eq. 0) then
-      call shmem_int4_add(target, new_val, npes -1) 
+      call shmem_int4_add(dest, new_val, npes -1) 
     end if
 
     call shmem_barrier_all()
 
     ! To validate the working of swap we need to check the value received at the PE that initiated the swap 
-    !  as well as the target PE
+    !  as well as the dest PE
 
     if(me .eq. npes - 1) then
-      if(target .eq. INT(5678, KIND=4) + 51234) then
+      if(dest .eq. INT(5678, KIND=4) + 51234) then
         call shmem_logical_put(success1, true_val, 1, 0)
       end if
     end if

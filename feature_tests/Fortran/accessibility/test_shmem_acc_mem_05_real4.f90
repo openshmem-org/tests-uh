@@ -40,7 +40,7 @@ program test_shmem_accessible
   include 'shmem.fh'
   integer, parameter    :: length = 4
 
-  real*4, ALLOCATABLE :: remote_target(:)
+  real*4, ALLOCATABLE :: remote_dest(:)
   
   integer               :: me, npes, errcode
   
@@ -58,7 +58,7 @@ program test_shmem_accessible
     stop
   end if
   
-  allocate(remote_target(length), STAT=errcode);
+  allocate(remote_dest(length), STAT=errcode);
   
   if(errcode .ne. 0) then
     write(*,*) 'Unable to allocate symmetric memory for the test.'
@@ -68,7 +68,7 @@ program test_shmem_accessible
   call shmem_barrier_all()
   
   if (me .eq. 0) then
-    if(.not.shmem_addr_accessible(remote_target, 1) ) then
+    if(.not.shmem_addr_accessible(remote_dest, 1) ) then
       write(*,*) 'test_shmem_acc_mem_05_real*4: Passed'
     else
       write(*,*) 'test_shmem_acc_mem_05_real*4: Failed'
@@ -77,7 +77,7 @@ program test_shmem_accessible
 
   call shmem_barrier_all()
   
-  deallocate(remote_target)
+  deallocate(remote_dest)
     
   call shmem_finalize()
 

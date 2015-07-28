@@ -43,7 +43,7 @@ program test_shmem_atomics
   logical, save             :: success1
   logical, save             :: success2
 
-  integer*4, ALLOCATABLE    :: target(:)
+  integer*4, ALLOCATABLE    :: dest(:)
 
   integer*4                 :: swapped_val
 
@@ -66,22 +66,22 @@ program test_shmem_atomics
     success1 = .FALSE.
     success2 = .FALSE.
 
-    ALLOCATE(target(1))
+    ALLOCATE(dest(1))
     
-    target(1) = 51234
+    dest(1) = 51234
 
     call shmem_barrier_all()
 
     if(me .eq. npes - 1) then
-      swapped_val = shmem_int4_finc(target, 0) 
+      swapped_val = shmem_int4_finc(dest, 0) 
     else if(me .eq. 0) then
-      swapped_val = shmem_int4_finc(target, npes - 1) 
+      swapped_val = shmem_int4_finc(dest, npes - 1) 
     end if
 
     call shmem_barrier_all()
 
     ! To validate the working of swap we need to check the value received at the PE that initiated the swap 
-    !  as well as the target PE
+    !  as well as the dest PE
 
     if(me .eq. 0) then
       if(swapped_val .eq. 51234) then
@@ -90,7 +90,7 @@ program test_shmem_atomics
     end if
 
     if(me .eq. npes - 1) then
-      if(target(1) .eq. 51234 + 1) then
+      if(dest(1) .eq. 51234 + 1) then
         call shmem_logical_put(success2, true_val, 1, 0)
       end if
     end if
@@ -107,7 +107,7 @@ program test_shmem_atomics
 
     call shmem_barrier_all()
 
-    DEALLOCATE(target)
+    DEALLOCATE(dest)
 
   else
     write (*,*) "Number of PEs must be > 1 to test shmem atomics, test skipped"
