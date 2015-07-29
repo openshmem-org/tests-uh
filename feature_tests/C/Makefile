@@ -66,9 +66,7 @@ all default:    $(EXES)
 .SUFFIXES: .x
 
 %.x:    %.c
-        $(CC) $(SHMEM_CFLAGS) -o $@ $^
-
-
+	$(CC) $(SHMEM_CFLAGS) -o $@ $^ -lm
 
 run:	all $(EXES)
 	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_accessible.x
@@ -86,6 +84,6 @@ run:	all $(EXES)
 
 
 clean:
-         rm -f $(EXES)
+	 rm -f $(EXES)
 
 

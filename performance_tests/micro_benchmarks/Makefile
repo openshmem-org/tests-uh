@@ -65,14 +65,10 @@ all default: $(EXES)
 
 .SUFFIXES: .x
 
-%.x:    
-	%.c
-	$(CC) $(SHMEM_CFLAGS) -o $@ $^
+%.x:    %.c
+	$(CC) $(SHMEM_CFLAGS) -o $@ $^ -lm 
 
-
-
-run:	
-	all $(EXES)
+run:	all $(EXES)
 	$(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./put_performance.x
 	$(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./get_performance.x
 	$(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./barrier_performance.x
@@ -83,5 +79,3 @@ run:
 
 clean:
 	rm -f $(EXES)
-
-

@@ -70,15 +70,11 @@ all default:    $(EXES)
 	$(CC) $(SHMEM_CFLAGS) -o $@ $^ -lm
 
 run: 	all $(EXES)
-	$(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./hello.x
-	$(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./cpi.x
-	$(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./sping.x
 	$(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./shmem_daxpy.x
 	$(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./shmem_2dheat.x
 	$(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./shmem_matrix.x
 	$(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./shmem_heat_image.x 10 10
-	$(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./ptp.x
-	$(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./adjacent_32bit_amo.x
+
 
 
 clean:
