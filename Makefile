@@ -41,8 +41,7 @@ help:
 	@echo
 	@echo "Please use one of the following targets:"
 	@echo
-	@echo "    * For Examples, C feature tests, Fortran feature tests and Microbenchmarks : make compile, make run, make clean"
-	@echo "    * For Examples : make examples, make examples-run"
+	@echo "    * For C feature tests, Fortran feature tests and Microbenchmarks : make compile, make run, make clean"
 	@echo "    * For C feature tests : make C_feature_tests, make C_feature_tests-run "
 	@echo "    * For  Fortran feature tests : make F_feature_tests, make F_feature_tests-run"
 	@echo "    * For  Microbenchmarks : make micro_bench, make micro_bench-run"
@@ -50,21 +49,18 @@ help:
 	@echo "    clean: removes object files"
 	@echo
 
-.PHONY : examples
+.PHONY : compile run	\
+		C_feature_tests	C_feature_tests-run	\
+		F_feature_tests F_feature_tests-run	\
+		micro_bench micro_bench-run		\
+		clean
 
-compile: C_feature_tests F_feature_tests micro_bench examples 
+compile: C_feature_tests F_feature_tests micro_bench
 
-run: examples-run C_feature_tests-run F_feature_tests-run micro_bench-run
+run: C_feature_tests-run F_feature_tests-run micro_bench-run
 
 C_feature_tests: 
 	cd feature_tests/C; $(MAKE) all
-
-examples:
-	cd examples; $(MAKE) all
-
-examples-run:
-	cd examples; $(MAKE) run  
-
 
 C_feature_tests-run:
 	cd feature_tests/C; $(MAKE) run
@@ -82,9 +78,7 @@ micro_bench-run:
 	cd performance_tests/micro_benchmarks; $(MAKE) run 
 
 clean:
-	cd examples; $(MAKE) $@
 	cd feature_tests/C; $(MAKE) $@
 	cd feature_tests/Fortran; $(MAKE) $@
 	cd performance_tests/micro_benchmarks; $(MAKE) $@
-	rm -f *~ */*~ *.x *.o
 
