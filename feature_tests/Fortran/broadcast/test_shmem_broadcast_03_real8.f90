@@ -70,16 +70,14 @@ program test_shmem_broadcast
   if(npes .ge. min_npes) then
     pSync(:) = SHMEM_SYNC_VALUE
 
-    call shpalloc(dest_addr, nelems, errcode, abort)
-    call shpalloc(src_addr, nelems, errcode, abort)
+    call shpalloc(dest_addr, nelems*2, errcode, abort)
+    call shpalloc(src_addr, nelems*2, errcode, abort)
 
     do i = 1, nelems, 1      
       src(i) = REAL(54321 + i, KIND=8)
     end do 
 
-    do i = 1, nelems, 1
-      dest(i) = -9
-    end do
+    dest = -9
 
     call shmem_barrier_all()
 

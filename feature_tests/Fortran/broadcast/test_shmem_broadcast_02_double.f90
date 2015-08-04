@@ -70,9 +70,7 @@ program test_shmem_broadcast
       src(i) = 54321.67 + DBLE(i)
     end do 
 
-    do i = 1, nelems, 1
-      dest(i) = -9
-    end do
+    dest = -9
 
     call shmem_barrier_all()
 

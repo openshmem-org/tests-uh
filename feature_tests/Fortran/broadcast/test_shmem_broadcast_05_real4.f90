@@ -68,9 +68,7 @@ program test_shmem_broadcast
       src(i) = REAL(54321 + i, KIND=4)
     end do 
 
-    do i = 1, nelems, 1
-      dest(i) = -9
-    end do
+    dest = -9
 
     call shmem_barrier_all()
 
