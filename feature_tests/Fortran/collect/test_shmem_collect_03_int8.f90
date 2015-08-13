@@ -2,6 +2,11 @@
 !
 ! Copyright (c) 2011 - 2015
 !   University of Houston System and UT-Battelle, LLC.
+! Copyright (c) 2009 - 2015
+!   Silicon Graphics International Corp.  SHMEM is copyrighted
+!   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
+!   (shmem) is released by Open Source Software Solutions, Inc., under an
+!   agreement with Silicon Graphics International Corp. (SGI).
 ! 
 ! All rights reserved.
 ! 
@@ -17,9 +22,9 @@
 !   documentation and/or other materials provided with the distribution.
 ! 
 ! o Neither the name of the University of Houston System, UT-Battelle, LLC
-!    nor the names of its contributors may be used to
-!   endorse or promote products derived from this software without specific
-!   prior written permission.
+!   nor the names of its contributors may be used to endorse or promote
+!   products derived from this software without specific prior written
+!   permission.
 ! 
 ! THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 ! "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -46,11 +51,9 @@ program test_shmem_collects
   integer,   parameter :: dest_nelems = nelems * min_npes ! assuming 2 pes ( 2 x 4 elements)
 
   integer*8             :: src(nelems)
-  integer*8            :: src_addr
   pointer              (src_addr, src)
 
   integer*8             :: dest(dest_nelems)
-  integer*8            :: dest_addr
   pointer              (dest_addr, dest)
 
   integer*8             :: dest_expected(dest_nelems)
@@ -60,7 +63,8 @@ program test_shmem_collects
   integer              :: i, pe, k, tmp
   logical              :: success
   integer              :: collect_nelems
-  integer              :: errcode, abort
+  integer              :: errcode
+  integer, parameter   :: abort = 0
 
 ! Function definitions
   integer              :: shmem_my_pe, shmem_n_pes

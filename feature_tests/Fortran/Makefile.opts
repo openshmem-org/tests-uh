@@ -37,6 +37,6 @@
 
 SHELL = /bin/sh
 SHMEM_F90         = oshfort
-SHMEM_F90CFLAGS   = -g -O0 -fcray-pointer
+SHMEM_F90FFLAGS   = -g -O0 -fcray-pointer
 #SHMEM_F90LFLAGS   = -ggdb -O0 -fcray-pointer
 TEST_RUNNER       = testrunner.pl

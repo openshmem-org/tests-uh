@@ -2,6 +2,11 @@
 !
 ! Copyright (c) 2011 - 2015
 !   University of Houston System and UT-Battelle, LLC.
+! Copyright (c) 2009 - 2015
+!   Silicon Graphics International Corp.  SHMEM is copyrighted
+!   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
+!   (shmem) is released by Open Source Software Solutions, Inc., under an
+!   agreement with Silicon Graphics International Corp. (SGI).
 ! 
 ! All rights reserved.
 ! 
@@ -17,9 +22,9 @@
 !   documentation and/or other materials provided with the distribution.
 ! 
 ! o Neither the name of the University of Houston System, UT-Battelle, LLC
-!    nor the names of its contributors may be used to
-!   endorse or promote products derived from this software without specific
-!   prior written permission.
+!   nor the names of its contributors may be used to endorse or promote
+!   products derived from this software without specific prior written
+!   permission.
 ! 
 ! THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 ! "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -42,11 +47,11 @@ program test_shmem_barrier
   integer, parameter :: min_npes = 3
 
   integer   :: flag
-  integer*8 :: flag_ptr
   pointer      (flag_ptr, flag)
 
-  integer       :: me, npes, i
-  integer     :: errcode, abort
+  integer       :: me, npes
+  integer     :: errcode
+  integer, parameter  :: abort = 0
 
 ! Function definitions
   integer                   :: shmem_my_pe, shmem_n_pes
@@ -59,6 +64,8 @@ program test_shmem_barrier
   if (npes .gt. 1) then
 
     call shpalloc(flag_ptr, 1, errcode, abort)    
+
+    flag = 0
 
     if(me .ne. 0) then
       call shmem_int4_inc(flag, 0)
@@ -80,7 +87,7 @@ program test_shmem_barrier
 
   else
     if(me .eq. 0) then
-      write (*,*) 'This test requirest ', min_npes, ' or more PEs.'
+      write (*,*) 'This test requires ', min_npes, ' or more PEs.'
     end if
   end if 
 

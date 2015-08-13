@@ -2,6 +2,11 @@
 !
 ! Copyright (c) 2011 - 2015
 !   University of Houston System and UT-Battelle, LLC.
+! Copyright (c) 2009 - 2015
+!   Silicon Graphics International Corp.  SHMEM is copyrighted
+!   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
+!   (shmem) is released by Open Source Software Solutions, Inc., under an
+!   agreement with Silicon Graphics International Corp. (SGI).
 ! 
 ! All rights reserved.
 ! 
@@ -17,9 +22,9 @@
 !   documentation and/or other materials provided with the distribution.
 ! 
 ! o Neither the name of the University of Houston System, UT-Battelle, LLC
-!    nor the names of its contributors may be used to
-!   endorse or promote products derived from this software without specific
-!   prior written permission.
+!   nor the names of its contributors may be used to endorse or promote
+!   products derived from this software without specific prior written
+!   permission.
 ! 
 ! THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 ! "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -41,11 +46,11 @@ program test_shmem_shpalloc
 
   integer, parameter :: numElements = 0 
 
-  integer*8          :: ptr
   integer*4           :: array(1)    
   pointer            (ptr, array)
   
-  integer            :: errcode, abort, me, npes
+  integer            :: errcode, me, npes
+  integer, parameter  :: abort = 0
   character*(*), parameter      :: TEST_NAME='shpalloc'
 
   ! Function return value types
@@ -56,7 +61,6 @@ program test_shmem_shpalloc
   me = shmem_my_pe()
   npes = shmem_n_pes()
 
-  abort = 0
   ! allocate remotely accessible block
   call shpalloc(ptr, numElements, errcode, abort)
 
