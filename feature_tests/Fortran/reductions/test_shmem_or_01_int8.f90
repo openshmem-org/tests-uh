@@ -48,7 +48,7 @@ program test_shmem_reduction
   integer,   parameter :: nelems = 10
 
   integer*8, save      :: src(nelems)
-  integer*4, save      :: dest(nelems)
+  integer*8, save      :: dest(nelems)
   integer*8  , save    :: dest_expected(nelems)
 
   integer,   save      :: pSync(SHMEM_REDUCE_SYNC_SIZE)
