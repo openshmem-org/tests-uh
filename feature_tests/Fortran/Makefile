@@ -1,7 +1,12 @@
 #
 #
-# Copyright (c) 2011 - 2015
+# Copyright (c) 2011 - 2015 
 #   University of Houston System and UT-Battelle, LLC.
+# Copyright (c) 2009 - 2015
+#   Silicon Graphics International Corp.  SHMEM is copyrighted
+#   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
+#   (shmem) is released by Open Source Software Solutions, Inc., under an
+#   agreement with Silicon Graphics International Corp. (SGI).
 # 
 # All rights reserved.
 # 
@@ -17,9 +22,9 @@
 #   documentation and/or other materials provided with the distribution.
 # 
 # o Neither the name of the University of Houston System, UT-Battelle, LLC
-#    nor the names of its contributors may be used to
-#   endorse or promote products derived from this software without specific
-#   prior written permission.
+#   nor the names of its contributors may be used to endorse or promote
+#   products derived from this software without specific prior written
+#   permission.
 # 
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 # "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -33,7 +38,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-#
+
 
 include Makefile.opts
 
