@@ -74,7 +74,7 @@ program test_shmem_iget
     dest(:) = -9
 
     do i = 1, N, 1
-      src(i) = INT(54321 + i, KIND=4)
+      src(i) = 54321 + i
     end do
 
     call shmem_barrier_all()

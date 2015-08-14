@@ -73,9 +73,9 @@ program test_shmem_atomics
     success1 = .FALSE.
     success2(1) = .FALSE.
 
-    dest(1) = INT(me, KIND=4)
+    dest(1) = me
 
-    new_val = INT(me, KIND=4)
+    new_val = me
 
     call shmem_barrier_all()
 
@@ -87,7 +87,7 @@ program test_shmem_atomics
     !  as well as the dest PE
 
     if(me .eq. 0) then
-      if(swapped_val .eq. INT(1, KIND=4)) then
+      if(swapped_val .eq. 1) then
         success1 = .TRUE.
       end if
     end if

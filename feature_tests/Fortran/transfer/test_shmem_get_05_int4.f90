@@ -78,7 +78,7 @@ program test_shmem_get
     end do 
 
     do i = 1, N, 1
-      src(i) = INT(54321 + i, KIND=4)
+      src(i) = 54321 + i
     end do 
 
     nextpe = mod((me + 1), npes)

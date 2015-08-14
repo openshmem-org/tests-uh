@@ -86,7 +86,7 @@ program test_shmem_atomics
     !  as well as the dest PE
 
     if(me .eq. 0) then
-      if(swapped_val .eq. INT(1, KIND=8)) then
+      if(swapped_val .eq. 1) then
         success1 = .TRUE.
       end if
     end if

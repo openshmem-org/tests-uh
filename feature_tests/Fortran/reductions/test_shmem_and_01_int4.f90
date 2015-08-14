@@ -74,13 +74,13 @@ program test_shmem_reduction
 
     do i = 1, nelems, 1
       dest(i) = 0
-      src(i) = INT(me + i, KIND=4)
-      dest_expected(i) = INT(i, KIND=4)
+      src(i) = me + i
+      dest_expected(i) = i
     end do
 
     do pe = 1, npes - 1, 1
       do i = 1, nelems, 1
-        dest_expected(i) = IAND(dest_expected(i), INT((pe + i), KIND=4))
+        dest_expected(i) = IAND(dest_expected(i), pe + i)
       end do
     end do
 

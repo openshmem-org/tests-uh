@@ -70,7 +70,7 @@ program test_shmem_broadcast
     pSync(:) = SHMEM_SYNC_VALUE
 
     do i = 1, nelems, 1      
-      src(i) = INT(54321 + i, KIND=8)
+      src(i) = 54321 + i
     end do 
 
     dest = -9
@@ -85,7 +85,7 @@ program test_shmem_broadcast
 
     if(me .eq. 1) then
       do i = 1, nelems, 1
-        if(dest(i) .ne. INT(54321 + i, KIND=8)) then
+        if(dest(i) .ne. 54321 + i) then
           success = .FALSE.
         end if
       end do

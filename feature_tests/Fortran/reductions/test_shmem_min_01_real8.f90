@@ -74,8 +74,8 @@ program test_shmem_reduction
 
     do i = 1, nelems, 1
       dest(i) = 0
-      src(i) = REAL(me + i, KIND=8)
-      dest_expected(i) = REAL(i, KIND=8)
+      src(i) = me + i
+      dest_expected(i) = i
     end do
  
     call shmem_barrier_all()    

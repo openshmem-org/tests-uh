@@ -75,9 +75,9 @@ program test_shmem_atomics
 
     call shpalloc(dest_ptr, 1, errcode, abort)
 
-    dest(1) = INT(me, KIND=8)
+    dest(1) = me
 
-    new_val = INT(me, KIND=8)
+    new_val = me
 
     call shmem_barrier_all()
 
@@ -91,7 +91,7 @@ program test_shmem_atomics
     !  as well as the dest PE
 
     if(me .eq. 0) then
-      if(swapped_val .eq. INT(1, KIND=8)) then
+      if(swapped_val .eq. 1) then
         success1 = .TRUE.
       end if
     end if

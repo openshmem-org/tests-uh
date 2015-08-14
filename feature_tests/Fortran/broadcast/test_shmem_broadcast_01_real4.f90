@@ -48,7 +48,7 @@ program test_shmem_broadcast
   integer, parameter  :: nelems = 10
   integer*8, save    :: pSync(SHMEM_BCAST_SYNC_SIZE)
    
-  integer            :: i
+  integer           :: i
   logical            :: success
   real*4, save    :: dest(nelems)
   real*4, save    :: src(nelems)

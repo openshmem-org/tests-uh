@@ -76,7 +76,7 @@ program test_shmem_put
     end do 
 
     do i = 1, N, 1
-      src(i) = INT(54321 + i, KIND=4) 
+      src(i) = 54321 + i
     end do 
 
     nextpe = mod((me + 1), npes)
@@ -89,7 +89,7 @@ program test_shmem_put
 
     if(me .eq. 0) then
       do i = 1, N, 1
-        if(dest(i) .ne. INT(54321 + i, KIND=4)) then
+        if(dest(i) .ne. 54321 + i) then
           success1 = .FALSE.
         end if
       end do 

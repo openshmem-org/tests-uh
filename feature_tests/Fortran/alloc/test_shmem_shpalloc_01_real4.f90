@@ -74,7 +74,7 @@ program test_shmem_shpalloc
     call shpalloc(array_addr, nelems, errcode, abort)
 
     do i = 1, nelems 
-      array(i) = REAL(54321.67, KIND=4) 
+      array(i) = 54321.67
     end do
 
     call shmem_barrier_all();
@@ -91,7 +91,7 @@ program test_shmem_shpalloc
 
         ! Check that values are correct
         do i = 1, nelems, 1
-          if(buffer(i) .ne. REAL(54321.67, KIND=4)) then
+          if(buffer(i) .ne. 54321.67) then
             success = .FALSE.
           end if
         end do

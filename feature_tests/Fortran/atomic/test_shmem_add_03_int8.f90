@@ -74,7 +74,7 @@ program test_shmem_atomics
 
     dest(1) = 51234
 
-    new_val = INT(5678, KIND=8)
+    new_val = 5678
 
     call shmem_barrier_all()
 
@@ -88,7 +88,7 @@ program test_shmem_atomics
     !  as well as the dest PE
 
     if(me .eq. npes - 1) then
-      if(dest(1) .eq. INT(5678, KIND=8) + 51234) then
+      if(dest(1) .eq. 5678 + 51234) then
         call shmem_logical_put(success1, true_val, 1, 0)
       end if
     end if

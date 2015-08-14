@@ -73,7 +73,7 @@ program test_shmem_iput
     end do
 
     do i = 1, N, 1
-      src(i) = INT(54321 + i, KIND=4) ! generate some values 
+      src(i) = 54321 + i ! generate some values 
     end do 
 
     nextpe = mod((me + 1), npes)

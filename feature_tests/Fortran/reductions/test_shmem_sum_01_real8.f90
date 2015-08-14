@@ -74,13 +74,13 @@ program test_shmem_reduction
 
     do i = 1, nelems, 1
       dest(i) = 0
-      src(i) = REAL(me + i, KIND=8)
+      src(i) = me + i
     end do
 
     dest_expected(:) = 0
     do pe = 0, npes - 1, 1
       do i = 1, nelems, 1
-        dest_expected(i) =  dest_expected(i) + REAL((pe + i), KIND=8)
+        dest_expected(i) =  dest_expected(i) + (pe + i)
       end do
     end do
 
