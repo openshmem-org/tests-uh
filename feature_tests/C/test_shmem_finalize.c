@@ -1,31 +1,31 @@
 /*
  *
- * Copyright (c) 2011 - 2015 
+ * Copyright (c) 2011 - 2015
  *   University of Houston System and UT-Battelle, LLC.
  * Copyright (c) 2009 - 2015
  *   Silicon Graphics International Corp.  SHMEM is copyrighted
  *   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
  *   (shmem) is released by Open Source Software Solutions, Inc., under an
  *   agreement with Silicon Graphics International Corp. (SGI).
- * 
+ *
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * o Redistributions of source code must retain the above copyright notice,
  *   this list of conditions and the following disclaimer.
- * 
+ *
  * o Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * 
+ *
  * o Neither the name of the University of Houston System, UT-Battelle, LLC
  *   nor the names of its contributors may be used to endorse or promote
  *   products derived from this software without specific prior written
  *   permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -45,7 +45,7 @@
  * Calls tested
  * shmem_finalize
  *
- * All PEs put a 64-bit value to its right neighbor and expect the 
+ * All PEs put a 64-bit value to its right neighbor and expect the
  * transfer to complete after shmem_finalize
  */
 
@@ -81,7 +81,7 @@ main (int argc, char **argv)
           /* Check for completion of all communication */
           if ((int)dest == me)
               printf ("Test shmem_finalize: Passed\n");
-          else 
+          else
               printf ("Test shmem_finalize: Failed\n");
         }
     }

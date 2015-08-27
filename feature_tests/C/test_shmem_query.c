@@ -44,8 +44,8 @@
 
 /*
  * Test for the info/query interfaces
- * Compare the values with the supported OpenSHMEM constants: 
- * _SHMEM_MAJOR_VERSION, _SHMEM_MINOR_VERSION, and 
+ * Compare the values with the supported OpenSHMEM constants:
+ * _SHMEM_MAJOR_VERSION, _SHMEM_MINOR_VERSION, and
  * _SHMEM_MAX_NAME_LEN
  *
  */
@@ -56,7 +56,7 @@
 
 #define PRINT_VER(arg,result) \
     printf("Test shmem_info_get_version (%s):%s\n",\
-            arg,result); 
+            arg,result);
 
 #define PRINT_NAME(arg) \
     printf("Test shmem_info_get_name: %s\n",arg);

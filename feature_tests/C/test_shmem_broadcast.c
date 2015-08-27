@@ -7,25 +7,25 @@
  *   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
  *   (shmem) is released by Open Source Software Solutions, Inc., under an
  *   agreement with Silicon Graphics International Corp. (SGI).
- * 
+ *
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * o Redistributions of source code must retain the above copyright notice,
  *   this list of conditions and the following disclaimer.
- * 
+ *
  * o Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * 
+ *
  * o Neither the name of the University of Houston System, UT-Battelle, LLC
  *   nor the names of its contributors may be used to endorse or promote
  *   products derived from this software without specific prior written
  *   permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -41,13 +41,15 @@
  */
 
 
-/*Tests shmem_broadcast32 shmem_broadcast64 calls
+/*
+ * Tests shmem_broadcast32 shmem_broadcast64 calls
  * PE 0 broadcasts to all other PEs
  * source and destination arrays are shmem_malloc-ed
  * Strided tests use active sets of all even PEs
  * PE 0 is the root,
  * and require a minimum of 3 PEs to test.
 */
+
 #include <stdio.h>
 #include <stdlib.h>
 
