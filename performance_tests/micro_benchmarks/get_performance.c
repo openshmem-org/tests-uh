@@ -40,8 +40,10 @@
  *
  */
 
-
-/* Performance test for shmem_XX_get (latency and bandwidth) */
+/*
+ * Performance test for shmem_XX_get (latency and bandwidth)
+ *
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -54,11 +56,10 @@ long double time_taken;
 long pSync[_SHMEM_REDUCE_SYNC_SIZE];
 long double pWrk[_SHMEM_REDUCE_MIN_WRKDATA_SIZE];
 
-//#define N_ELEMENTS 25600/*Data size chosen to be able to capture time required*/
 int
 main (void)
 {
-    int j, k;
+    int j;
     long int i;
     int *target;
     int *source;
@@ -67,7 +68,7 @@ main (void)
     struct timeval start, end;
     long double start_time, end_time;
 
-    int N_ELEMENTS = (4194304 * 2) / sizeof (int);
+    const int N_ELEMENTS = (4194304 * 2) / sizeof (int);
 
     shmem_init ();
     me = shmem_my_pe ();
@@ -80,9 +81,10 @@ main (void)
     source = (int *) shmem_malloc (N_ELEMENTS * sizeof (*source));
     target = (int *) shmem_malloc (N_ELEMENTS * sizeof (*target));
 
-    if (me == 0)
+    if (me == 0) {
         printf
             ("Get Performance test results:\nSize (Bytes)\t\tTime (Microseconds)\t\tBandwidth (Bytes/Second)\n");
+    }
 
     for (i = 0; i < N_ELEMENTS; i += 1) {
         source[i] = i + 1;
@@ -111,20 +113,21 @@ main (void)
         }
         shmem_longdouble_sum_to_all (&time_taken, &time_taken, 1, 0, 0, npes,
                                      pWrk, pSync);
-
+        shmem_barrier_all ();
 
         if (me == 0) {
             time_taken = time_taken / (npes * 10000);   /* Average time across
                                                            all PEs for one put */
-            if (i * sizeof (i) < 1048576)
+            if (i * sizeof (i) < 1048576) {
                 printf ("%ld \t\t\t\t %Lf\t\t\t\t %Lf\n", i * sizeof (i),
                         time_taken,
                         (i * sizeof (i)) / (time_taken * 1000000.0));
-            else
+            }
+            else {
                 printf ("%ld \t\t\t %Lf\t\t\t\t %Lf\n", i * sizeof (i),
                         time_taken,
                         (i * sizeof (i)) / (time_taken * 1000000.0));
-
+            }
         }
 
     }

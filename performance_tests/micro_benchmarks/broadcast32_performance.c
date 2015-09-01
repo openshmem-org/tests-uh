@@ -39,22 +39,28 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
-/* Performance test for shmem_broadcast32 */
+
+/*
+ * Performance test for shmem_broadcast32
+ *
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <sys/time.h>
 #include <shmem.h>
+
 long pSyncA[_SHMEM_BCAST_SYNC_SIZE];
 long pSyncB[_SHMEM_BCAST_SYNC_SIZE];
 
 #define N_ELEMENTS 25600        /* Data size chosen to be able to capture time
                                    required */
+
 int
 main (void)
 {
-    int i, j, k;
+    int i;
     int *target;
     int *source;
     int me, npes;
@@ -89,12 +95,14 @@ main (void)
 
         /* alternate between 2 pSync arrays to synchronize consequent
            collectives of even and odd iterations */
-        if (i % 2)
+        if (i % 2) {
             shmem_broadcast32 (target, source, N_ELEMENTS, 0, 0, 0, npes,
                                pSyncA);
-        else
+        }
+        else {
             shmem_broadcast32 (target, source, N_ELEMENTS, 0, 0, 0, npes,
                                pSyncB);
+        }
 
         gettimeofday (&end, NULL);
 
@@ -104,10 +112,11 @@ main (void)
         }
 
     }
-    if (me == 0)
+    if (me == 0) {
         printf
             ("Time required for a broadcast of 100 Kbytes of data, with %d PEs is %ld microseconds\n",
              npes, time_taken / 10000);
+    }
 
     shmem_barrier_all ();
 

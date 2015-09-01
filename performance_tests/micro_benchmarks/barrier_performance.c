@@ -39,7 +39,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
-/* Performance test for shmem_barrier*/
+
+/*
+ * Performance test for shmem_barrier
+ *
+ */
 
 #include <stdio.h>
 #include <sys/time.h>
@@ -54,7 +58,7 @@ int
 main ()
 {
     int me, npes, src;
-    int i, j;
+    int i;
     struct timeval start, end;
     long time_taken, start_time, end_time;
 
@@ -72,8 +76,9 @@ main ()
         if (me != 0) {
             shmem_int_p (&x, src * (i + 1), me - 1);
         }
-        else
+        else {
             shmem_int_p (&x, src * (i + 1), npes - 1);
+        }
         shmem_barrier_all ();
 
         gettimeofday (&start, NULL);
@@ -87,10 +92,11 @@ main ()
 
     }
     /* printf("%d: x = %d\n", me, x); */
-    if (me == 0)
+    if (me == 0) {
         printf
             ("Time required for a barrier, with %d PEs is %ld microseconds\n",
              npes, time_taken / 10000);
+    }
 
     shmem_finalize ();
 

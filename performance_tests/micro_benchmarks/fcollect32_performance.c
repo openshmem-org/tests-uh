@@ -39,21 +39,27 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
-/* Performance test for shmem_fcollect32*/
+
+/*
+ * Performance test for shmem_fcollect32
+ *
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <sys/time.h>
 #include <shmem.h>
+
 static long pSyncA[_SHMEM_BCAST_SYNC_SIZE];
 static long pSyncB[_SHMEM_BCAST_SYNC_SIZE];
 
 #define N_ELEMENTS 4
+
 int
 main (void)
 {
-    int i, j, k;
+    int i;
     int *target;
     int *source;
     int me, npes;
@@ -88,10 +94,12 @@ main (void)
 
         /* alternate between 2 pSync arrays to synchronize consequent
            collectives of even and odd iterations */
-        if (i % 2)
+        if (i % 2) {
             shmem_fcollect32 (target, source, N_ELEMENTS, 0, 0, npes, pSyncA);
-        else
+        }
+        else {
             shmem_fcollect32 (target, source, N_ELEMENTS, 0, 0, npes, pSyncB);
+        }
 
         gettimeofday (&end, NULL);
 
@@ -101,10 +109,11 @@ main (void)
         }
 
     }
-    if (me == 0)
+    if (me == 0) {
         printf
             ("Time required to collect %d bytes of data, with %d PEs is %ld microseconds\n",
              (4 * N_ELEMENTS * npes), npes, time_taken / 10000);
+    }
 
     shmem_barrier_all ();
     shmem_free (target);
