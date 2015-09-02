@@ -136,19 +136,19 @@ main ()
         }
 
         if (me == 1) {
-            if (dest1 == 0) {
+            if (*dest1 == 0) {
                 shmem_int_put (&success1_p2, &success, 1, 0);
             }
-            if (dest2 == 0) {
+            if (*dest2 == 0) {
                 shmem_int_put (&success2_p2, &success, 1, 0);
             }
-            if (dest3 == 0) {
+            if (*dest3 == 0) {
                 shmem_int_put (&success3_p2, &success, 1, 0);
             }
-            if (dest4 == 0) {
+            if (*dest4 == 0) {
                 shmem_int_put (&success4_p2, &success, 1, 0);
             }
-            if (dest5 == 0) {
+            if (*dest5 == 0) {
                 shmem_int_put (&success5_p2, &success, 1, 0);
             }
         }
