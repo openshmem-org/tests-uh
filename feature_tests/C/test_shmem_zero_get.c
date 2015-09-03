@@ -62,7 +62,7 @@
 int
 main (int argc, char **argv)
 {
-    int i, j;
+    int i;
     int nextpe;
     int me, npes;
     int success1, success2, success3, success4, success5, success6, success7,
@@ -76,11 +76,6 @@ main (int argc, char **argv)
     static double src6[N];
     static float src7[N];
     char *src8;
-    short src9;
-    int src10;
-    long src11;
-    double src12;
-    float src13;
 
     short *dest1;
     int *dest2;
@@ -123,11 +118,6 @@ main (int argc, char **argv)
             src7[i] = (float) me;
             src8[i] = (char) me;
         }
-        src9 = (short) me;
-        src10 = me;
-        src11 = (long) me;
-        src12 = (double) me;
-        src13 = (float) me;
 
 
         dest1 = (short *) shmem_malloc (N * sizeof (*dest1));

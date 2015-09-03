@@ -63,7 +63,6 @@ main (int argc, char *argv[])
 {
     long local_dest;
     int *shm_dest;
-    char *msg = "Test Address Accessible: Passed";
     int me, npes, i;
     int pe_acc_success = 0;
 
