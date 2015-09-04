@@ -62,6 +62,8 @@ program test_shmem_barrier
 
   dest = 0
 
+  call shmem_barrier_all()
+
   if (npes .gt. 1) then
     
     if(me .eq. npes - 1) then
@@ -72,6 +74,8 @@ program test_shmem_barrier
 ! Atomic increment of destination on 0
 
     call shmem_int4_inc(dest, 0)
+
+    call shmem_barrier_all()
 
     if(me .eq. 0) then
       if(dest .eq. npes - 1) then
