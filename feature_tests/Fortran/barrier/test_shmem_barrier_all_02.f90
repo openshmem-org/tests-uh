@@ -67,6 +67,8 @@ program test_shmem_barrier
       call shmem_int4_inc(flag, 0)
     end if 
 
+     call shmem_barrier_all()
+
     if(me .eq. 0) then
 ! If all PEs updated the flag it means they all got past the barrier
       call shmem_int4_wait(flag, npes - 1)

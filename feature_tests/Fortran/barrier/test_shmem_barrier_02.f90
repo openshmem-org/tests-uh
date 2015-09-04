@@ -86,6 +86,8 @@ program test_shmem_barrier
       call shmem_int4_inc(flag, 0)
     end if
 
+     call shmem_barrier_all()
+
     if(me .eq. 0) then
       call shmem_int4_wait_until(flag(1), SHMEM_CMP_EQ, (npes - 1) )
       write (*,*) "test_shmem_barrier_02.f90: Passed" 
