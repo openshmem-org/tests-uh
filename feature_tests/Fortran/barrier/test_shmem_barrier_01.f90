@@ -72,7 +72,7 @@ program test_shmem_barrier
       pSync(i) = SHMEM_SYNC_VALUE 
     end do
 
-     call shmem_barrier_all()
+    call shmem_barrier_all()
 
     if(me .ge. 2) then
       call shmem_barrier(2, 0, npes - 2, pSync) ! Only PEs 2, 3, 4, ... + perform the barrier
@@ -83,7 +83,7 @@ program test_shmem_barrier
       call shmem_int4_inc(flag(1), 0)
     end if
 
-     call shmem_barrier_all()
+    call shmem_barrier_all()
 
     if(me .eq. 0) then
       call shmem_int4_wait_until(flag(1), SHMEM_CMP_EQ, npes - 2 )
