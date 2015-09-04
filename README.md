@@ -144,18 +144,7 @@ Additional information:
 Correct output for this test also depends on a reliable implementation
 of the shmem_barrier_all() OpenSHMEM call.
 
-iv. test_shmem_barrier  
-
-This tests shmem_barrier, shmem_barrier_all calls available for C/C++
-and Fortran.
-
-Additional information:
-
-Correct output for this test also depends on a reliable implementation
-of the shmem_int_p() OpenSHMEM call.
-
-
-v.  test_shmem_reductions  
+iv.  test_shmem_reductions  
 
 This  tests;
 
@@ -173,7 +162,7 @@ Additional information:
 Correct output for this test also depends on a reliable implementation
 of the shmem_barrier_all() OpenSHMEM call.
 
-vi. test_shmem_atomic  
+v. test_shmem_atomic  
 
 This tests;
 
@@ -195,7 +184,7 @@ Additional information:
 Correct output for this test also depends on a reliable implementation
 of the shmem_barrier_all() and shmem_int_put OpenSHMEM calls.
 
-vii.  test_shmem_synchronization 
+vi.  test_shmem_synchronization 
 
 This tests;
 
@@ -213,7 +202,7 @@ Correct output for this test also depends on a reliable implementation
 of the shmem_barrier_all(), shmem_long_put and shmem_long_wait
 OpenSHMEM calls.
 
-viii. test_shmem_accessible
+vii. test_shmem_accessible
 This tests;
 Fortran:
 test_shmem_acc_mem_01_real8, test_shmem_acc_mem_03_int4, test_shmem_acc_mem_04_real4,
@@ -232,7 +221,7 @@ Additional information:
 Correct output for this test also depends on a reliable implementation
 of the shmem_barrier_all() OpenSHMEM call.
 
-ix. test_shmem_collects  
+viii. test_shmem_collects  
 This tests;
 Fortran only:
 test_shmem_collect_02_int8, test_shmem_fcollect_01_int4, test_shmem_fcollect_03_int8,
@@ -245,7 +234,7 @@ Additional information:
 Correct output for this test also depends on a reliable implementation of the
 shmem_barrier_all() OpenSHMEM call.	  
 
-x.  test_shmem_lock
+ix.  test_shmem_lock
 
 This tests;
 
