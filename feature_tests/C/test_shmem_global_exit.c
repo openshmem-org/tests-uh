@@ -57,24 +57,22 @@
 int
 main (int argv, char **argc)
 {
-    int nextpe;
-    int me, npes;
+    int me;
     int status=99;
 
     shmem_init ();
     me = shmem_my_pe ();
-    npes = shmem_n_pes ();
 
-    if(me==0) {
-        shmem_global_exit(status);
+    if (me == 0) {
+        shmem_global_exit (status);
     }
     else {
-        sleep(me*3);
+        sleep (me*3);
     }
-    shmem_barrier_all();
+    shmem_barrier_all ();
 
     /* PE-0 reach this point if shmem_global_exit is a no-op */
-    if(me==0) {
+    if( me == 0) {
       printf ("Test shmem_global_exit: Failed\n");
     }
 

@@ -75,7 +75,7 @@ float src13;
 int
 main (int argc, char **argv)
 {
-    int i, j;
+    int i;
     int nextpe;
     int me, npes;
     int success1, success2, success3, success4, success5, success6, success7,
