@@ -90,8 +90,7 @@ Additional information:
 Test test_shmem_put_shmem_malloc uses shmem_malloc-ed variables that
 are allocated and managed by the OpenSHMEM library while the
 test_shmem_put_globals checks that the same calls work with global
-variables. Correct output for this test also depends on a reliable
-implementation of the shmem_barrier_all() OpenSHMEM call.
+variables.
 
 ii. test_shmem_get_shmem_malloc, test_shmem_get_globals 
 
@@ -131,18 +130,12 @@ Additional information:
 Test test_shmem_get_shmem_malloc uses shmem_malloc-ed variables that
 are allocated and managed by the OpenSHMEM library while the
 test_shmem_get_globals checks that the same calls work with global
-variables. Correct output for this test also depends on a reliable
-implementation of the shmem_barrier_all() OpenSHMEM call.
+variables.
 
 iii.  test_shmem_broadcast  
 
 This tests shmem_broadcast32, shmem_broadcast64 calls available for
 C/C++ and Fortran.
-
-Additional information:
-
-Correct output for this test also depends on a reliable implementation
-of the shmem_barrier_all() OpenSHMEM call.
 
 iv.  test_shmem_reductions  
 
@@ -157,10 +150,6 @@ test_shmem_xor_01_int4, test_shmem_and_01_int8, test_shmem_min_01_int4,
 test_shmem_or_01_int8, test_shmem_sum_01_int4, test_shmem_xor_01_int8,
 test_shmem_max_01_int4  test_shmem_min_01_int8, test_shmem_prod_01_int4, test_shmem_sum_01_int8,
 
-Additional information:
-
-Correct output for this test also depends on a reliable implementation
-of the shmem_barrier_all() OpenSHMEM call.
 
 v. test_shmem_atomic  
 
@@ -179,10 +168,6 @@ test_shmem_add_03_int8, test_shmem_fadd_01_int4, test_shmem_finc_05_int8, test_s
 test_shmem_add_04_int4, test_shmem_fadd_01_int8, test_shmem_inc_01_int4, test_shmem_swap_01_int8,
 test_shmem_add_04_int8, test_shmem_finc_01_int4, test_shmem_inc_01_int8, test_shmem_swap_02_int4,
 
-Additional information:
-
-Correct output for this test also depends on a reliable implementation
-of the shmem_barrier_all() and shmem_int_put OpenSHMEM calls.
 
 vi.  test_shmem_synchronization 
 
@@ -199,8 +184,7 @@ shmem_int4_wait, shmem_int4_wait_until, shmem_int8_wait, shmem_int8_wait_until
 Additional information:
 
 Correct output for this test also depends on a reliable implementation
-of the shmem_barrier_all(), shmem_long_put and shmem_long_wait
-OpenSHMEM calls.
+of the shmem_long_put and shmem_long_wait OpenSHMEM calls.
 
 vii. test_shmem_accessible
 This tests;
@@ -216,10 +200,6 @@ test_shmem_acc_mem_01_int8, test_shmem_acc_mem_02_real8, test_shmem_acc_mem_04_i
 test_shmem_acc_mem_01_logical, test_shmem_acc_mem_03_char, test_shmem_acc_mem_04_int8, test_shmem_acc_mem_05_real8,
 test_shmem_acc_mem_01_real4, test_shmem_acc_mem_03_double, test_shmem_acc_mem_04_logical,
 
-Additional information:
-
-Correct output for this test also depends on a reliable implementation
-of the shmem_barrier_all() OpenSHMEM call.
 
 viii. test_shmem_collects  
 This tests;
@@ -230,9 +210,7 @@ test_shmem_collect_01_int4, test_shmem_collect_03_int8, test_shmem_fcollect_02_i
 test_shmem_fcollect_04_int8,
 test_shmem_collect_01_int8, test_shmem_collect_04_int4, test_shmem_fcollect_02_int8,
 test_shmem_collect_02_int4, test_shmem_collect_04_int8, test_shmem_fcollect_03_int4,
-Additional information:
-Correct output for this test also depends on a reliable implementation of the
-shmem_barrier_all() OpenSHMEM call.	  
+	  
 
 ix.  test_shmem_lock
 
@@ -244,7 +222,7 @@ shmem_clear_lock, shmem_set_lock, shmem_test_lock
 Additional information:
 
 Correct output for this test also depends on a reliable implementation
-of the shmem_barrier_all() and shmem_quiet OpenSHMEM calls.
+of the shmem_quiet OpenSHMEM calls.
 
 
 2.2 Performance Tests
@@ -262,10 +240,6 @@ iii.  broadcast_performance
 iv. barrier_performance  
 v.  collects_performance  
 
-Additional information:
-
-Correct output for this test also depends on a reliable implementation
-of the shmem_barrier_all() OpenSHMEM call.
 
 3.  Running Tests
 
