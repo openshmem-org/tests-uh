@@ -1,26 +1,31 @@
 /*
  *
  * Copyright (c) 2011 - 2015
- *   University of Houston System and Oak Ridge National Laboratory.
- * 
+ *   University of Houston System and UT-Battelle, LLC.
+ * Copyright (c) 2009 - 2015
+ *   Silicon Graphics International Corp.  SHMEM is copyrighted
+ *   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
+ *   (shmem) is released by Open Source Software Solutions, Inc., under an
+ *   agreement with Silicon Graphics International Corp. (SGI).
+ *
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * o Redistributions of source code must retain the above copyright notice,
  *   this list of conditions and the following disclaimer.
- * 
+ *
  * o Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * 
- * o Neither the name of the University of Houston System, Oak Ridge
- *   National Laboratory nor the names of its contributors may be used to
- *   endorse or promote products derived from this software without specific
- *   prior written permission.
- * 
+ *
+ * o Neither the name of the University of Houston System, UT-Battelle, LLC
+ *   nor the names of its contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -34,7 +39,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
-/* Performance test for shmem_barrier*/
+
+/*
+ * Performance test for shmem_barrier
+ *
+ */
 
 #include <stdio.h>
 #include <sys/time.h>
@@ -49,7 +58,7 @@ int
 main ()
 {
     int me, npes, src;
-    int i, j;
+    int i;
     struct timeval start, end;
     long time_taken, start_time, end_time;
 
@@ -57,9 +66,9 @@ main ()
         pSync[i] = _SHMEM_SYNC_VALUE;
     }
 
-    start_pes (0);
-    me = _my_pe ();
-    npes = _num_pes ();
+    shmem_init ();
+    me = shmem_my_pe ();
+    npes = shmem_n_pes ();
     src = me - 1;
     time_taken = 0;
 
@@ -67,8 +76,9 @@ main ()
         if (me != 0) {
             shmem_int_p (&x, src * (i + 1), me - 1);
         }
-        else
+        else {
             shmem_int_p (&x, src * (i + 1), npes - 1);
+        }
         shmem_barrier_all ();
 
         gettimeofday (&start, NULL);
@@ -82,10 +92,13 @@ main ()
 
     }
     /* printf("%d: x = %d\n", me, x); */
-    if (me == 0)
+    if (me == 0) {
         printf
             ("Time required for a barrier, with %d PEs is %ld microseconds\n",
              npes, time_taken / 10000);
+    }
+
+    shmem_finalize ();
 
     return 0;
 }

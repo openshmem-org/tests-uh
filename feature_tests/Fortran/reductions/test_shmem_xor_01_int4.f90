@@ -1,7 +1,12 @@
 !
 !
 ! Copyright (c) 2011 - 2015
-!   University of Houston System and Oak Ridge National Laboratory.
+!   University of Houston System and UT-Battelle, LLC.
+! Copyright (c) 2009 - 2015
+!   Silicon Graphics International Corp.  SHMEM is copyrighted
+!   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
+!   (shmem) is released by Open Source Software Solutions, Inc., under an
+!   agreement with Silicon Graphics International Corp. (SGI).
 ! 
 ! All rights reserved.
 ! 
@@ -16,10 +21,10 @@
 !   notice, this list of conditions and the following disclaimer in the
 !   documentation and/or other materials provided with the distribution.
 ! 
-! o Neither the name of the University of Houston System, Oak Ridge
-!   National Laboratory nor the names of its contributors may be used to
-!   endorse or promote products derived from this software without specific
-!   prior written permission.
+! o Neither the name of the University of Houston System, UT-Battelle, LLC
+!   nor the names of its contributors may be used to endorse or promote
+!   products derived from this software without specific prior written
+!   permission.
 ! 
 ! THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 ! "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -43,50 +48,49 @@ program test_shmem_reduction
   integer,   parameter :: nelems = 10
 
   integer*4, save      :: src(nelems)
-  integer*4, save      :: target(nelems)
-  integer*4  , save    :: target_expected(nelems)
+  integer*4, save      :: dest(nelems)
+  integer*4  , save    :: dest_expected(nelems)
 
   integer,   save      :: pSync(SHMEM_REDUCE_SYNC_SIZE)
   integer  , save      :: pWrk(SHMEM_REDUCE_MIN_WRKDATA_SIZE)
 
   integer              :: me, npes, i, pe
   logical              :: success
-  integer*4            :: a, b
 
   character*(*), parameter :: TEST_NAME = 'shmem_xor'
 
   ! Function definitions
-  integer                   :: my_pe, num_pes
+  integer                   :: shmem_my_pe, shmem_n_pes
 
   success = .TRUE.
 
-  call start_pes(0)
+  call shmem_init()
 
-  me   = my_pe()
-  npes = num_pes()
+  me   = shmem_my_pe()
+  npes = shmem_n_pes()
 
   if (npes .ge. min_npes) then
 
     pSync(:) = SHMEM_SYNC_VALUE
 
     do i = 1, nelems, 1
-      target(i) = 0
-      src(i) = INT(me + i, KIND=4)
-      target_expected(i) = INT(i, KIND=4)
+      dest(i) = 0
+      src(i) = me + i
+      dest_expected(i) = i
     end do
 
     do pe = 1, npes - 1, 1
       do i = 1, nelems, 1
-        target_expected(i) = IEOR(target_expected(i), INT((pe + i), KIND=4))
+        dest_expected(i) = IEOR(dest_expected(i), pe + i)
       end do
     end do
 
     call shmem_barrier_all()
     
-    call shmem_int4_xor_to_all(target, src, nelems, 0, 0, npes, pWrk, pSync)
+    call shmem_int4_xor_to_all(dest, src, nelems, 0, 0, npes, pWrk, pSync)
  
     do i = 1, nelems, 1
-      if(target(i) .ne. target_expected(i)) then
+      if(dest(i) .ne. dest_expected(i)) then
         success = .FALSE.
       end if 
     end do
@@ -104,5 +108,7 @@ program test_shmem_reduction
       write(*,*) 'This test requires ', min_npes, ' or more PEs.'
     end if
   end if
+
+  call shmem_finalize()
 
 end program test_shmem_reduction

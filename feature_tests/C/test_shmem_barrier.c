@@ -1,26 +1,31 @@
 /*
  *
  * Copyright (c) 2011 - 2015
- *   University of Houston System and Oak Ridge National Laboratory.
- * 
+ *   University of Houston System and UT-Battelle, LLC.
+ * Copyright (c) 2009 - 2015
+ *   Silicon Graphics International Corp.  SHMEM is copyrighted
+ *   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
+ *   (shmem) is released by Open Source Software Solutions, Inc., under an
+ *   agreement with Silicon Graphics International Corp. (SGI).
+ *
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * o Redistributions of source code must retain the above copyright notice,
  *   this list of conditions and the following disclaimer.
- * 
+ *
  * o Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * 
- * o Neither the name of the University of Houston System, Oak Ridge
- *   National Laboratory nor the names of its contributors may be used to
- *   endorse or promote products derived from this software without specific
- *   prior written permission.
- * 
+ *
+ * o Neither the name of the University of Houston System, UT-Battelle, LLC
+ *   nor the names of its contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -36,7 +41,9 @@
  */
 
 
-/*Tests shmem_barrier call*/
+/*
+ * Tests shmem_barrier call
+ */
 
 #include <stdio.h>
 
@@ -52,9 +59,9 @@ main ()
     int me, npes;
     int i;
 
-    start_pes (0);
-    me = _my_pe ();
-    npes = _num_pes ();
+    shmem_init ();
+    me = shmem_my_pe ();
+    npes = shmem_n_pes ();
 
     for (i = 0; i < _SHMEM_BCAST_SYNC_SIZE; i += 1) {
         pSync[i] = _SHMEM_SYNC_VALUE;
@@ -95,5 +102,8 @@ main ()
         printf ("Number of PEs must be > 1 to test barrier, test skipped\n");
 
     }
+
+    shmem_finalize ();
+
     return 0;
 }

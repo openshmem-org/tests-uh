@@ -1,26 +1,31 @@
 /*
  *
  * Copyright (c) 2011 - 2015
- *   University of Houston System and Oak Ridge National Laboratory.
- * 
+ *   University of Houston System and UT-Battelle, LLC.
+ * Copyright (c) 2009 - 2015
+ *   Silicon Graphics International Corp.  SHMEM is copyrighted
+ *   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
+ *   (shmem) is released by Open Source Software Solutions, Inc., under an
+ *   agreement with Silicon Graphics International Corp. (SGI).
+ *
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * o Redistributions of source code must retain the above copyright notice,
  *   this list of conditions and the following disclaimer.
- * 
+ *
  * o Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * 
- * o Neither the name of the University of Houston System, Oak Ridge
- *   National Laboratory nor the names of its contributors may be used to
- *   endorse or promote products derived from this software without specific
- *   prior written permission.
- * 
+ *
+ * o Neither the name of the University of Houston System, UT-Battelle, LLC
+ *   nor the names of its contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -35,8 +40,10 @@
  *
  */
 
-
-/* Performance test for shmem_XX_get (latency and bandwidth) */
+/*
+ * Performance test for shmem_XX_get (latency and bandwidth)
+ *
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -49,11 +56,10 @@ long double time_taken;
 long pSync[_SHMEM_REDUCE_SYNC_SIZE];
 long double pWrk[_SHMEM_REDUCE_MIN_WRKDATA_SIZE];
 
-//#define N_ELEMENTS 25600/*Data size chosen to be able to capture time required*/
 int
 main (void)
 {
-    int j, k;
+    int j;
     long int i;
     int *target;
     int *source;
@@ -62,22 +68,23 @@ main (void)
     struct timeval start, end;
     long double start_time, end_time;
 
-    int N_ELEMENTS = (4194304 * 2) / sizeof (int);
+    const int N_ELEMENTS = (4194304 * 2) / sizeof (int);
 
-    start_pes (0);
-    me = _my_pe ();
-    npes = _num_pes ();
+    shmem_init ();
+    me = shmem_my_pe ();
+    npes = shmem_n_pes ();
 
     for (i = 0; i < _SHMEM_BCAST_SYNC_SIZE; i += 1) {
         pSync[i] = _SHMEM_SYNC_VALUE;
     }
     nxtpe = (me + 1) % npes;
-    source = (int *) shmalloc (N_ELEMENTS * sizeof (*source));
-    target = (int *) shmalloc (N_ELEMENTS * sizeof (*target));
+    source = (int *) shmem_malloc (N_ELEMENTS * sizeof (*source));
+    target = (int *) shmem_malloc (N_ELEMENTS * sizeof (*target));
 
-    if (me == 0)
+    if (me == 0) {
         printf
             ("Get Performance test results:\nSize (Bytes)\t\tTime (Microseconds)\t\tBandwidth (Bytes/Second)\n");
+    }
 
     for (i = 0; i < N_ELEMENTS; i += 1) {
         source[i] = i + 1;
@@ -106,26 +113,30 @@ main (void)
         }
         shmem_longdouble_sum_to_all (&time_taken, &time_taken, 1, 0, 0, npes,
                                      pWrk, pSync);
-
+        shmem_barrier_all ();
 
         if (me == 0) {
             time_taken = time_taken / (npes * 10000);   /* Average time across
                                                            all PEs for one put */
-            if (i * sizeof (i) < 1048576)
+            if (i * sizeof (i) < 1048576) {
                 printf ("%ld \t\t\t\t %Lf\t\t\t\t %Lf\n", i * sizeof (i),
                         time_taken,
                         (i * sizeof (i)) / (time_taken * 1000000.0));
-            else
+            }
+            else {
                 printf ("%ld \t\t\t %Lf\t\t\t\t %Lf\n", i * sizeof (i),
                         time_taken,
                         (i * sizeof (i)) / (time_taken * 1000000.0));
-
+            }
         }
 
     }
     shmem_barrier_all ();
 
-    shfree (target);
-    shfree (source);
+    shmem_free (target);
+    shmem_free (source);
+
+    shmem_finalize ();
+
     return 0;
 }

@@ -1,26 +1,31 @@
 /*
  *
- * Copyright (c) 2011 - 2015 
- *   University of Houston System and Oak Ridge National Laboratory.
- * 
+ * Copyright (c) 2011 - 2015
+ *   University of Houston System and UT-Battelle, LLC.
+ * Copyright (c) 2009 - 2015
+ *   Silicon Graphics International Corp.  SHMEM is copyrighted
+ *   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
+ *   (shmem) is released by Open Source Software Solutions, Inc., under an
+ *   agreement with Silicon Graphics International Corp. (SGI).
+ *
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * o Redistributions of source code must retain the above copyright notice,
  *   this list of conditions and the following disclaimer.
- * 
+ *
  * o Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * 
- * o Neither the name of the University of Houston System, Oak Ridge
- *   National Laboratory nor the names of its contributors may be used to
- *   endorse or promote products derived from this software without specific
- *   prior written permission.
- * 
+ *
+ * o Neither the name of the University of Houston System, UT-Battelle, LLC
+ *   nor the names of its contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -57,7 +62,7 @@
 int
 main (int argc, char **argv)
 {
-    int i, j;
+    int i;
     int nextpe;
     int me, npes;
     int success1, success2, success3, success4, success5, success6, success7,
@@ -92,9 +97,9 @@ main (int argc, char **argv)
     float *dest13;
 
 
-    start_pes (0);
-    me = _my_pe ();
-    npes = _num_pes ();
+    shmem_init ();
+    me = shmem_my_pe ();
+    npes = shmem_n_pes ();
 
     if (npes > 1) {
 
@@ -125,19 +130,19 @@ main (int argc, char **argv)
         src13 = (float) me;
 
 
-        dest1 = (short *) shmalloc (N * sizeof (*dest1));
-        dest2 = (int *) shmalloc (N * sizeof (*dest2));
-        dest3 = (long *) shmalloc (N * sizeof (*dest3));
-        dest4 = (long double *) shmalloc (N * sizeof (*dest4));
-        dest5 = (long long *) shmalloc (N * sizeof (*dest5));
-        dest6 = (double *) shmalloc (N * sizeof (*dest6));
-        dest7 = (float *) shmalloc (N * sizeof (*dest7));
-        dest8 = (char *) shmalloc (4 * sizeof (*dest8));
-        dest9 = (short *) shmalloc (sizeof (*dest9));
-        dest10 = (int *) shmalloc (sizeof (*dest10));
-        dest11 = (long *) shmalloc (sizeof (*dest11));
-        dest12 = (double *) shmalloc (sizeof (*dest12));
-        dest13 = (float *) shmalloc (sizeof (*dest13));
+        dest1 = (short *) shmem_malloc (N * sizeof (*dest1));
+        dest2 = (int *) shmem_malloc (N * sizeof (*dest2));
+        dest3 = (long *) shmem_malloc (N * sizeof (*dest3));
+        dest4 = (long double *) shmem_malloc (N * sizeof (*dest4));
+        dest5 = (long long *) shmem_malloc (N * sizeof (*dest5));
+        dest6 = (double *) shmem_malloc (N * sizeof (*dest6));
+        dest7 = (float *) shmem_malloc (N * sizeof (*dest7));
+        dest8 = (char *) shmem_malloc (4 * sizeof (*dest8));
+        dest9 = (short *) shmem_malloc (sizeof (*dest9));
+        dest10 = (int *) shmem_malloc (sizeof (*dest10));
+        dest11 = (long *) shmem_malloc (sizeof (*dest11));
+        dest12 = (double *) shmem_malloc (sizeof (*dest12));
+        dest13 = (float *) shmem_malloc (sizeof (*dest13));
 
         for (i = 0; i < N; i += 1) {
             dest1[i] = -9;
@@ -334,24 +339,27 @@ main (int argc, char **argv)
 
         shmem_barrier_all ();
 
-        shfree (dest1);
-        shfree (dest2);
-        shfree (dest3);
-        shfree (dest4);
-        shfree (dest5);
-        shfree (dest6);
-        shfree (dest7);
-        shfree (dest8);
-        shfree (dest9);
-        shfree (dest10);
-        shfree (dest11);
-        shfree (dest12);
-        shfree (dest13);
+        shmem_free (dest1);
+        shmem_free (dest2);
+        shmem_free (dest3);
+        shmem_free (dest4);
+        shmem_free (dest5);
+        shmem_free (dest6);
+        shmem_free (dest7);
+        shmem_free (dest8);
+        shmem_free (dest9);
+        shmem_free (dest10);
+        shmem_free (dest11);
+        shmem_free (dest12);
+        shmem_free (dest13);
 
     }
     else {
         printf
             ("Number of PEs must be > 1 to test shmem put of zero length, test skipped\n");
     }
+
+    shmem_finalize ();
+
     return 0;
 }

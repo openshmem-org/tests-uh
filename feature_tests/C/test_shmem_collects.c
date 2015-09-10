@@ -1,26 +1,31 @@
 /*
  *
  * Copyright (c) 2011 - 2015
- *   University of Houston System and Oak Ridge National Laboratory.
- * 
+ *   University of Houston System and UT-Battelle, LLC.
+ * Copyright (c) 2009 - 2015
+ *   Silicon Graphics International Corp.  SHMEM is copyrighted
+ *   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
+ *   (shmem) is released by Open Source Software Solutions, Inc., under an
+ *   agreement with Silicon Graphics International Corp. (SGI).
+ *
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * o Redistributions of source code must retain the above copyright notice,
  *   this list of conditions and the following disclaimer.
- * 
+ *
  * o Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * 
- * o Neither the name of the University of Houston System, Oak Ridge
- *   National Laboratory nor the names of its contributors may be used to
- *   endorse or promote products derived from this software without specific
- *   prior written permission.
- * 
+ *
+ * o Neither the name of the University of Houston System, UT-Battelle, LLC
+ *   nor the names of its contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -37,8 +42,9 @@
 
 
 /* Tests shmem_fcollect32 call
- * Each PE contributes 4 elements 
- * */
+ * Each PE contributes 4 elements
+ *
+ */
 
 #include <stdio.h>
 #include <string.h>
@@ -70,9 +76,9 @@ main (void)
     int *compare_dst1, *compare_dst3;
     long *compare_dst2, *compare_dst4;
 
-    start_pes (0);
-    npes = _num_pes ();
-    me = _my_pe ();
+    shmem_init ();
+    npes = shmem_n_pes ();
+    me = shmem_my_pe ();
 
     for (i = 0; i < _SHMEM_BCAST_SYNC_SIZE; i += 1) {
         pSync[i] = _SHMEM_SYNC_VALUE;
@@ -80,15 +86,15 @@ main (void)
 
     if (npes > 1) {
 
+        dst1 = (int *) shmem_malloc (npes * 4 * sizeof (*dst1));
+        dst2 = (long *) shmem_malloc (npes * 4 * sizeof (*dst2));
+        dst3 = (int *) shmem_malloc (npes * 4 * sizeof (*dst3));
+        dst4 = (long *) shmem_malloc (npes * 4 * sizeof (*dst4));
 
-        dst1 = (int *) shmalloc (npes * 4 * sizeof (dst1));
-        compare_dst1 = (int *) malloc (npes * 4 * sizeof (dst1));
-        dst2 = (long *) shmalloc (npes * 4 * sizeof (dst2));
-        compare_dst2 = (long *) malloc (npes * 4 * sizeof (dst2));
-        dst3 = (int *) shmalloc (npes * 4 * sizeof (dst3));
-        compare_dst3 = (int *) malloc (npes * 4 * sizeof (dst3));
-        dst4 = (long *) shmalloc (npes * 4 * sizeof (dst4));
-        compare_dst4 = (long *) malloc (npes * 4 * sizeof (dst4));
+        compare_dst1 = (int *) malloc (npes * 4 * sizeof (*compare_dst1));
+        compare_dst2 = (long *) malloc (npes * 4 * sizeof (*compare_dst2));
+        compare_dst3 = (int *) malloc (npes * 4 * sizeof (*compare_dst3));
+        compare_dst4 = (long *) malloc (npes * 4 * sizeof (*compare_dst4));
 
         /* Test shmem_fcollect32 */
         /* Create the output of fcollect32 and save in compare_dst array */
@@ -113,13 +119,16 @@ main (void)
 
         if (me == 0) {
             for (i = 0; i < npes * 4; i += 1) {
-                if (dst1[i] != compare_dst1[i])
+                if (dst1[i] != compare_dst1[i]) {
                     success = 1;
+                }
             }
-            if (success == 1)
+            if (success == 1) {
                 printf ("Test shmem_fcollect32: Failed\n");
-            else
+            }
+            else {
                 printf ("Test shmem_fcollect32: Passed\n");
+            }
         }
 
         shmem_barrier_all ();
@@ -147,13 +156,16 @@ main (void)
 
         if (me == 0) {
             for (i = 0; i < npes * 4; i += 1) {
-                if (dst2[i] != compare_dst2[i])
+                if (dst2[i] != compare_dst2[i]) {
                     success = 1;
+                }
             }
-            if (success == 1)
+            if (success == 1) {
                 printf ("Test shmem_fcollect64: Failed\n");
-            else
+            }
+            else {
                 printf ("Test shmem_fcollect64: Passed\n");
+            }
         }
 
         /* Test collect32 */
@@ -162,14 +174,20 @@ main (void)
         x = npes / 4;
         y = npes % 4;
 
-        if (y == 1)
+        switch (y) {
+        case 1:
             dst_len = x * 10 + 1;
-        else if (y == 2)
+            break;
+        case 2:
             dst_len = x * 10 + 3;
-        else if (y == 3)
+            break;
+        case 3:
             dst_len = x * 10 + 6;
-        else
+            break;
+        default:
             dst_len = x * 10;
+            break;
+        }
 
         /* Create the output of collect32 and save in compare_dst array */
 
@@ -183,29 +201,31 @@ main (void)
             }
         }
 
-
         for (i = 0; i < dst_len; i++) {
             dst3[i] = -1;
         }
 
-        for (i = 0; i < 4; i++)
+        for (i = 0; i < 4; i++) {
             src3[i] = me * 10 + src3[i];
+        }
 
         shmem_barrier_all ();
 
         shmem_collect32 (dst3, src3, (me % 4 + 1), 0, 0, npes, pSync);
-
-
+        shmem_barrier_all ();
 
         if (me == 0) {
             for (i = 0; i < dst_len; i += 1) {
-                if (dst3[i] != compare_dst3[i])
+                if (dst3[i] != compare_dst3[i]) {
                     success = 1;
+                }
             }
-            if (success == 1)
+            if (success == 1) {
                 printf ("Test shmem_collect32: Failed\n");
-            else
+            }
+            else {
                 printf ("Test shmem_collect32: Passed\n");
+            }
         }
 
         shmem_barrier_all ();
@@ -245,19 +265,34 @@ main (void)
 
         if (me == 0) {
             for (i = 0; i < dst_len; i += 1) {
-                if (dst4[i] != compare_dst4[i])
+                if (dst4[i] != compare_dst4[i]) {
                     success = 1;
+                }
             }
-            if (success == 1)
+            if (success == 1) {
                 printf ("Test shmem_collect64: Failed\n");
-            else
+            }
+            else {
                 printf ("Test shmem_collect64: Passed\n");
+            }
         }
 
-    }
-    else
-        printf ("Number of PEs must be > 1 to test collects, test skipped\n");
+        free (compare_dst4);
+        free (compare_dst3);
+        free (compare_dst2);
+        free (compare_dst1);
 
+        shmem_free (dst4);
+        shmem_free (dst3);
+        shmem_free (dst2);
+        shmem_free (dst1);
+
+    }
+    else {
+        printf ("Number of PEs must be > 1 to test collects, test skipped\n");
+    }
+
+    shmem_finalize ();
 
     return 0;
 }

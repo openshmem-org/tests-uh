@@ -1,7 +1,12 @@
 #
 #
-# Copyright (c) 2011 - 2015
-#   University of Houston System and Oak Ridge National Laboratory.
+# Copyright (c) 2011 - 2015 
+#   University of Houston System and UT-Battelle, LLC.
+# Copyright (c) 2009 - 2015
+#   Silicon Graphics International Corp.  SHMEM is copyrighted
+#   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
+#   (shmem) is released by Open Source Software Solutions, Inc., under an
+#   agreement with Silicon Graphics International Corp. (SGI).
 # 
 # All rights reserved.
 # 
@@ -16,10 +21,10 @@
 #   notice, this list of conditions and the following disclaimer in the
 #   documentation and/or other materials provided with the distribution.
 # 
-# o Neither the name of the University of Houston System, Oak Ridge
-#   National Laboratory nor the names of its contributors may be used to
-#   endorse or promote products derived from this software without specific
-#   prior written permission.
+# o Neither the name of the University of Houston System, UT-Battelle, LLC
+#   nor the names of its contributors may be used to endorse or promote
+#   products derived from this software without specific prior written
+#   permission.
 # 
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 # "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -33,9 +38,9 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-#
 
-include Makefile.in
+
+include Makefile.opts
 
 MAKECMD=make -C
 
@@ -43,7 +48,6 @@ all:
 	$(MAKECMD) accessibility
 	$(MAKECMD) alloc
 	$(MAKECMD) atomic
-	$(MAKECMD) barrier
 	$(MAKECMD) broadcast
 	$(MAKECMD) collect
 	$(MAKECMD) reductions
@@ -53,7 +57,6 @@ run:
 	$(MAKECMD) accessibility run
 	$(MAKECMD) alloc run
 	$(MAKECMD) atomic run
-	$(MAKECMD) barrier run
 	$(MAKECMD) broadcast run
 	$(MAKECMD) collect run
 	$(MAKECMD) reductions run
@@ -63,7 +66,6 @@ clean:
 	$(MAKECMD) accessibility clean
 	$(MAKECMD) alloc clean
 	$(MAKECMD) atomic clean
-	$(MAKECMD) barrier clean
 	$(MAKECMD) broadcast clean
 	$(MAKECMD) collect clean
 	$(MAKECMD) reductions clean

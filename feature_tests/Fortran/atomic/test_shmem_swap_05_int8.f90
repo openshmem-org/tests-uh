@@ -1,7 +1,12 @@
 !
 !
 ! Copyright (c) 2011 - 2015
-!   University of Houston System and Oak Ridge National Laboratory.
+!   University of Houston System and UT-Battelle, LLC.
+! Copyright (c) 2009 - 2015
+!   Silicon Graphics International Corp.  SHMEM is copyrighted
+!   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
+!   (shmem) is released by Open Source Software Solutions, Inc., under an
+!   agreement with Silicon Graphics International Corp. (SGI).
 ! 
 ! All rights reserved.
 ! 
@@ -16,10 +21,10 @@
 !   notice, this list of conditions and the following disclaimer in the
 !   documentation and/or other materials provided with the distribution.
 ! 
-! o Neither the name of the University of Houston System, Oak Ridge
-!   National Laboratory nor the names of its contributors may be used to
-!   endorse or promote products derived from this software without specific
-!   prior written permission.
+! o Neither the name of the University of Houston System, UT-Battelle, LLC
+!   nor the names of its contributors may be used to endorse or promote
+!   products derived from this software without specific prior written
+!   permission.
 ! 
 ! THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 ! "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -43,53 +48,52 @@ program test_shmem_atomics
   logical, save             :: success1
   logical, ALLOCATABLE      :: success2(:)
 
-  integer*8, ALLOCATABLE     :: target(:)
+  integer*8, ALLOCATABLE     :: dest(:)
 
   integer*8                  :: swapped_val, new_val
 
-  integer                   :: errcode, abort, length
   integer                   :: me, npes
 
   ! Function definitions
-  integer                   :: my_pe, num_pes
+  integer                   :: shmem_my_pe, shmem_n_pes
   integer*8                  :: shmem_int8_swap
 
-  call start_pes(0)
-  me = my_pe()
-  npes = num_pes()
+  call shmem_init()
+  me = shmem_my_pe()
+  npes = shmem_n_pes()
 
   call shmem_barrier_all()
 
   ! Make sure this job is running with at least 2 PEs.
 
   if (npes .gt. 1) then
-    ALLOCATE(target(1))
+    ALLOCATE(dest(1))
     ALLOCATE(success2(1))
    
     success1 = .FALSE.
     success2(1) = .FALSE.
 
-    target(1) = INT(me, KIND=8)
+    dest(1) = me
 
-    new_val = INT(me, KIND=8)
+    new_val = me
 
     call shmem_barrier_all()
 
-    swapped_val = shmem_int8_swap(target(1), new_val, mod((me + 1), npes))
+    swapped_val = shmem_int8_swap(dest(1), new_val, mod((me + 1), npes))
 
     call shmem_barrier_all()
 
     ! To validate the working of swap we need to check the value received at the PE that initiated the swap 
-    !  as well as the target PE
+    !  as well as the dest PE
 
     if(me .eq. 0) then
-      if(swapped_val .eq. INT(1, KIND=8)) then
+      if(swapped_val .eq. 1) then
         success1 = .TRUE.
       end if
     end if
 
     if(me .eq. 1) then
-      if(target(1) .eq. 0) then
+      if(dest(1) .eq. 0) then
         call shmem_logical_put(success2, true_val, 1, 0)
       end if
     end if
@@ -98,19 +102,21 @@ program test_shmem_atomics
 
     if(me .eq. 0) then
       if(success1 .eqv. .TRUE. .or. success2(1) .eqv. .TRUE.) then
-        write (*,*) "Test 05 shmem_int8_swap: Failed"
-      else
         write (*,*) "Test 05 shmem_int8_swap: Passed"
+      else
+        write (*,*) "Test 05 shmem_int8_swap: Failed"
       end if
     end if
 
     call shmem_barrier_all()
 
-    DEALLOCATE(target)
+    DEALLOCATE(dest)
     DEALLOCATE(success2)
 
   else
     write (*,*) "Number of PEs must be > 1 to test shmem atomics, test skipped"
   end if 
+
+  call shmem_finalize()
 
 end program test_shmem_atomics

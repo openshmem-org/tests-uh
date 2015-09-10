@@ -1,56 +1,60 @@
 #
- #
- # Copyright (c) 2011 - 2015 
- # University of Houston System and Oak Ridge National
- # Laboratory.
- # 
- # All rights reserved.
- # 
- # Redistribution and use in source and binary forms, with or without
- # modification, are permitted provided that the following conditions
- # are met:
- # 
- # o Redistributions of source code must retain the above copyright notice,
- #   this list of conditions and the following disclaimer.
- # 
- # o Redistributions in binary form must reproduce the above copyright
- #   notice, this list of conditions and the following disclaimer in the
- #   documentation and/or other materials provided with the distribution.
- # 
- # o Neither the name of the University of Houston System, Oak Ridge
- #   National Laboratory nor the names of its contributors may be used to
- #   endorse or promote products derived from this software without specific
- #   prior written permission.
- # 
- # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- # "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- # LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- # A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- # HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- # SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
- # TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- # PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- #
+#
+# Copyright (c) 2011 - 2015
+#   University of Houston System and UT-Battelle, LLC.
+# Copyright (c) 2009 - 2015
+#   Silicon Graphics International Corp.  SHMEM is copyrighted
+#   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
+#   (shmem) is released by Open Source Software Solutions, Inc., under an
+#   agreement with Silicon Graphics International Corp. (SGI).
+#
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+#
+# o Redistributions of source code must retain the above copyright notice,
+#   this list of conditions and the following disclaimer.
+#
+# o Redistributions in binary form must reproduce the above copyright
+#   notice, this list of conditions and the following disclaimer in the
+#   documentation and/or other materials provided with the distribution.
+#
+# o Neither the name of the University of Houston System, UT-Battelle, LLC
+#   nor the names of its contributors may be used to endorse or promote
+#   products derived from this software without specific prior written
+#   permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+# HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+# TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+# PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+# LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+# NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+
 SHELL = /bin/sh
 
-SHMEM_CFLAGS=
+SHMEM_CFLAGS=-g -O0
 
 GCC=gcc
 
 CC = oshcc
 
 
-# Please set these variables. They are used in execution time.
-# #
-# # the run command consists
-# # > $RUNCMD $RUNOPT $NCOREOPT $NCORE[...] $NPROCOPT $NPROC[...]  executable
+# Please set these variables. They are used at execution time.
+# the run command consists of
+# > $RUNCMD $RUNOPT $NCOREOPT $NCORE[...] $NPROCOPT $NPROC[...]  executable
 
 RUNCMD=oshrun
 RUNOPT=
-NCOREOPT= 
+NCOREOPT=
 NCORE=
 NPROCOPT=-np
 NPROC=2
@@ -68,9 +72,7 @@ all default:    $(EXES)
 .SUFFIXES: .x
 
 %.x:    %.c
-	        $(CC) $(SHMEM_CFLAGS) -o $@ $^
-
-
+	$(CC) $(SHMEM_CFLAGS) -o $@ $^ -lm
 
 run:	all $(EXES)
 	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_accessible.x
@@ -79,15 +81,15 @@ run:	all $(EXES)
 	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_broadcast.x
 	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_collects.x
 	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_get_globals.x
-	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_get_shmalloc.x
+	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_get_shmem_malloc.x
 	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_lock.x
 	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_put_globals.x
-	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_put_shmalloc.x
+	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_put_shmem_malloc.x
 	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_reduction.x
 	 $(RUNCMD) $(RUNOPT) $(NPROCOPT) $(NPROC) ./test_shmem_synchronization.x
 
 
 clean:
-	        rm -f $(EXES)
+	 rm -f $(EXES)
 
 

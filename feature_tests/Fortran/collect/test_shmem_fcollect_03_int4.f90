@@ -1,7 +1,12 @@
 !
 !
 ! Copyright (c) 2011 - 2015
-!   University of Houston System and Oak Ridge National Laboratory.
+!   University of Houston System and UT-Battelle, LLC.
+! Copyright (c) 2009 - 2015
+!   Silicon Graphics International Corp.  SHMEM is copyrighted
+!   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
+!   (shmem) is released by Open Source Software Solutions, Inc., under an
+!   agreement with Silicon Graphics International Corp. (SGI).
 ! 
 ! All rights reserved.
 ! 
@@ -16,10 +21,10 @@
 !   notice, this list of conditions and the following disclaimer in the
 !   documentation and/or other materials provided with the distribution.
 ! 
-! o Neither the name of the University of Houston System, Oak Ridge
-!   National Laboratory nor the names of its contributors may be used to
-!   endorse or promote products derived from this software without specific
-!   prior written permission.
+! o Neither the name of the University of Houston System, UT-Battelle, LLC
+!   nor the names of its contributors may be used to endorse or promote
+!   products derived from this software without specific prior written
+!   permission.
 ! 
 ! THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 ! "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -44,33 +49,32 @@ program test_shmem_collects
 
   integer,   parameter :: min_npes = 2
   integer,   parameter :: nelems = 10 
-  integer,   parameter :: target_nelems = nelems * min_npes ! assuming 2 pes ( 2 x 4 elements)
+  integer,   parameter :: dest_nelems = nelems * min_npes ! assuming 2 pes ( 2 x 4 elements)
 
   integer*4             :: src(nelems)
-  integer*8            :: src_addr
   pointer              (src_addr, src)
 
-  integer*4             :: target(target_nelems)
-  integer*8            :: target_addr
-  pointer              (target_addr, target)
+  integer*4             :: dest(dest_nelems)
+  pointer              (dest_addr, dest)
 
-  integer*4             :: target_expected(target_nelems)
+  integer*4             :: dest_expected(dest_nelems)
 
   integer, save        :: flag
   integer              :: npes, me
   integer              :: i, pe, k
   logical              :: success
   integer              :: collect_nelems
-  integer              :: errcode, abort
+  integer              :: errcode
+  integer, parameter   :: abort = 0
 
 ! Function definitions
-  integer              :: my_pe, num_pes
+  integer              :: shmem_my_pe, shmem_n_pes
   
 
-  call start_pes(0)
+  call shmem_init()
 
-  npes = num_pes()
-  me   = my_pe()
+  npes = shmem_n_pes()
+  me   = shmem_my_pe()
 
   pSync(:) = SHMEM_SYNC_VALUE
 
@@ -79,14 +83,14 @@ program test_shmem_collects
     success = .TRUE.
     flag = 0
 
-    call shpalloc (target_addr, target_nelems, errcode, abort)
+    call shpalloc (dest_addr, dest_nelems, errcode, abort)
     call shpalloc(src_addr, nelems, errcode, abort)
 
     collect_nelems = nelems / npes
 
-    do i = 1, target_nelems, 1
-      target(i) = -9
-      target_expected = -9
+    do i = 1, dest_nelems, 1
+      dest(i) = -9
+      dest_expected = -9
     end do
 
     do i = 1, nelems, 1
@@ -96,19 +100,19 @@ program test_shmem_collects
     k = 1
     do pe = 0, npes - 1, 1
       do i = 1, collect_nelems, 1
-        target_expected(k) = i * 100 + pe  
+        dest_expected(k) = i * 100 + pe  
         k = k + 1
       end do
     end do
     
     call shmem_barrier_all()
 
-    call shmem_fcollect32(target, src, collect_nelems, &
+    call shmem_fcollect32(dest, src, collect_nelems, &
       0, 0, npes, &
       pSync)
 
     do i = 1, collect_nelems * npes, 1
-      if(target(i) .ne. target_expected(i)) then
+      if(dest(i) .ne. dest_expected(i)) then
         if(me .ne. 0) then
           call shmem_int4_inc(flag, 0)
         end if
@@ -131,11 +135,13 @@ program test_shmem_collects
 
     call shmem_barrier_all()
 
-    call shpdeallc (target_addr, errcode, abort)
+    call shpdeallc (dest_addr, errcode, abort)
     call shpdeallc(src_addr, errcode, abort)
 
   else
     write (*,*) "This test requires ", min_npes, " or more PEs." 
   end if
+
+  call shmem_finalize()
 
 end program test_shmem_collects

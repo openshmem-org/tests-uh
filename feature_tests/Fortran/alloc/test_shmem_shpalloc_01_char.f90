@@ -1,7 +1,12 @@
 !
 !
 ! Copyright (c) 2011 - 2015
-!   University of Houston System and Oak Ridge National Laboratory.
+!   University of Houston System and UT-Battelle, LLC.
+! Copyright (c) 2009 - 2015
+!   Silicon Graphics International Corp.  SHMEM is copyrighted
+!   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
+!   (shmem) is released by Open Source Software Solutions, Inc., under an
+!   agreement with Silicon Graphics International Corp. (SGI).
 ! 
 ! All rights reserved.
 ! 
@@ -16,10 +21,10 @@
 !   notice, this list of conditions and the following disclaimer in the
 !   documentation and/or other materials provided with the distribution.
 ! 
-! o Neither the name of the University of Houston System, Oak Ridge
-!   National Laboratory nor the names of its contributors may be used to
-!   endorse or promote products derived from this software without specific
-!   prior written permission.
+! o Neither the name of the University of Houston System, UT-Battelle, LLC
+!   nor the names of its contributors may be used to endorse or promote
+!   products derived from this software without specific prior written
+!   permission.
 ! 
 ! THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 ! "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -43,23 +48,23 @@ program test_shmem_shpalloc
   integer, parameter :: nelems = 50
 
   character           :: array(1)    
-  integer*8          :: array_addr
   pointer            (array_addr, array)
 
   character           :: buffer(nelems)
   
-  integer            :: errcode, abort, me, npes, pe, i
+  integer            :: errcode, me, npes, pe, i
+  integer, parameter  :: abort = 0
   logical            :: success
 
   character*(*), parameter  :: TEST_NAME='shpalloc'
 
   ! Function return value types
-  integer            :: my_pe, num_pes
+  integer            :: shmem_my_pe, shmem_n_pes
 
-  call start_pes(0)
+  call shmem_init()
 
-  me = my_pe()
-  npes = num_pes()
+  me = shmem_my_pe()
+  npes = shmem_n_pes()
 
   success = .TRUE.
 
@@ -109,5 +114,7 @@ program test_shmem_shpalloc
      write (*,*) 'This test requires ', min_npes, ' or more PEs.'
    end if
   end if
-  
+    
+  call shmem_finalize()
+
 end program

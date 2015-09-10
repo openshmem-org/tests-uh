@@ -1,7 +1,12 @@
 !
 !
 ! Copyright (c) 2011 - 2015
-!   University of Houston System and Oak Ridge National Laboratory.
+!   University of Houston System and UT-Battelle, LLC.
+! Copyright (c) 2009 - 2015
+!   Silicon Graphics International Corp.  SHMEM is copyrighted
+!   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
+!   (shmem) is released by Open Source Software Solutions, Inc., under an
+!   agreement with Silicon Graphics International Corp. (SGI).
 ! 
 ! All rights reserved.
 ! 
@@ -16,10 +21,10 @@
 !   notice, this list of conditions and the following disclaimer in the
 !   documentation and/or other materials provided with the distribution.
 ! 
-! o Neither the name of the University of Houston System, Oak Ridge
-!   National Laboratory nor the names of its contributors may be used to
-!   endorse or promote products derived from this software without specific
-!   prior written permission.
+! o Neither the name of the University of Houston System, UT-Battelle, LLC
+!   nor the names of its contributors may be used to endorse or promote
+!   products derived from this software without specific prior written
+!   permission.
 ! 
 ! THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 ! "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -39,13 +44,10 @@ program test_shmem_iget
   implicit none
   include 'shmem.fh'
 
-  character*80       :: argv ! testing reading cmdline argument
-  integer            :: argc
-
   integer, parameter :: N = 10 
 
-  integer            ::  i,j
-  integer            ::  nextpe
+  integer            ::  i
+ 
   integer            ::  me, npes
   logical            ::  success
 
@@ -53,15 +55,15 @@ program test_shmem_iget
 
   integer*4, ALLOCATABLE :: src(:)
 
-  integer            :: errcode, abort
+  
 
 ! Function definitions
-  integer            :: my_pe, num_pes
+  integer            :: shmem_my_pe, shmem_n_pes
 
-  call start_pes(0)
+  call shmem_init()
   
-  me   = my_pe();
-  npes = num_pes();
+  me   = shmem_my_pe();
+  npes = shmem_n_pes();
 
   if(npes .gt. 1) then
 
@@ -72,7 +74,7 @@ program test_shmem_iget
     dest(:) = -9
 
     do i = 1, N, 1
-      src(i) = INT(54321 + i, KIND=4)
+      src(i) = 54321 + i
     end do
 
     call shmem_barrier_all()
@@ -104,4 +106,7 @@ program test_shmem_iget
   else
     write(*,*) "Number of PEs must be > 1 to test shmem get, test skipped"
   end if
+
+  call shmem_finalize()
+
 end program

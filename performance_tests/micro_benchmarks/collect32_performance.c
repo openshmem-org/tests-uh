@@ -1,26 +1,31 @@
 /*
  *
  * Copyright (c) 2011 - 2015
- *   University of Houston System and Oak Ridge National Laboratory.
- * 
+ *   University of Houston System and UT-Battelle, LLC.
+ * Copyright (c) 2009 - 2015
+ *   Silicon Graphics International Corp.  SHMEM is copyrighted
+ *   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
+ *   (shmem) is released by Open Source Software Solutions, Inc., under an
+ *   agreement with Silicon Graphics International Corp. (SGI).
+ *
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * o Redistributions of source code must retain the above copyright notice,
  *   this list of conditions and the following disclaimer.
- * 
+ *
  * o Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * 
- * o Neither the name of the University of Houston System, Oak Ridge
- *   National Laboratory nor the names of its contributors may be used to
- *   endorse or promote products derived from this software without specific
- *   prior written permission.
- * 
+ *
+ * o Neither the name of the University of Houston System, UT-Battelle, LLC
+ *   nor the names of its contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -34,40 +39,45 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
-/* Performance test for shmem_collect32*/
 
+/*
+ * Performance test for shmem_collect32
+ *
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <sys/time.h>
 #include <shmem.h>
+
 long pSyncA[_SHMEM_BCAST_SYNC_SIZE];
 long pSyncB[_SHMEM_BCAST_SYNC_SIZE];
 
 #define N_ELEMENTS 4
+
 int
 main (void)
 {
-    int i, j, k;
+    int i;
     int *target;
     int *source;
     int me, npes;
     struct timeval start, end;
     long time_taken, start_time, end_time;
 
-    start_pes (0);
-    me = _my_pe ();
-    npes = _num_pes ();
+    shmem_init ();
+    me = shmem_my_pe ();
+    npes = shmem_n_pes ();
 
-    source = (int *) shmalloc (N_ELEMENTS * sizeof (*source));
+    source = (int *) shmem_malloc (N_ELEMENTS * sizeof (*source));
 
     time_taken = 0;
 
     for (i = 0; i < N_ELEMENTS; i += 1) {
         source[i] = (i + 1) * 10 + me;
     }
-    target = (int *) shmalloc (N_ELEMENTS * sizeof (*target) * npes);
+    target = (int *) shmem_malloc (N_ELEMENTS * sizeof (*target) * npes);
     for (i = 0; i < N_ELEMENTS * npes; i += 1) {
         target[i] = -90;
     }
@@ -84,10 +94,12 @@ main (void)
 
         /* alternate between 2 pSync arrays to synchronize consequent
            collectives of even and odd iterations */
-        if (i % 2)
+        if (i % 2) {
             shmem_collect32 (target, source, N_ELEMENTS, 0, 0, npes, pSyncA);
-        else
+        }
+        else {
             shmem_collect32 (target, source, N_ELEMENTS, 0, 0, npes, pSyncB);
+        }
 
         gettimeofday (&end, NULL);
 
@@ -97,14 +109,18 @@ main (void)
         }
 
     }
-    if (me == 0)
+    if (me == 0) {
         printf
             ("Time required to collect %d bytes of data, with %d PEs is %ld microseconds\n",
              (4 * N_ELEMENTS * npes), npes, time_taken / 10000);
+    }
 
     shmem_barrier_all ();
 
-    shfree (target);
-    shfree (source);
+    shmem_free (target);
+    shmem_free (source);
+
+    shmem_finalize ();
+
     return 0;
 }

@@ -1,7 +1,12 @@
 !
 !
 ! Copyright (c) 2011 - 2015
-!   University of Houston System and Oak Ridge National Laboratory.
+!   University of Houston System and UT-Battelle, LLC.
+! Copyright (c) 2009 - 2015
+!   Silicon Graphics International Corp.  SHMEM is copyrighted
+!   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
+!   (shmem) is released by Open Source Software Solutions, Inc., under an
+!   agreement with Silicon Graphics International Corp. (SGI).
 ! 
 ! All rights reserved.
 ! 
@@ -16,10 +21,10 @@
 !   notice, this list of conditions and the following disclaimer in the
 !   documentation and/or other materials provided with the distribution.
 ! 
-! o Neither the name of the University of Houston System, Oak Ridge
-!   National Laboratory nor the names of its contributors may be used to
-!   endorse or promote products derived from this software without specific
-!   prior written permission.
+! o Neither the name of the University of Houston System, UT-Battelle, LLC
+!   nor the names of its contributors may be used to endorse or promote
+!   products derived from this software without specific prior written
+!   permission.
 ! 
 ! THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 ! "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -41,23 +46,19 @@ program test_shmem_atomics
 
   logical, parameter        :: true_val = .TRUE.
   logical, save             :: success1
-  logical, save             :: success2
 
-  integer*8                 :: target
+  integer*8                 :: dest
 
-  integer*8                 :: swapped_val, new_val
-
-  integer                   :: errcode, abort
   integer                   :: me, npes
 
   ! Function definitions
-  integer                   :: my_pe, num_pes
+  integer                   :: shmem_my_pe, shmem_n_pes
 
-  common /globalvars/ target
+  common /globalvars/ dest
 
-  call start_pes(0)
-  me = my_pe()
-  npes = num_pes()
+  call shmem_init()
+  me = shmem_my_pe()
+  npes = shmem_n_pes()
 
   call shmem_barrier_all()
 
@@ -66,21 +67,21 @@ program test_shmem_atomics
   if (npes .gt. 1) then
     success1 = .FALSE.
 
-    target = 51234
+    dest = 51234
 
     call shmem_barrier_all()
 
     if(me .eq. 0) then
-      call shmem_int8_inc(target, npes - 1) 
+      call shmem_int8_inc(dest, npes - 1) 
     end if
 
     call shmem_barrier_all()
 
     ! To validate the working of swap we need to check the value received at the PE that initiated the swap 
-    !  as well as the target PE
+    !  as well as the dest PE
 
     if(me .eq. npes - 1) then
-      if(target .eq. 51234 + 1) then
+      if(dest .eq. 51234 + 1) then
         call shmem_logical_put(success1, true_val, 1, 0)
       end if
     end if
@@ -89,9 +90,9 @@ program test_shmem_atomics
 
     if(me .eq. 0) then
       if(success1 .eqv. .TRUE.) then
-        write (*,*) "Test 01 shmem_int8_inc: Passed"
+        write (*,*) "Test 02 shmem_int8_inc: Passed"
       else
-        write (*,*) "Test 01 shmem_int8_inc: Failed"
+        write (*,*) "Test 02 shmem_int8_inc: Failed"
       end if
     end if
 
@@ -100,5 +101,7 @@ program test_shmem_atomics
   else
     write (*,*) "Number of PEs must be > 1 to test shmem atomics, test skipped"
   end if 
+
+  call shmem_finalize()
 
 end program test_shmem_atomics

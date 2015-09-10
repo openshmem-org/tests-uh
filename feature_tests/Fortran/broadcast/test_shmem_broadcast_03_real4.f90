@@ -1,7 +1,12 @@
 !
 !
 ! Copyright (c) 2011 - 2015
-!   University of Houston System and Oak Ridge National Laboratory.
+!   University of Houston System and UT-Battelle, LLC.
+! Copyright (c) 2009 - 2015
+!   Silicon Graphics International Corp.  SHMEM is copyrighted
+!   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
+!   (shmem) is released by Open Source Software Solutions, Inc., under an
+!   agreement with Silicon Graphics International Corp. (SGI).
 ! 
 ! All rights reserved.
 ! 
@@ -16,10 +21,10 @@
 !   notice, this list of conditions and the following disclaimer in the
 !   documentation and/or other materials provided with the distribution.
 ! 
-! o Neither the name of the University of Houston System, Oak Ridge
-!   National Laboratory nor the names of its contributors may be used to
-!   endorse or promote products derived from this software without specific
-!   prior written permission.
+! o Neither the name of the University of Houston System, UT-Battelle, LLC
+!   nor the names of its contributors may be used to endorse or promote
+!   products derived from this software without specific prior written
+!   permission.
 ! 
 ! THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 ! "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -46,50 +51,46 @@ program test_shmem_broadcast
   integer            :: i
   logical            :: success
 
-  real*4           :: target(1)
-  integer*8          :: target_addr
-  pointer            (target_addr, target)
+  real*4           :: dest(1)
+  pointer            (dest_addr, dest)
 
   real*4           :: src(1)
-  integer*8          :: src_addr
   pointer            (src_addr, src)
 
-  integer            :: abort, errcode
-
+  integer            :: errcode
+  integer, parameter  :: abort = 0
   integer            :: me, npes
 
 ! Function definitions
-  integer            :: my_pe, num_pes
+  integer            :: shmem_my_pe, shmem_n_pes
 
-  call start_pes(0)
-  me = my_pe()
-  npes = num_pes()
+  call shmem_init()
+  me = shmem_my_pe()
+  npes = shmem_n_pes()
   
   success = .TRUE.
 
   if(npes .ge. min_npes) then
     pSync(:) = SHMEM_SYNC_VALUE
 
-    call shpalloc(target_addr, nelems, errcode, abort)
+    call shpalloc(dest_addr, nelems, errcode, abort)
     call shpalloc(src_addr, nelems, errcode, abort)
 
     do i = 1, nelems, 1      
       src(i) = REAL(54321 + i, KIND=4)
     end do 
 
-    do i = 1, nelems, 1
-      target(i) = -9
-    end do
+    dest = -9
 
     call shmem_barrier_all()
 
-    call shmem_broadcast4(target, src, nelems, 0, 0, 0, npes, pSync)
+    call shmem_broadcast4(dest, src, nelems, 0, 0, 0, npes, pSync)
 
     call shmem_barrier_all()
 
     if(me .eq. 1) then
       do i = 1, nelems, 1
-        if(target(i) .ne. REAL(54321 + i, KIND=4)) then
+        if(dest(i) .ne. REAL(54321 + i, KIND=4)) then
           success = .FALSE.
         end if
       end do
@@ -103,7 +104,7 @@ program test_shmem_broadcast
 
     call shmem_barrier_all()
 
-    call shpdeallc(target_addr, errcode, abort)
+    call shpdeallc(dest_addr, errcode, abort)
     call shpdeallc(src_addr, errcode, abort)
 
   else
@@ -111,5 +112,7 @@ program test_shmem_broadcast
       write (*,*) 'This test requires ', min_npes, ' or more PEs.'
     end if
   end if 
+
+  call shmem_finalize()
 
 end program test_shmem_broadcast
