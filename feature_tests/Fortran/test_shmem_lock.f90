@@ -7,25 +7,25 @@
 !   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
 !   (shmem) is released by Open Source Software Solutions, Inc., under an
 !   agreement with Silicon Graphics International Corp. (SGI).
-! 
+!
 ! All rights reserved.
-! 
+!
 ! Redistribution and use in source and binary forms, with or without
 ! modification, are permitted provided that the following conditions
 ! are met:
-! 
+!
 ! o Redistributions of source code must retain the above copyright notice,
 !   this list of conditions and the following disclaimer.
-! 
+!
 ! o Redistributions in binary form must reproduce the above copyright
 !   notice, this list of conditions and the following disclaimer in the
 !   documentation and/or other materials provided with the distribution.
-! 
+!
 ! o Neither the name of the University of Houston System, UT-Battelle, LLC
 !   nor the names of its contributors may be used to endorse or promote
 !   products derived from this software without specific prior written
 !   permission.
-! 
+!
 ! THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 ! "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 ! LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -74,12 +74,12 @@ program test_shmem_lock
     new_val = new_val + 1
 
     call shmem_integer_put(x, new_val, 1, 0)  ! increment x on PE 0
-    call shmem_quiet() 
+    call shmem_quiet()
 
     call shmem_clear_lock(L)
 
     call shmem_barrier_all()
- 
+
     if(me .eq. 0) then
       if(x .eq. npes) then
         write(*,*) "Test for set, and clear lock: Passed"
@@ -99,7 +99,7 @@ program test_shmem_lock
     call shmem_integer_get(new_val, x, 1, 0)
     new_val = new_val + 1
 
-    call shmem_integer_put(x, new_val, 1, 0)  ! increment x on PE 0 
+    call shmem_integer_put(x, new_val, 1, 0)  ! increment x on PE 0
 
     call shmem_quiet()
 
@@ -114,7 +114,7 @@ program test_shmem_lock
         write(*,*) "Test for test lock: Failed"
       end if
 
-    end if 
+    end if
 
     call shmem_barrier_all()
   else

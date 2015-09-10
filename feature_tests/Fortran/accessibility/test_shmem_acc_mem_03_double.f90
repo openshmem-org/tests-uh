@@ -7,25 +7,25 @@
 !   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
 !   (shmem) is released by Open Source Software Solutions, Inc., under an
 !   agreement with Silicon Graphics International Corp. (SGI).
-! 
+!
 ! All rights reserved.
-! 
+!
 ! Redistribution and use in source and binary forms, with or without
 ! modification, are permitted provided that the following conditions
 ! are met:
-! 
+!
 ! o Redistributions of source code must retain the above copyright notice,
 !   this list of conditions and the following disclaimer.
-! 
+!
 ! o Redistributions in binary form must reproduce the above copyright
 !   notice, this list of conditions and the following disclaimer in the
 !   documentation and/or other materials provided with the distribution.
-! 
+!
 ! o Neither the name of the University of Houston System, UT-Battelle, LLC
 !   nor the names of its contributors may be used to endorse or promote
 !   products derived from this software without specific prior written
 !   permission.
-! 
+!
 ! THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 ! "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 ! LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -47,44 +47,44 @@ program test_shmem_accessible
 
   double precision           :: remote_dest(1)
   pointer             (remote_ptr, remote_dest)
-  
+
   integer             :: me, npes
   integer             :: errcode
   integer, parameter  :: abort = 0
   ! SHMEM function definitions
   integer             :: shmem_my_pe, shmem_n_pes
   ! --
-  
+
   call shmem_init()
   me   = shmem_my_pe()
-  npes = shmem_n_pes()  
- 
+  npes = shmem_n_pes()
+
   if(npes .lt. 2 ) then
     write(*,*) 'This test requires 2+ PEs to run.'
     stop
   end if
-  
+
   call shpalloc(remote_ptr, length, errcode, abort)
-  
+
   if(errcode .ne. 0) then
     write(*,*) 'Unable to allocate symmetric memory for the test.'
-    stop  
+    stop
   end if
-  
+
   call shmem_barrier_all()
-  
+
   if (me .eq. 0) then
     if( shmem_addr_accessible(remote_dest, 1) ) then
       write(*,*) 'test_shmem_acc_mem_03_double precision: Passed'
     else
       write(*,*) 'test_shmem_acc_mem_03_double precision: Failed'
-    end if    
+    end if
   end if
 
   call shmem_barrier_all()
-  
+
   call shpdeallc(remote_ptr, errcode, abort)
-    
+
   call shmem_finalize()
 
 end program test_shmem_accessible

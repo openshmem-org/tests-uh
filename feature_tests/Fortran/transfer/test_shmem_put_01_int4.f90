@@ -7,25 +7,25 @@
 !   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
 !   (shmem) is released by Open Source Software Solutions, Inc., under an
 !   agreement with Silicon Graphics International Corp. (SGI).
-! 
+!
 ! All rights reserved.
-! 
+!
 ! Redistribution and use in source and binary forms, with or without
 ! modification, are permitted provided that the following conditions
 ! are met:
-! 
+!
 ! o Redistributions of source code must retain the above copyright notice,
 !   this list of conditions and the following disclaimer.
-! 
+!
 ! o Redistributions in binary form must reproduce the above copyright
 !   notice, this list of conditions and the following disclaimer in the
 !   documentation and/or other materials provided with the distribution.
-! 
+!
 ! o Neither the name of the University of Houston System, UT-Battelle, LLC
 !   nor the names of its contributors may be used to endorse or promote
 !   products derived from this software without specific prior written
 !   permission.
-! 
+!
 ! THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 ! "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 ! LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -55,10 +55,10 @@ program test_shmem_put
 
   integer*4                :: src(N)
 
-  
+
 
 ! Function definitions
-  integer                 :: shmem_my_pe, shmem_n_pes  
+  integer                 :: shmem_my_pe, shmem_n_pes
 
   call shmem_init()
   me   = shmem_my_pe()
@@ -67,20 +67,20 @@ program test_shmem_put
 ! Make sure this job is running on at least 2 PEs
   if(npes .gt. 1) then
 
-    success1 = .TRUE. 
+    success1 = .TRUE.
 
     do i = 1, N, 1
       dest(i) = -9
-    end do 
+    end do
 
     do i = 1, N, 1
       src(i) = 54321 + i
-    end do 
+    end do
 
     nextpe = mod((me + 1), npes)
 
     call shmem_barrier_all()
-    
+
     call shmem_integer_put(dest, src, N, nextpe)
 
     call shmem_barrier_all()
@@ -90,14 +90,14 @@ program test_shmem_put
         if(dest(i) .ne. 54321 + i) then
           success1 = .FALSE.
         end if
-      end do 
+      end do
 
       if(success1 .eqv. .TRUE.) then
-        write(*,*) "Test shmem_integer_put: Passed" 
+        write(*,*) "Test shmem_integer_put: Passed"
       else
         write(*,*) "Test shmem_integer_put: Failed"
       end if
-    end if 
+    end if
 
     call shmem_barrier_all()
 

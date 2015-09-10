@@ -7,25 +7,25 @@
 !   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
 !   (shmem) is released by Open Source Software Solutions, Inc., under an
 !   agreement with Silicon Graphics International Corp. (SGI).
-! 
+!
 ! All rights reserved.
-! 
+!
 ! Redistribution and use in source and binary forms, with or without
 ! modification, are permitted provided that the following conditions
 ! are met:
-! 
+!
 ! o Redistributions of source code must retain the above copyright notice,
 !   this list of conditions and the following disclaimer.
-! 
+!
 ! o Redistributions in binary form must reproduce the above copyright
 !   notice, this list of conditions and the following disclaimer in the
 !   documentation and/or other materials provided with the distribution.
-! 
+!
 ! o Neither the name of the University of Houston System, UT-Battelle, LLC
 !   nor the names of its contributors may be used to endorse or promote
 !   products derived from this software without specific prior written
 !   permission.
-! 
+!
 ! THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 ! "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 ! LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -46,9 +46,9 @@ program test_shmem_shpalloc
 
   integer, parameter :: nelems = 1024000000
 
-  real*8           :: array(1)    
+  real*8           :: array(1)
   pointer            (array_addr, array)
-  
+
   integer            :: errcode, me, npes
   integer, parameter  :: abort = 0
   character*(*), parameter :: TEST_NAME='shpalloc'
@@ -76,7 +76,7 @@ program test_shmem_shpalloc
   call shmem_barrier_all()
 
   call shpdeallc(array_addr, errcode, abort)
-    
+
   call shmem_finalize()
 
 end program

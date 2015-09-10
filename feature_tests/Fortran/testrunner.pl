@@ -1,32 +1,32 @@
 #!/usr/bin/perl
 #
 #
-# Copyright (c) 2011 - 2015 
+# Copyright (c) 2011 - 2015
 #   University of Houston System and UT-Battelle, LLC.
 # Copyright (c) 2009 - 2015
 #   Silicon Graphics International Corp.  SHMEM is copyrighted
 #   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
 #   (shmem) is released by Open Source Software Solutions, Inc., under an
 #   agreement with Silicon Graphics International Corp. (SGI).
-# 
+#
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
 # are met:
-# 
+#
 # o Redistributions of source code must retain the above copyright notice,
 #   this list of conditions and the following disclaimer.
-# 
+#
 # o Redistributions in binary form must reproduce the above copyright
 #   notice, this list of conditions and the following disclaimer in the
 #   documentation and/or other materials provided with the distribution.
-# 
+#
 # o Neither the name of the University of Houston System, UT-Battelle, LLC
 #   nor the names of its contributors may be used to endorse or promote
 #   products derived from this software without specific prior written
 #   permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 # "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 # LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -39,7 +39,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
- 
+
 # TestRunner
 #   Runs a set of tests and prints out results in a format that is somehow nice to humans :D
 # This script assumes that executables are launched with mpirun, but the script can be easily
@@ -78,7 +78,7 @@ our $ht_stats = {
   'notfound' => '0',
   'pass'     => '0',
   'fail'      => '0'
-}; 
+};
 
 sub read_test_config($);
 sub clean_string($);
@@ -103,11 +103,11 @@ sub print_usage(){
 # Runs all the tests in the configuration
 sub test_runner($){
  my ($ht_configuration) = @_;
- 
+
  foreach my $test_id (sort keys %$ht_configuration){
-   my $test_parameters = $ht_configuration->{$test_id}; 
-   run_test $test_id, $test_parameters; 
-   $ht_stats->{'total'}++; 
+   my $test_parameters = $ht_configuration->{$test_id};
+   run_test $test_id, $test_parameters;
+   $ht_stats->{'total'}++;
  }
 
  print "\nDone testing.\n";
@@ -127,7 +127,7 @@ sub execute_test($){
   my ($test_config) = @_;
   my @output;
 
-  @output = `($RUN_CMD -np $test_config->{'npes'} ./$test_config->{'executable'} ) 2>/dev/null`;   
+  @output = `($RUN_CMD -np $test_config->{'npes'} ./$test_config->{'executable'} ) 2>/dev/null`;
 
   if($output[0] =~ /Passed/){
     return $TEST_OK;
@@ -187,8 +187,8 @@ sub run_test($$) {
 
 				# terminate the child process and check the results
 				kill 9, $child_pid;
-				kill 9, $child_pid + 2; 
-				kill 9, $child_pid + 1; 
+				kill 9, $child_pid + 2;
+				kill 9, $child_pid + 1;
 				if($test_result eq $TEST_UNDEF){
 				  # We may be expecting a timeout to occur
 					if($test_config->{'expect'} eq $TEST_TIMEOUT){
@@ -211,7 +211,7 @@ sub run_test($$) {
 				$ht_stats->{'fail'}++;
 				last;
 			}
-		}	
+		}
 	}
 	# The following is an ugly hack to eliminate zombie processes... TODO: I should REALLY fix this.
 	waitpid $child_pid, 0;
@@ -221,7 +221,7 @@ sub run_test($$) {
 # Reads the configuration, returns a hash table with all the settings
 # hash table structure:
 # ht_configuration => {
-#   test_1 => { 
+#   test_1 => {
 #     test_name,
 #     title,
 #     parameters,
@@ -230,7 +230,7 @@ sub run_test($$) {
 #     types,
 #   }
 #   ...
-#   test_N => { 
+#   test_N => {
 #     test_name,
 #     title,
 #     parameters,
@@ -239,7 +239,7 @@ sub run_test($$) {
 #     types
 #   }
 # }
-# test_name  => name of the test (used to generate the executable name) 
+# test_name  => name of the test (used to generate the executable name)
 # types      => data types to be tested (used to generate the executable name)
 # parameters => parameters to be passed with the executable
 # timeout    => how long before assuming that the test Failed (0 = wait forever). Time in seconds.
@@ -254,9 +254,9 @@ sub read_test_config($){
 
   # read the configuration file line by line
   while(<CONFIGFILE>){
-   
+
      my $line = $_;
-     my @elems = split /,/, $line; # read comma-separated elements 
+     my @elems = split /,/, $line; # read comma-separated elements
      my $test_name;
      my $tmp_value;
 
@@ -266,7 +266,7 @@ sub read_test_config($){
        next;
      }
 
-     $test_name = clean_string($elems[0]);      
+     $test_name = clean_string($elems[0]);
      $ht_tmp->{'executable'} = $test_name;
 
      $tmp_value = clean_string($elems[1]);
@@ -285,20 +285,20 @@ sub read_test_config($){
 
      $tmp_value = clean_string($elems[3]);
      $ht_tmp->{'parameters'} = $tmp_value;
-      
+
      $tmp_value = clean_string($elems[4]);
      if(! ($tmp_value =~ /^[0-9]+$/)){
        print "Error: Configuration file, line $line_num >> Test has invalid timeout value: $tmp_value\n";
        exit;
      }
-     $ht_tmp->{'timeout'} = $tmp_value; 
-  
+     $ht_tmp->{'timeout'} = $tmp_value;
+
      $tmp_value = clean_string($elems[5]);
      if($tmp_value ne "Pass" and $tmp_value ne "Fail" and $tmp_value ne "Timeout"){
        print "Error: Configuration file, line $line_num >> Invalid value for 'Expected' field: $tmp_value \n";
        exit;
      }
-     $ht_tmp->{'expect'} = $tmp_value; 
+     $ht_tmp->{'expect'} = $tmp_value;
 
      # Finally, add the parameters to the hash table.
      # The key for this set of parameters is "test_NNN" where NNN is a 3 digit number padded on the left with 0s.
@@ -317,6 +317,6 @@ sub clean_string($){
 
   $word =~ s/^\s+//;
   $word =~ s/\s+$//;
-  
+
   return $word;
 }

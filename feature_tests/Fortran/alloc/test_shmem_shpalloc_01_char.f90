@@ -7,25 +7,25 @@
 !   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
 !   (shmem) is released by Open Source Software Solutions, Inc., under an
 !   agreement with Silicon Graphics International Corp. (SGI).
-! 
+!
 ! All rights reserved.
-! 
+!
 ! Redistribution and use in source and binary forms, with or without
 ! modification, are permitted provided that the following conditions
 ! are met:
-! 
+!
 ! o Redistributions of source code must retain the above copyright notice,
 !   this list of conditions and the following disclaimer.
-! 
+!
 ! o Redistributions in binary form must reproduce the above copyright
 !   notice, this list of conditions and the following disclaimer in the
 !   documentation and/or other materials provided with the distribution.
-! 
+!
 ! o Neither the name of the University of Houston System, UT-Battelle, LLC
 !   nor the names of its contributors may be used to endorse or promote
 !   products derived from this software without specific prior written
 !   permission.
-! 
+!
 ! THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 ! "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 ! LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -47,11 +47,11 @@ program test_shmem_shpalloc
   integer, parameter :: min_npes = 3
   integer, parameter :: nelems = 50
 
-  character           :: array(1)    
+  character           :: array(1)
   pointer            (array_addr, array)
 
   character           :: buffer(nelems)
-  
+
   integer            :: errcode, me, npes, pe, i
   integer, parameter  :: abort = 0
   logical            :: success
@@ -73,8 +73,8 @@ program test_shmem_shpalloc
     ! allocate remotely accessible block
     call shpalloc(array_addr, nelems, errcode, abort)
 
-    do i = 1, nelems 
-      array(i) = '#' 
+    do i = 1, nelems
+      array(i) = '#'
     end do
 
     call shmem_barrier_all();
@@ -83,11 +83,11 @@ program test_shmem_shpalloc
       do pe = 1, npes - 1, 1
         ! Reset the contents of our local buffer
         do i = 1, nelems, 1
-          buffer(i) = 'z' 
+          buffer(i) = 'z'
         end do
 
         ! Get data on PE 'pe'
-        call shmem_character_get(buffer, array, nelems, pe) 
+        call shmem_character_get(buffer, array, nelems, pe)
 
         ! Check that values are correct
         do i = 1, nelems, 1
@@ -114,7 +114,7 @@ program test_shmem_shpalloc
      write (*,*) 'This test requires ', min_npes, ' or more PEs.'
    end if
   end if
-    
+
   call shmem_finalize()
 
 end program

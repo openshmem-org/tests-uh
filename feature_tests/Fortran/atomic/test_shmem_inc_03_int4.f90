@@ -7,25 +7,25 @@
 !   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
 !   (shmem) is released by Open Source Software Solutions, Inc., under an
 !   agreement with Silicon Graphics International Corp. (SGI).
-! 
+!
 ! All rights reserved.
-! 
+!
 ! Redistribution and use in source and binary forms, with or without
 ! modification, are permitted provided that the following conditions
 ! are met:
-! 
+!
 ! o Redistributions of source code must retain the above copyright notice,
 !   this list of conditions and the following disclaimer.
-! 
+!
 ! o Redistributions in binary form must reproduce the above copyright
 !   notice, this list of conditions and the following disclaimer in the
 !   documentation and/or other materials provided with the distribution.
-! 
+!
 ! o Neither the name of the University of Houston System, UT-Battelle, LLC
 !   nor the names of its contributors may be used to endorse or promote
 !   products derived from this software without specific prior written
 !   permission.
-! 
+!
 ! THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 ! "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 ! LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -76,12 +76,12 @@ program test_shmem_atomics
     call shmem_barrier_all()
 
     if(me .eq. 0) then
-      call shmem_int4_inc(dest, npes - 1) 
+      call shmem_int4_inc(dest, npes - 1)
     end if
 
     call shmem_barrier_all()
 
-    ! To validate the working of swap we need to check the value received at the PE that initiated the swap 
+    ! To validate the working of swap we need to check the value received at the PE that initiated the swap
     !  as well as the dest PE
 
     if(me .eq. npes - 1) then
@@ -106,7 +106,7 @@ program test_shmem_atomics
 
   else
     write (*,*) "Number of PEs must be > 1 to test shmem atomics, test skipped"
-  end if 
+  end if
 
   call shmem_finalize()
 
