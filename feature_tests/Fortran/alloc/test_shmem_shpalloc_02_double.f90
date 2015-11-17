@@ -7,6 +7,7 @@
 !   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
 !   (shmem) is released by Open Source Software Solutions, Inc., under an
 !   agreement with Silicon Graphics International Corp. (SGI).
+! Copyright (c) 2015 Intel Corporation
 !
 ! All rights reserved.
 !
@@ -65,7 +66,7 @@ program test_shmem_shpalloc
   call shpalloc(ptr, numElements*2, errcode, abort)
 
   if(me .eq. 0) then
-    if(errcode .ne. -1) then
+    if(errcode .eq. -1) then
       write (*,*) TEST_NAME, ': Passed'
     else
       write (*,*) TEST_NAME, ': Failed'
