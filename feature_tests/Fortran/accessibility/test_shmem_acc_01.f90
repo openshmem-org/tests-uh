@@ -7,6 +7,7 @@
 !   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
 !   (shmem) is released by Open Source Software Solutions, Inc., under an
 !   agreement with Silicon Graphics International Corp. (SGI).
+! Copyright (c) 2015 Intel Corporation
 !
 ! All rights reserved.
 !
@@ -46,9 +47,6 @@ program test_shmem_accessible
 
   integer                   :: me, npes
   logical                   :: rc
-
- ! SHMEM function definitions
-  integer                   :: shmem_my_pe, shmem_n_pes
 
   call shmem_init()
 
