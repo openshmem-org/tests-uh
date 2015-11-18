@@ -7,6 +7,7 @@
 !   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
 !   (shmem) is released by Open Source Software Solutions, Inc., under an
 !   agreement with Silicon Graphics International Corp. (SGI).
+! Copyright (c) 2015 Intel Corporation
 !
 ! All rights reserved.
 !
@@ -45,7 +46,7 @@ program test_shmem_broadcast
   include 'shmem.fh'
 
   integer, parameter :: min_npes = 3
-  integer, parameter  :: nelems = 10
+  integer, parameter  :: nelems = 16
   integer*8, save    :: pSync(SHMEM_BCAST_SYNC_SIZE)
 
   integer            :: i
@@ -80,7 +81,7 @@ program test_shmem_broadcast
     call shmem_barrier_all()
 
     if(me .ne. 0) then
-      call shmem_broadcast4(dest, src, nelems, 0, 0, 0, npes, pSync)
+      call shmem_broadcast4(dest, src, nelems / 4, 0, 0, 0, npes, pSync)
     end if
 
     call shmem_barrier_all()
