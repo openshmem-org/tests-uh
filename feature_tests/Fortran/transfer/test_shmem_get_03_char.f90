@@ -69,7 +69,7 @@ program test_shmem_get
 
     success1 = .TRUE.
 
-    call shpalloc(ptr, N, errcode, abort)
+    call shpalloc(ptr, CEILING(N/4.0), errcode, abort)
 
     do i = 1, N, 1
       dest(i) = 'z'

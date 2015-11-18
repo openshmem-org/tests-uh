@@ -72,8 +72,8 @@ program test_shmem_broadcast
   if(npes .ge. min_npes) then
     pSync(:) = SHMEM_SYNC_VALUE
 
-    call shpalloc(dest_addr, nelems, errcode, abort)
-    call shpalloc(src_addr, nelems, errcode, abort)
+    call shpalloc(dest_addr, nelems / 4, errcode, abort)
+    call shpalloc(src_addr, nelems / 4, errcode, abort)
 
     do i = 1, nelems, 1
       src(i) = CHAR(40 + i)

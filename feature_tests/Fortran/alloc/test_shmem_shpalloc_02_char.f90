@@ -60,7 +60,7 @@ program test_shmem_shpalloc
   npes = shmem_n_pes()
 
   ! allocate remotely accessible block
-  call shpalloc(ptr, numElements, errcode, abort)
+  call shpalloc(ptr, numElements / 4, errcode, abort)
 
   if(me .eq. 0) then
     if(errcode .eq. -1) then

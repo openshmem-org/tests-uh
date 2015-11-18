@@ -46,7 +46,7 @@ program test_shmem_shpalloc
   include 'shmem.fh'
 
   integer, parameter :: min_npes = 3
-  integer, parameter :: nelems = 50
+  integer, parameter :: nelems = 64
 
   character           :: array(1)
   pointer            (array_addr, array)
@@ -69,7 +69,7 @@ program test_shmem_shpalloc
   if(npes .ge. min_npes) then
 
     ! allocate remotely accessible block
-    call shpalloc(array_addr, nelems, errcode, abort)
+    call shpalloc(array_addr, nelems / 4, errcode, abort)
 
     do i = 1, nelems
       array(i) = '#'
