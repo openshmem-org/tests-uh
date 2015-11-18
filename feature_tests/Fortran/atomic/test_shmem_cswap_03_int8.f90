@@ -70,7 +70,7 @@ program test_shmem_atomics
     success1 = .FALSE.
     success2 = .FALSE.
 
-    call shpalloc(dest_ptr, 1, errcode, abort)
+    call shpalloc(dest_ptr, 2, errcode, abort)
 
     dest(1) = me
 

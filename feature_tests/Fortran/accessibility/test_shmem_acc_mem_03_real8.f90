@@ -63,7 +63,7 @@ program test_shmem_accessible
   end if
 
   !abort = 0 ! do not abort on eror
-  call shpalloc(remote_ptr, length, errcode, abort)
+  call shpalloc(remote_ptr, length * 2, errcode, abort)
 
   if(errcode .ne. 0) then
     write(*,*) 'Unable to allocate symmetric memory for the test.'

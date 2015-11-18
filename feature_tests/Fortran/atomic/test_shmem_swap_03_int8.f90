@@ -71,7 +71,7 @@ program test_shmem_atomics
 
   if (npes .gt. 1) then
 
-    call shpalloc(dest_ptr, 1, errcode, abort)
+    call shpalloc(dest_ptr, 2, errcode, abort)
     call shpalloc(success2_ptr, 1, errcode, abort)
 
     success1 = .FALSE.

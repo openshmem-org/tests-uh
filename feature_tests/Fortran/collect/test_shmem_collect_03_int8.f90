@@ -79,8 +79,8 @@ program test_shmem_collects
     success = .TRUE.
     flag = 0
 
-    call shpalloc (dest_addr, dest_nelems, errcode, abort)
-    call shpalloc(src_addr, nelems, errcode, abort)
+    call shpalloc (dest_addr, dest_nelems * 2, errcode, abort)
+    call shpalloc(src_addr, nelems * 2, errcode, abort)
 
 ! The number of elements to collect from each PE
     collect_nelems = nelems / npes
