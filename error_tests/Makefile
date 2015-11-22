@@ -46,53 +46,29 @@ help:
 	@echo
 	@echo "Please use one of the following targets:"
 	@echo
-	@echo "    * For C feature tests, Fortran feature tests and Microbenchmarks : make compile, make run, make clean"
-	@echo "    * For C feature tests : make C_feature_tests, make C_feature_tests-run "
-	@echo "    * For  Fortran feature tests : make F_feature_tests, make F_feature_tests-run"
-	@echo "    * For  Fortran error tests : make F_error_tests, make F_error_tests-run"
-	@echo "    * For  Microbenchmarks : make micro_bench, make micro_bench-run"
-	@echo
-	@echo "    clean: removes object files"
+	@echo "  * For Fortran : make F_error_tests, make F_error_tests-run"
+	@echo "  * all         : compile both C and Fortran tests"
+	@echo "  * run         : compile both C and Fortran tests, then run them
+	@echo "  * clean       : removes object and executable files"
 	@echo
 
-.PHONY : compile run	\
-		C_feature_tests	C_feature_tests-run	\
-		F_feature_tests F_feature_tests-run	\
-		F_error_tests F_error_tests-run		\
-		micro_bench micro_bench-run		\
-		clean
+ERROR_TESTS = F_error_tests
+ERROR_TESTS_RUN = $(addsuffix -run, $(ERROR_TESTS))
 
-compile: C_feature_tests F_feature_tests F_error_tests micro_bench
 
-run: C_feature_tests-run F_feature_tests-run F_error_tests-run micro_bench-run
+.PHONY: $(ERROR_TESTS) \
+	all clean
 
-C_feature_tests: 
-	cd feature_tests/C; $(MAKE) all
+all: $(ERROR_TESTS)
 
-C_feature_tests-run:
-	cd feature_tests/C; $(MAKE) run
+run: $(ERROR_TESTS_RUN)
 
-F_feature_tests: 
-	cd feature_tests/Fortran; $(MAKE) all
+F_error_tests:
+	cd ./Fortran; $(MAKE) all
 
-F_feature_tests-run:
-	cd feature_tests/Fortran; $(MAKE) run
-
-F_error_tests: 
-	cd error_tests/Fortran; $(MAKE) all
-
-F_error_tests-run:
-	cd error_tests/Fortran; $(MAKE) run
-
-micro_bench:
-	cd performance_tests/micro_benchmarks; $(MAKE) 
-
-micro_bench-run:
-	cd performance_tests/micro_benchmarks; $(MAKE) run 
+F_error_tests-run: F_error_tests
+	cd ./Fortran; $(MAKE) run
 
 clean:
-	cd feature_tests/C; $(MAKE) $@
-	cd feature_tests/Fortran; $(MAKE) $@
-	cd error_tests/Fortran; $(MAKE) $@
-	cd performance_tests/micro_benchmarks; $(MAKE) $@
+	cd ./Fortran; $(MAKE) $@
 
