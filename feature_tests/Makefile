@@ -49,7 +49,7 @@ help:
 	@echo "  * For C       : make C_feature_tests, make C_feature_tests-run "
 	@echo "  * For Fortran : make F_feature_tests, make F_feature_tests-run"
 	@echo "  * all         : compile both C and Fortran tests"
-	@echo "  * run         : compile both C and Fortran tests, then run them
+	@echo "  * run         : compile both C and Fortran tests, then run them"
 	@echo "  * clean       : removes object and executable files"
 	@echo
 
