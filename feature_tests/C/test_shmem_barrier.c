@@ -7,6 +7,7 @@
  *   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
  *   (shmem) is released by Open Source Software Solutions, Inc., under an
  *   agreement with Silicon Graphics International Corp. (SGI).
+ * Copyright (c) 2015 Intel Corporation
  *
  * All rights reserved.
  *
@@ -50,7 +51,7 @@
 #include <shmem.h>
 
 
-long pSync[_SHMEM_BCAST_SYNC_SIZE];
+long pSync[_SHMEM_BARRIER_SYNC_SIZE];
 int x = 10101;
 
 int
@@ -63,7 +64,7 @@ main ()
     me = shmem_my_pe ();
     npes = shmem_n_pes ();
 
-    for (i = 0; i < _SHMEM_BCAST_SYNC_SIZE; i += 1) {
+    for (i = 0; i < _SHMEM_BARRIER_SYNC_SIZE; i += 1) {
         pSync[i] = _SHMEM_SYNC_VALUE;
     }
 

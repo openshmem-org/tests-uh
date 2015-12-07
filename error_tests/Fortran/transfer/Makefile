@@ -1,31 +1,31 @@
 #
 #
-# Copyright (c) 2011 - 2015 
+# Copyright (c) 2011 - 2015
 #   University of Houston System and UT-Battelle, LLC.
 # Copyright (c) 2009 - 2015
 #   Silicon Graphics International Corp.  SHMEM is copyrighted
 #   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
 #   (shmem) is released by Open Source Software Solutions, Inc., under an
 #   agreement with Silicon Graphics International Corp. (SGI).
-# 
+#
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
 # are met:
-# 
+#
 # o Redistributions of source code must retain the above copyright notice,
 #   this list of conditions and the following disclaimer.
-# 
+#
 # o Redistributions in binary form must reproduce the above copyright
 #   notice, this list of conditions and the following disclaimer in the
 #   documentation and/or other materials provided with the distribution.
-# 
+#
 # o Neither the name of the University of Houston System, UT-Battelle, LLC
 #   nor the names of its contributors may be used to endorse or promote
 #   products derived from this software without specific prior written
 #   permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 # "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 # LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -39,60 +39,25 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
+include ../Makefile.opts
 
-SHELL = /bin/sh
+F90_TESTS        = $(wildcard *.f90)
 
-help: 
-	@echo
-	@echo "Please use one of the following targets:"
-	@echo
-	@echo "    * For C feature tests, Fortran feature tests and Microbenchmarks : make compile, make run, make clean"
-	@echo "    * For C feature tests : make C_feature_tests, make C_feature_tests-run "
-	@echo "    * For  Fortran feature tests : make F_feature_tests, make F_feature_tests-run"
-	@echo "    * For  Fortran error tests : make F_error_tests, make F_error_tests-run"
-	@echo "    * For  Microbenchmarks : make micro_bench, make micro_bench-run"
-	@echo
-	@echo "    clean: removes object files"
-	@echo
+F90_EXES         = $(F90_TESTS:.f90=.x)
 
-.PHONY : compile run	\
-		C_feature_tests	C_feature_tests-run	\
-		F_feature_tests F_feature_tests-run	\
-		F_error_tests F_error_tests-run		\
-		micro_bench micro_bench-run		\
-		clean
+EXES             = $(F90_EXES)
 
-compile: C_feature_tests F_feature_tests F_error_tests micro_bench
+.PHONY: clean all default
 
-run: C_feature_tests-run F_feature_tests-run F_error_tests-run micro_bench-run
+all default:    $(EXES)
 
-C_feature_tests: 
-	cd feature_tests/C; $(MAKE) all
+.SUFFIXES: .x
 
-C_feature_tests-run:
-	cd feature_tests/C; $(MAKE) run
-
-F_feature_tests: 
-	cd feature_tests/Fortran; $(MAKE) all
-
-F_feature_tests-run:
-	cd feature_tests/Fortran; $(MAKE) run
-
-F_error_tests: 
-	cd error_tests/Fortran; $(MAKE) all
-
-F_error_tests-run:
-	cd error_tests/Fortran; $(MAKE) run
-
-micro_bench:
-	cd performance_tests/micro_benchmarks; $(MAKE) 
-
-micro_bench-run:
-	cd performance_tests/micro_benchmarks; $(MAKE) run 
+%.x:    %.f90
+	-$(SHMEM_F90) $(SHMEM_F90FFLAGS) -o $@ $^
 
 clean:
-	cd feature_tests/C; $(MAKE) $@
-	cd feature_tests/Fortran; $(MAKE) $@
-	cd error_tests/Fortran; $(MAKE) $@
-	cd performance_tests/micro_benchmarks; $(MAKE) $@
+	rm -f $(EXES)
 
+run: $(EXES)
+	@../${TEST_RUNNER}

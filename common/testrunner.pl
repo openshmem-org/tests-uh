@@ -8,6 +8,7 @@
 #   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
 #   (shmem) is released by Open Source Software Solutions, Inc., under an
 #   agreement with Silicon Graphics International Corp. (SGI).
+# Copyright (c) 2015 Intel Corporation
 #
 # All rights reserved.
 #
@@ -58,8 +59,7 @@ use Env;
 use Env qw(PATH HOME TERM);
 use Env qw($SHELL @LD_LIBRARY_PATH);
 use Time::HiRes qw( usleep ualarm gettimeofday tv_interval nanosleep
-                      clock_gettime clock_getres clock_nanosleep clock
-                      stat );
+                      clock stat );
 use Data::Dumper;
 
 our $EXIT_ERROR = -1;
