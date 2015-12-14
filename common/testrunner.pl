@@ -126,10 +126,17 @@ sub test_runner($){
 sub execute_test($){
   my ($test_config) = @_;
   my @output;
+  my $log_filename = "$test_config->{'executable'}" . ".log";
+  my $log_fh;
 
-  @output = `($RUN_CMD -np $test_config->{'npes'} ./$test_config->{'executable'} ) 2>/dev/null`;
+  @output = `($RUN_CMD -np $test_config->{'npes'} ./$test_config->{'executable'} ) 2>&1`;
 
-  if($output[0] =~ /Passed/){
+  open $log_fh, '>', $log_filename or die "Error opening log file '$log_filename'";
+  print $log_fh "@output";
+  close $log_fh;
+
+  # The last line of output from the test must contain "Passed"
+  if($output[$#output] =~ /Passed/){
     return $TEST_OK;
   }
 
@@ -212,6 +219,18 @@ sub run_test($$) {
           }else{
             print "Failed\n";
             $ht_stats->{'fail'}++;
+
+            my $log_filename = "$test_config->{'executable'}" . ".log";
+            my $log_fh;
+
+            open $log_fh, '<', $log_filename or die "Error opening log file '$log_filename'";
+            print "===========================================================================\n";
+            print "= TEST FAILED: $test_config->{'executable'}\n";
+            print "===========================================================================\n";
+            while (<$log_fh>) { print "= $_"; }
+            print "===========================================================================\n";
+            close $log_fh;
+
             last;
           }
         }
