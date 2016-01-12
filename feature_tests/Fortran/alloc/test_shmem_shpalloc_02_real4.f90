@@ -76,8 +76,6 @@ program test_shmem_shpalloc
   ! All PEs wait until PE 0 has finished.
   call shmem_barrier_all()
 
-  call shpdeallc(ptr, errcode, abort)
-
   call shmem_finalize()
 
 end program

@@ -202,15 +202,19 @@ sub run_test($$) {
 					last;
 				}
 			}
-			if($test_result eq $test_config->{'expect'}){
-  	  			print "OK\n";
-				$ht_stats->{'pass'}++;
-				last;
-			}elsif($test_result ne $TEST_UNDEF){
-  	  			print "Failed\n";
-				$ht_stats->{'fail'}++;
-				last;
-			}
+        # The signal handler can run between the if and else below, leading to a race.
+        # Check whether we have a result from the test case before looking at it.
+        if($test_result ne $TEST_UNDEF){
+          if($test_result eq $test_config->{'expect'}){
+            print "OK\n";
+            $ht_stats->{'pass'}++;
+            last;
+          }else{
+            print "Failed\n";
+            $ht_stats->{'fail'}++;
+            last;
+          }
+        }
 		}
 	}
 	# The following is an ugly hack to eliminate zombie processes... TODO: I should REALLY fix this.

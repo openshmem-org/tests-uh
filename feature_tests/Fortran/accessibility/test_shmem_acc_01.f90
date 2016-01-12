@@ -69,6 +69,8 @@ program test_shmem_accessible
     end if
   end if
 
+  call shmem_finalize()
+
 end program test_shmem_accessible
 
 

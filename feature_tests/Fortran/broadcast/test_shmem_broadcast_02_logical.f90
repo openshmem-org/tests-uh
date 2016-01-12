@@ -105,8 +105,6 @@ program test_shmem_broadcast
     end if
   end if
 
-  stop
-
   call shmem_finalize()
 
 end program test_shmem_broadcast
