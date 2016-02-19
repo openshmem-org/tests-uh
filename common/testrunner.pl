@@ -129,7 +129,7 @@ sub execute_test($){
   my $log_filename = "$test_config->{'executable'}" . ".log";
   my $log_fh;
 
-  @output = `($RUN_CMD -np $test_config->{'npes'} ./$test_config->{'executable'} ) 2>&1`;
+  @output = `$RUN_CMD -np $test_config->{'npes'} ./$test_config->{'executable'} 2>&1`;
 
   open $log_fh, '>', $log_filename or die "Error opening log file '$log_filename'";
   print $log_fh "@output";
