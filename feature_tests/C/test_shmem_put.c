@@ -181,7 +181,7 @@ main (int argc, char **argv)
 
         if (me == 0) {
             for (i = 0; i < N; i += 1) {
-                if (dest1[i] == (npes - 1)) {
+                if (dest1[i] != (npes - 1)) {
                     success1 = 1;
                 }
                 if (dest2[i] != (npes - 1)) {
