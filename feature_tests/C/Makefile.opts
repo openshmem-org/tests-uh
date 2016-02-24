@@ -39,29 +39,13 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-include Makefile.opts
+SHELL = /bin/sh
 
+SHMEM_CFLAGS=-g -O0
 
-C_TESTS        = $(wildcard *.c)
+GCC=gcc
 
-C_EXES         = $(C_TESTS:.c=.x)
+CC = oshcc
 
-EXES           = $(C_EXES)
-
-.PHONY: clean all default
-
-all default:    $(EXES)
-
-.SUFFIXES: .x
-
-%.x:    %.c
-	$(CC) $(SHMEM_CFLAGS) -o $@ $^ -lm
-
-run:	$(EXES)
-	 @../${TEST_RUNNER}
-
-
-clean:
-	 rm -f $(EXES)
-
+TEST_RUNNER = ../common/testrunner.pl
 
