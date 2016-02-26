@@ -70,6 +70,8 @@ main (void)
     long *source;
     int i, me, npes;
 
+    int fail_count = 0;
+
     shmem_init ();
     me = shmem_my_pe ();
     npes = shmem_n_pes ();
@@ -116,13 +118,14 @@ main (void)
         }
 
         shmem_barrier_all ();
-        if (me == npes - 1) {
-            shmem_int_get (&success32_root, &success32, 1, 0);
+        if (me == 0) {
+            shmem_int_get (&success32_root, &success32, 1, npes - 1);
             if (success32 == 0 && success32_root == 0) {
                 printf ("Test shmem_broadcast32: Passed\n");
             }
             else {
                 printf ("Test shmem_broadcast32: Failed\n");
+                fail_count++;
             }
         }
 
@@ -151,13 +154,14 @@ main (void)
 
         shmem_barrier_all ();
 
-        if (me == npes - 1) {
-            shmem_int_get (&success64_root, &success64, 1, 0);
+        if (me == 0) {
+            shmem_int_get (&success64_root, &success64, 1, npes - 1 );
             if (success64 == 0 && success64_root == 0) {
                 printf ("Test shmem_broadcast64: Passed\n");
             }
             else {
                 printf ("Test shmem_broadcast64: Failed\n");
+                fail_count++;
             }
         }
 
@@ -209,13 +213,14 @@ main (void)
         }
 
         shmem_barrier_all ();
-        if (me == 2) {
-            shmem_int_get (&success32_root, &success32, 1, 0);
+        if (me == 0) {
+            shmem_int_get (&success32_root, &success32, 1, 2);
             if (success32 == 0 && success32_root == 0) {
                 printf ("Test strided shmem_broadcast32: Passed\n");
             }
             else {
                 printf ("Test strided shmem_broadcast32: Failed\n");
+                fail_count++;
             }
         }
 
@@ -252,14 +257,22 @@ main (void)
 
         shmem_barrier_all ();
 
-        if (me == 2) {
-            shmem_int_get (&success64_root, &success64, 1, 0);
+        if (me == 0) {
+            shmem_int_get (&success64_root, &success64, 1, 2);
             if (success64 == 0 && success64_root == 0) {
                 printf ("Test strided shmem_broadcast64: Passed\n");
             }
             else {
                 printf ("Test strided shmem_broadcast64: Failed\n");
+                fail_count++;
             }
+        }
+
+        if (me == 0) {
+            if (fail_count == 0)
+                printf("All Tests Passed\n");
+            else
+                printf("%d Tests Failed\n", fail_count);
         }
 
         shmem_free (targ);
