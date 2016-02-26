@@ -76,6 +76,8 @@ main (void)
     int *compare_dst1, *compare_dst3;
     long *compare_dst2, *compare_dst4;
 
+    int fail_count = 0;
+
     shmem_init ();
     npes = shmem_n_pes ();
     me = shmem_my_pe ();
@@ -125,6 +127,7 @@ main (void)
             }
             if (success == 1) {
                 printf ("Test shmem_fcollect32: Failed\n");
+                fail_count++;
             }
             else {
                 printf ("Test shmem_fcollect32: Passed\n");
@@ -162,6 +165,7 @@ main (void)
             }
             if (success == 1) {
                 printf ("Test shmem_fcollect64: Failed\n");
+                fail_count++;
             }
             else {
                 printf ("Test shmem_fcollect64: Passed\n");
@@ -222,6 +226,7 @@ main (void)
             }
             if (success == 1) {
                 printf ("Test shmem_collect32: Failed\n");
+                fail_count++;
             }
             else {
                 printf ("Test shmem_collect32: Passed\n");
@@ -271,10 +276,18 @@ main (void)
             }
             if (success == 1) {
                 printf ("Test shmem_collect64: Failed\n");
+                fail_count++;
             }
             else {
                 printf ("Test shmem_collect64: Passed\n");
             }
+        }
+
+        if (me == 0) {
+            if (fail_count == 0)
+                printf("All Tests Passed\n");
+            else
+                printf("%d Tests Failed\n", fail_count);
         }
 
         free (compare_dst4);
