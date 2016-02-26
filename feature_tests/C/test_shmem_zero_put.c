@@ -68,6 +68,8 @@ main (int argc, char **argv)
     int success1, success2, success3, success4, success5, success6, success7,
         success8;
 
+    int fail_count = 0;
+
     short src1[N];
     int src2[N];
     long src3[N];
@@ -208,37 +210,52 @@ main (int argc, char **argv)
 
             if (success1 == 0)
                 printf ("Test shmem_short_put of zero length: Passed\n");
-            else
+            else {
                 printf ("Test shmem_short_put of zero length: Failed\n");
+                fail_count++;
+            }
             if (success2 == 0)
                 printf ("Test shmem_int_put of zero length: Passed\n");
-            else
+            else {
                 printf ("Test shmem_int_put of zero length: Failed\n");
+                fail_count++;
+            }
             if (success3 == 0)
                 printf ("Test shmem_long_put of zero length: Passed\n");
-            else
+            else {
                 printf ("Test shmem_long_put of zero length: Failed\n");
+                fail_count++;
+            }
             if (success4 == 0)
                 printf ("Test shmem_longdouble_put of zero length: Passed\n");
-            else
+            else {
                 printf ("Test shmem_longdouble_put of zero length: Failed\n");
+                fail_count++;
+            }
             if (success5 == 0)
                 printf ("Test shmem_longlong_put of zero length: Passed\n");
-            else
+            else {
                 printf ("Test shmem_longlong_put of zero length: Failed\n");
+                fail_count++;
+            }
             if (success6 == 0)
                 printf ("Test shmem_double_put of zero length: Passed\n");
-            else
+            else {
                 printf ("Test shmem_double_put of zero length: Failed\n");
+                fail_count++;
+            }
             if (success7 == 0)
                 printf ("Test shmem_float_put of zero length: Passed\n");
-            else
+            else {
                 printf ("Test shmem_float_put of zero length: Failed\n");
+                fail_count++;
+            }
             if (success8 == 0)
                 printf ("Test shmem_putmem of zero length: Passed\n");
-            else
+            else {
                 printf ("Test shmem_putmem of zero length: Failed\n");
-
+                fail_count++;
+            }
         }
         shmem_barrier_all ();
 
@@ -275,18 +292,24 @@ main (int argc, char **argv)
                 }
                 if (success2 == 0)
                     printf ("Test shmem_put32 of zero length: Passed\n");
-                else
+                else {
                     printf ("Test shmem_put32 of zero length: Failed\n");
+                    fail_count++;
+                }
 
                 if (success3 == 0)
                     printf ("Test shmem_put64 of zero length: Passed\n");
-                else
+                else {
                     printf ("Test shmem_put64 of zero length: Failed\n");
+                    fail_count++;
+                }
 
                 if (success4 == 0)
                     printf ("Test shmem_put128 of zero length: Passed\n");
-                else
+                else {
                     printf ("Test shmem_put128 of zero length: Failed\n");
+                    fail_count++;
+                }
             }
         }
         else if (sizeof (int) == 8) {
@@ -322,22 +345,36 @@ main (int argc, char **argv)
                 }
                 if (success1 == 0)
                     printf ("Test shmem_put32 of zero length: Passed\n");
-                else
+                else {
                     printf ("Test shmem_put32 of zero length: Failed\n");
+                    fail_count++;
+                }
+
                 if (success2 == 0)
                     printf ("Test shmem_put64 of zero length: Passed\n");
-                else
+                else {
                     printf ("Test shmem_put64 of zero length: Failed\n");
+                    fail_count++;
+                }
 
                 if (success3 == 0)
                     printf ("Test shmem_put128 of zero length: Passed\n");
-                else
+                else {
                     printf ("Test shmem_put128 of zero length: Failed\n");
+                    fail_count++;
+                }
             }
         }
 
 
         shmem_barrier_all ();
+
+        if (me == 0) {
+            if (fail_count == 0)
+                printf("All Tests Passed\n");
+            else
+                printf("%d Tests Failed\n", fail_count);
+        }
 
         shmem_free (dest1);
         shmem_free (dest2);
