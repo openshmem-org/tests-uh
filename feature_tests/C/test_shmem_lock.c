@@ -59,6 +59,8 @@ main (int argc, char **argv)
     int ret_val;
     int new_val;
 
+    int fail_count = 0;
+
     shmem_init ();
     me = shmem_my_pe ();
     npes = shmem_n_pes ();
@@ -83,8 +85,10 @@ main (int argc, char **argv)
         if (me == 0) {
             if (x == npes)
                 printf ("Test for set, and clear lock: Passed\n");
-            else
+            else {
                 printf ("Test for set, and clear lock: Failed\n");
+                fail_count++;
+            }
             x = 0;
         }
         shmem_barrier_all ();
@@ -105,11 +109,21 @@ main (int argc, char **argv)
         if (me == 0) {
             if (x == npes)
                 printf ("Test for test lock: Passed\n");
-            else
+            else {
                 printf ("Test for test lock: Failed\n");
+                fail_count++;
+            }
 
         }
+
         shmem_barrier_all ();
+
+        if (me == 0) {
+            if (fail_count == 0)
+                printf("All Tests Passed\n");
+            else
+                printf("%d Tests Failed\n", fail_count);
+        }
     }
     else
         printf ("Number of PEs must be > 1 to test locks, test skipped\n");
