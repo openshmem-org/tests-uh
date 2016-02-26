@@ -64,6 +64,8 @@ main (int argc, char **argv)
     int me, npes;
     uint64_t src;
 
+    int fail_count = 0;
+
     shmem_init ();
     me = shmem_my_pe ();
     npes = shmem_n_pes ();
@@ -81,13 +83,21 @@ main (int argc, char **argv)
           /* Check for completion of all communication */
           if ((int)dest == me)
               printf ("Test shmem_finalize: Passed\n");
-          else
+          else {
               printf ("Test shmem_finalize: Failed\n");
+              fail_count++;
+          }
+        }
+
+        if (me == 0) {
+            if (fail_count == 0)
+                printf("All Tests Passed\n");
+            else
+                printf("%d Tests Failed\n", fail_count);
         }
     }
     else {
         printf ("Number of PEs must be > 1 to test shmem finalize, test skipped\n");
-
     }
 
     shmem_finalize ();
