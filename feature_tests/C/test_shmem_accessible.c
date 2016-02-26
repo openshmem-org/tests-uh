@@ -65,6 +65,7 @@ main (int argc, char *argv[])
     int *shm_dest;
     int me, npes, i;
     int pe_acc_success = 0;
+    int fail_count = 0;
 
     shmem_init ();
     me = shmem_my_pe ();
@@ -78,26 +79,28 @@ main (int argc, char *argv[])
 
         if (!check_it (&global_dest)) {   /* long global: yes */
             printf ("Test Global Address Accessible: Failed\n");
+            fail_count++;
         }
         else {
             printf ("Test Global Address Accessible: Passed\n");
         }
         if (!check_it (&static_dest)) {   /* static int global: yes */
             printf ("Test Static Global Address Accessible: Failed\n");
+            fail_count++;
         }
         else {
             printf ("Test Static Global Address Accessible: Passed\n");
         }
         if (check_it (&local_dest)) { /* main() stack: no */
             printf ("Test Stack Address Accessible: Failed\n");
-
+            fail_count++;
         }
         else {
             printf ("Test Stack Address Accessible: Passed\n");
         }
         if (!check_it (shm_dest)) {   /* shmem_malloc: yes */
-
             printf ("Test Shmalloc-ed Address Accessible: Failed\n");
+            fail_count++;
         }
         else {
             printf ("Test Shmalloc-ed Address Accessible: Passed\n");
@@ -113,12 +116,16 @@ main (int argc, char *argv[])
         }
         if (pe_acc_success == 1) {
             printf ("Test shmem_pe_accessible: Failed\n");
+            fail_count++;
         }
         else {
             printf ("Test shmem_pe_accessible: Passed\n");
         }
 
-
+        if (fail_count == 0)
+            printf("All Tests Passed\n");
+        else
+            printf("%d Tests Failed\n", fail_count);
     }
 
     shmem_free (shm_dest);
