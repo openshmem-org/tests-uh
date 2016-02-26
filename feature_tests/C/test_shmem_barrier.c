@@ -60,6 +60,8 @@ main ()
     int me, npes;
     int i;
 
+    int fail_count = 0;
+
     shmem_init ();
     me = shmem_my_pe ();
     npes = shmem_n_pes ();
@@ -74,11 +76,13 @@ main ()
 
         shmem_barrier_all ();
 
-        if (me == npes - 1) {
+        if (me == 0) {
             if (x == 4)
                 printf ("Test shmem_barrier_all: Passed\n");
-            else
+            else {
                 printf ("Test shmem_barrier_all: Failed\n");
+                fail_count++;
+            }
         }
 
         x = -9;
@@ -86,17 +90,27 @@ main ()
 
         if (me == 0 || me == 1) {
 
-            if (me == 0)
-                shmem_int_p (&x, 4, 1);
+            if (me == 1)
+                shmem_int_p (&x, 4, 0);
 
             shmem_barrier (0, 0, 2, pSync);
 
-            if (me == 1) {
+            if (me == 0) {
                 if (x == 4)
                     printf ("Test shmem_barrier: Passed\n");
-                else
+                else {
                     printf ("Test shmem_barrier: Failed\n");
+                    fail_count++;
+                }
             }
+        }
+
+        if (me == 0)
+        {
+            if (fail_count == 0)
+                printf("All Tests Passed\n");
+            else
+                printf("%d Tests Failed\n", fail_count);
         }
     }
     else {
