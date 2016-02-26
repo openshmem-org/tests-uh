@@ -409,12 +409,13 @@ main (int argc, char **argv)
                 printf ("Test shmem_float_p: Failed\n");
                 fail_count++;
             }
+        }
 
+        if (me == 0) {
             if (fail_count == 0)
                 printf("All Tests Passed\n");
             else
                 printf("%d Tests Failed\n", fail_count);
-
         }
 
         shmem_barrier_all ();
