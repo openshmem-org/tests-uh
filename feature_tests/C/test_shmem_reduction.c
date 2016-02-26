@@ -100,6 +100,8 @@ main ()
     int checkpoint0, checkpoint1, checkpoint2, checkpoint3, checkpoint4,
         checkpoint5, checkpoint6;
 
+    int fail_count = 0;
+
     shmem_init ();
     me = shmem_my_pe ();
     npes = shmem_n_pes ();
@@ -154,30 +156,35 @@ main ()
         }
         if (success0 == 1) {
             printf ("Reduction operation shmem_short_max_to_all: Failed\n");
+            fail_count++;
         }
         else {
             printf ("Reduction operation shmem_short_max_to_all: Passed\n");
         }
         if (success1 == 1) {
             printf ("Reduction operation shmem_int_max_to_all: Failed\n");
+            fail_count++;
         }
         else {
             printf ("Reduction operation shmem_int_max_to_all: Passed\n");
         }
         if (success2 == 1) {
             printf ("Reduction operation shmem_long_max_to_all: Failed\n");
+            fail_count++;
         }
         else {
             printf ("Reduction operation shmem_long_max_to_all: Passed\n");
         }
         if (success3 == 1) {
             printf ("Reduction operation shmem_float_max_to_all: Failed\n");
+            fail_count++;
         }
         else {
             printf ("Reduction operation shmem_float_max_to_all: Passed\n");
         }
         if (success4 == 1) {
             printf ("Reduction operation shmem_double_max_to_all: Failed\n");
+            fail_count++;
         }
         else {
             printf ("Reduction operation shmem_double_max_to_all: Passed\n");
@@ -185,6 +192,7 @@ main ()
         if (success5 == 1) {
             printf
                 ("Reduction operation shmem_longdouble_max_to_all: Failed\n");
+            fail_count++;
         }
         else {
             printf
@@ -192,6 +200,7 @@ main ()
         }
         if (success6 == 1) {
             printf ("Reduction operation shmem_longlong_max_to_all: Failed\n");
+            fail_count++;
         }
         else {
             printf ("Reduction operation shmem_longlong_max_to_all: Passed\n");
@@ -252,30 +261,35 @@ main ()
         }
         if (success0 == 1) {
             printf ("Reduction operation shmem_short_min_to_all: Failed\n");
+            fail_count++;
         }
         else {
             printf ("Reduction operation shmem_short_min_to_all: Passed\n");
         }
         if (success1 == 1) {
             printf ("Reduction operation shmem_int_min_to_all: Failed\n");
+            fail_count++;
         }
         else {
             printf ("Reduction operation shmem_int_min_to_all: Passed\n");
         }
         if (success2 == 1) {
             printf ("Reduction operation shmem_long_min_to_all: Failed\n");
+            fail_count++;
         }
         else {
             printf ("Reduction operation shmem_long_min_to_all: Passed\n");
         }
         if (success3 == 1) {
             printf ("Reduction operation shmem_float_min_to_all: Failed\n");
+            fail_count++;
         }
         else {
             printf ("Reduction operation shmem_float_min_to_all: Passed\n");
         }
         if (success4 == 1) {
             printf ("Reduction operation shmem_double_min_to_all: Failed\n");
+            fail_count++;
         }
         else {
             printf ("Reduction operation shmem_double_min_to_all: Passed\n");
@@ -283,6 +297,7 @@ main ()
         if (success5 == 1) {
             printf
                 ("Reduction operation shmem_longdouble_min_to_all: Failed\n");
+            fail_count++;
         }
         else {
             printf
@@ -290,6 +305,7 @@ main ()
         }
         if (success6 == 1) {
             printf ("Reduction operation shmem_longlong_min_to_all: Failed\n");
+            fail_count++;
         }
         else {
             printf ("Reduction operation shmem_longlong_min_to_all: Passed\n");
@@ -346,30 +362,35 @@ main ()
         }
         if (success0 == 1) {
             printf ("Reduction operation shmem_short_sum_to_all: Failed\n");
+            fail_count++;
         }
         else {
             printf ("Reduction operation shmem_short_sum_to_all: Passed\n");
         }
         if (success1 == 1) {
             printf ("Reduction operation shmem_int_sum_to_all: Failed\n");
+            fail_count++;
         }
         else {
             printf ("Reduction operation shmem_int_sum_to_all: Passed\n");
         }
         if (success2 == 1) {
             printf ("Reduction operation shmem_long_sum_to_all: Failed\n");
+            fail_count++;
         }
         else {
             printf ("Reduction operation shmem_long_sum_to_all: Passed\n");
         }
         if (success3 == 1) {
             printf ("Reduction operation shmem_float_sum_to_all: Failed\n");
+            fail_count++;
         }
         else {
             printf ("Reduction operation shmem_float_sum_to_all: Passed\n");
         }
         if (success4 == 1) {
             printf ("Reduction operation shmem_double_sum_to_all: Failed\n");
+            fail_count++;
         }
         else {
             printf ("Reduction operation shmem_double_sum_to_all: Passed\n");
@@ -377,6 +398,7 @@ main ()
         if (success5 == 1) {
             printf
                 ("Reduction operation shmem_longdouble_sum_to_all: Failed\n");
+            fail_count++;
         }
         else {
             printf
@@ -384,6 +406,7 @@ main ()
         }
         if (success6 == 1) {
             printf ("Reduction operation shmem_longlong_sum_to_all: Failed\n");
+            fail_count++;
         }
         else {
             printf ("Reduction operation shmem_longlong_sum_to_all: Passed\n");
@@ -425,24 +448,28 @@ main ()
         }
         if (success0 == 1) {
             printf ("Reduction operation shmem_short_and_to_all: Failed\n");
+            fail_count++;
         }
         else {
             printf ("Reduction operation shmem_short_and_to_all: Passed\n");
         }
         if (success1 == 1) {
             printf ("Reduction operation shmem_int_and_to_all: Failed\n");
+            fail_count++;
         }
         else {
             printf ("Reduction operation shmem_int_and_to_all: Passed\n");
         }
         if (success2 == 1) {
             printf ("Reduction operation shmem_long_and_to_all: Failed\n");
+            fail_count++;
         }
         else {
             printf ("Reduction operation shmem_long_and_to_all: Passed\n");
         }
         if (success6 == 1) {
             printf ("Reduction operation shmem_longlong_and_to_all: Failed\n");
+            fail_count++;
         }
         else {
             printf ("Reduction operation shmem_longlong_and_to_all: Passed\n");
@@ -530,6 +557,7 @@ main ()
         }
         if (success0 == 1) {
             printf ("Reduction operation shmem_short_prod_to_all: Failed\n");
+            fail_count++;
         }
         else if (checkpoint0 == 1)
             printf
@@ -539,6 +567,7 @@ main ()
         }
         if (success1 == 1) {
             printf ("Reduction operation shmem_int_prod_to_all: Failed\n");
+            fail_count++;
         }
         else if (checkpoint1 == 1)
             printf
@@ -549,6 +578,7 @@ main ()
         }
         if (success2 == 1) {
             printf ("Reduction operation shmem_long_prod_to_all: Failed\n");
+            fail_count++;
         }
         else if (checkpoint2 == 1)
             printf
@@ -559,6 +589,7 @@ main ()
         }
         if (success3 == 1) {
             printf ("Reduction operation shmem_float_prod_to_all: Failed\n");
+            fail_count++;
         }
         else if (checkpoint3 == 1)
             printf
@@ -569,6 +600,7 @@ main ()
         }
         if (success4 == 1) {
             printf ("Reduction operation shmem_double_prod_to_all: Failed\n");
+            fail_count++;
         }
         else if (checkpoint4 == 1)
             printf
@@ -580,6 +612,7 @@ main ()
         if (success5 == 1) {
             printf
                 ("Reduction operation shmem_longdouble_prod_to_all: Failed\n");
+            fail_count++;
         }
         else if (checkpoint5 == 1)
             printf
@@ -591,6 +624,7 @@ main ()
         }
         if (success6 == 1) {
             printf ("Reduction operation shmem_longlong_prod_to_all: Failed\n");
+            fail_count++;
         }
         else if (checkpoint6 == 1)
             printf
@@ -637,24 +671,28 @@ main ()
         }
         if (success0 == 1) {
             printf ("Reduction operation shmem_short_or_to_all: Failed\n");
+            fail_count++;
         }
         else {
             printf ("Reduction operation shmem_short_or_to_all: Passed\n");
         }
         if (success1 == 1) {
             printf ("Reduction operation shmem_int_or_to_all: Failed\n");
+            fail_count++;
         }
         else {
             printf ("Reduction operation shmem_int_or_to_all: Passed\n");
         }
         if (success2 == 1) {
             printf ("Reduction operation shmem_long_or_to_all: Failed\n");
+            fail_count++;
         }
         else {
             printf ("Reduction operation shmem_long_or_to_all: Passed\n");
         }
         if (success6 == 1) {
             printf ("Reduction operation shmem_longlong_or_to_all: Failed\n");
+            fail_count++;
         }
         else {
             printf ("Reduction operation shmem_longlong_or_to_all: Passed\n");
@@ -698,29 +736,40 @@ main ()
         }
         if (success0 == 1) {
             printf ("Reduction operation shmem_short_xor_to_all: Failed\n");
+            fail_count++;
         }
         else {
             printf ("Reduction operation shmem_short_xor_to_all: Passed\n");
         }
         if (success1 == 1) {
             printf ("Reduction operation shmem_int_xor_to_all: Failed\n");
+            fail_count++;
         }
         else {
             printf ("Reduction operation shmem_int_xor_to_all: Passed\n");
         }
         if (success2 == 1) {
             printf ("Reduction operation shmem_long_xor_to_all: Failed\n");
+            fail_count++;
         }
         else {
             printf ("Reduction operation shmem_long_xor_to_all: Passed\n");
         }
         if (success6 == 1) {
             printf ("Reduction operation shmem_longlong_xor_to_all: Failed\n");
+            fail_count++;
         }
         else {
             printf ("Reduction operation shmem_longlong_xor_to_all: Passed\n");
         }
 
+    }
+
+    if (me == 0) {
+        if (fail_count == 0)
+            printf("All Tests Passed\n");
+        else
+            printf("%d Tests Failed\n", fail_count);
     }
 
     shmem_finalize ();
