@@ -268,13 +268,6 @@ main (void)
             }
         }
 
-        if (me == 0) {
-            if (fail_count == 0)
-                printf("All Tests Passed\n");
-            else
-                printf("%d Tests Failed\n", fail_count);
-        }
-
         shmem_free (targ);
         shmem_free (src);
         shmem_free (dest);
@@ -285,6 +278,13 @@ main (void)
         if (me == 0) {
             printf ("Number of PEs must be > 2 to test strided broadcast, test skipped\n");
         }
+    }
+
+    if (me == 0) {
+      if (fail_count == 0)
+        printf("All Tests Passed\n");
+      else
+        printf("%d Tests Failed\n", fail_count);
     }
 
     shmem_finalize ();
