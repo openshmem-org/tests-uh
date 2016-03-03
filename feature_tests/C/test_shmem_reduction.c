@@ -61,8 +61,8 @@
 
 #include <shmem.h>
 
-long pSync[_SHMEM_REDUCE_SYNC_SIZE];
-long pSync1[_SHMEM_REDUCE_SYNC_SIZE];
+long pSync[SHMEM_REDUCE_SYNC_SIZE];
+long pSync1[SHMEM_REDUCE_SYNC_SIZE];
 
 #define N 3
 
@@ -83,13 +83,13 @@ long double expected_result5;
 long long expected_result6;
 
 
-short pWrk0[_SHMEM_REDUCE_MIN_WRKDATA_SIZE];
-int pWrk1[_SHMEM_REDUCE_MIN_WRKDATA_SIZE];
-long pWrk2[_SHMEM_REDUCE_MIN_WRKDATA_SIZE];
-float pWrk3[_SHMEM_REDUCE_MIN_WRKDATA_SIZE];
-double pWrk4[_SHMEM_REDUCE_MIN_WRKDATA_SIZE];
-long double pWrk5[_SHMEM_REDUCE_MIN_WRKDATA_SIZE];
-long long pWrk6[_SHMEM_REDUCE_MIN_WRKDATA_SIZE];
+short pWrk0[SHMEM_REDUCE_MIN_WRKDATA_SIZE];
+int pWrk1[SHMEM_REDUCE_MIN_WRKDATA_SIZE];
+long pWrk2[SHMEM_REDUCE_MIN_WRKDATA_SIZE];
+float pWrk3[SHMEM_REDUCE_MIN_WRKDATA_SIZE];
+double pWrk4[SHMEM_REDUCE_MIN_WRKDATA_SIZE];
+long double pWrk5[SHMEM_REDUCE_MIN_WRKDATA_SIZE];
+long long pWrk6[SHMEM_REDUCE_MIN_WRKDATA_SIZE];
 
 int
 main ()
@@ -97,10 +97,9 @@ main ()
     int i, j;
     int me, npes;
     int success0, success1, success2, success3, success4, success5, success6;
-    int checkpoint0, checkpoint1, checkpoint2, checkpoint3, checkpoint4,
-        checkpoint5, checkpoint6;
 
     int fail_count = 0;
+    int pe_bound;
 
     shmem_init ();
     me = shmem_my_pe ();
@@ -109,16 +108,18 @@ main ()
     success0 = success1 = success2 = success3 = success4 = success5 =
         success6 = 0;
 
-    checkpoint0 = checkpoint1 = checkpoint2 = checkpoint3 = checkpoint4 =
-        checkpoint5 = checkpoint6 = 0;
+    if(npes > 8)
+        pe_bound = 8;
+    else
+        pe_bound = npes;
 
-    for (i = 0; i < _SHMEM_REDUCE_SYNC_SIZE; i += 1) {
-        pSync[i] = _SHMEM_SYNC_VALUE;
-        pSync1[i] = _SHMEM_SYNC_VALUE;
+    for (i = 0; i < SHMEM_REDUCE_SYNC_SIZE; i += 1) {
+        pSync[i] = SHMEM_SYNC_VALUE;
+        pSync1[i] = SHMEM_SYNC_VALUE;
     }
 
-    for (i = 0; i < N; i += 1) {
-        src0[i] = src1[i] = src2[i] = src3[i] = src4[i] = src5[i] =
+    for (i = 0; i < N; i+= 1) {
+          src0[i] = src1[i] = src2[i] = src3[i] = src4[i] = src5[i] =
             src6[i] = me + i;
     }
 
@@ -207,7 +208,6 @@ main ()
         }
 
     }
-
 
     /* Test MIN: shmem_double_min_to_all, shmem_float_min_to_all,
        shmem_int_min_to_all, shmem_long_min_to_all,
@@ -485,8 +485,14 @@ main ()
     success0 = success1 = success2 = success3 = success4 = success5 =
         success6 = 0;
     for (i = 0; i < N; i += 1) {
-        src0[i] = src1[i] = src2[i] = src3[i] = src4[i] = src5[i] =
-            src6[i] = me + 1;
+        if (me < 8) {
+            src0[i] = src1[i] = src2[i] = src3[i] = src4[i] = src5[i] =
+              src6[i] = me + 1;
+        }
+        else {
+            src0[i] = src1[i] = src2[i] = src3[i] = src4[i] = src5[i] =
+              src6[i] = 1;
+        }
     }
     for (i = 0; i < N; i += 1) {
         dst0[i] = -9;
@@ -500,7 +506,8 @@ main ()
     expected_result0 = expected_result1 = expected_result2 =
         expected_result3 = expected_result4 = expected_result5 =
         expected_result6 = 1;
-    for (i = 1; i <= npes; i++) {
+
+    for (i = 1; i <= pe_bound; i++) {
         expected_result0 = expected_result0 * i;
         expected_result1 = expected_result1 * i;
         expected_result2 = expected_result2 * i;
@@ -509,6 +516,7 @@ main ()
         expected_result5 = expected_result5 * i;
         expected_result6 = expected_result6 * i;
     }
+
     shmem_barrier_all ();
 
     shmem_short_prod_to_all (dst0, src0, N, 0, 0, npes, pWrk0, pSync);
@@ -523,45 +531,29 @@ main ()
         for (i = 0; i < N; i++) {
             if (dst0[i] != expected_result0)
                 success0 = 1;
-            else if (npes > 8)
-                checkpoint0 = 1;
+
             if (dst1[i] != expected_result1)
                 success1 = 1;
-            else if (npes > 12)
-                checkpoint1 = 1;
+
             if (dst2[i] != expected_result2)
                 success2 = 1;
-            else if (npes > 20)
-                checkpoint2 = 1;
 
             if (dst3[i] != expected_result3)
                 success3 = 1;
-            else if (npes > 13)
-                checkpoint3 = 1;
 
             if (dst4[i] != expected_result4)
                 success4 = 1;
-            else if (npes > 22)
-                checkpoint4 = 1;
 
             if (dst5[i] != expected_result5)
                 success5 = 1;
-            else if (npes > 25)
-                checkpoint5 = 1;
 
             if (dst6[i] != expected_result6)
                 success6 = 1;
-            else if (npes > 20)
-                checkpoint6 = 1;
-
         }
         if (success0 == 1) {
             printf ("Reduction operation shmem_short_prod_to_all: Failed\n");
             fail_count++;
         }
-        else if (checkpoint0 == 1)
-            printf
-                ("Warning:Reduction operation shmem_short_prod_to_all does not support more than 8 pes\n");
         else {
             printf ("Reduction operation shmem_short_prod_to_all: Passed\n");
         }
@@ -569,10 +561,6 @@ main ()
             printf ("Reduction operation shmem_int_prod_to_all: Failed\n");
             fail_count++;
         }
-        else if (checkpoint1 == 1)
-            printf
-                ("Warning:Reduction operation shmem_int_prod_to_all does not support more than 12 pes\n");
-
         else {
             printf ("Reduction operation shmem_int_prod_to_all: Passed\n");
         }
@@ -580,10 +568,6 @@ main ()
             printf ("Reduction operation shmem_long_prod_to_all: Failed\n");
             fail_count++;
         }
-        else if (checkpoint2 == 1)
-            printf
-                ("Warning:Reduction operation shmem_long_prod_to_all does not support more than 20 pes\n");
-
         else {
             printf ("Reduction operation shmem_long_prod_to_all: Passed\n");
         }
@@ -591,10 +575,6 @@ main ()
             printf ("Reduction operation shmem_float_prod_to_all: Failed\n");
             fail_count++;
         }
-        else if (checkpoint3 == 1)
-            printf
-                ("Warning:Reduction operation shmem_float_prod_to_all does not support more than 13 pes\n");
-
         else {
             printf ("Reduction operation shmem_float_prod_to_all: Passed\n");
         }
@@ -602,10 +582,6 @@ main ()
             printf ("Reduction operation shmem_double_prod_to_all: Failed\n");
             fail_count++;
         }
-        else if (checkpoint4 == 1)
-            printf
-                ("Warning:Reduction operation shmem_double_prod_to_all does not support more than 22 pes\n");
-
         else {
             printf ("Reduction operation shmem_double_prod_to_all: Passed\n");
         }
@@ -614,10 +590,6 @@ main ()
                 ("Reduction operation shmem_longdouble_prod_to_all: Failed\n");
             fail_count++;
         }
-        else if (checkpoint5 == 1)
-            printf
-                ("Warning:Reduction operation shmem_longdouble_prod_to_all does not support more than 25 pes\n");
-
         else {
             printf
                 ("Reduction operation shmem_longdouble_prod_to_all: Passed\n");
@@ -626,10 +598,6 @@ main ()
             printf ("Reduction operation shmem_longlong_prod_to_all: Failed\n");
             fail_count++;
         }
-        else if (checkpoint6 == 1)
-            printf
-                ("Warning:Reduction operation shmem_longlong_prod_to_all does not support more than 20 pes\n");
-
         else {
             printf ("Reduction operation shmem_longlong_prod_to_all: Passed\n");
         }
