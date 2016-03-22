@@ -58,6 +58,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <limits.h>
 
 #include <shmem.h>
 
@@ -99,7 +100,7 @@ main ()
     int success0, success1, success2, success3, success4, success5, success6;
 
     int fail_count = 0;
-    int pe_bound;
+    int pe_bound=1;
 
     shmem_init ();
     me = shmem_my_pe ();
@@ -108,9 +109,16 @@ main ()
     success0 = success1 = success2 = success3 = success4 = success5 =
         success6 = 0;
 
-    if(npes > 8)
-        pe_bound = 8;
-    else
+    i = 2;
+
+    while (i < SHRT_MAX) {
+      i = 2 * i;
+      pe_bound++;
+    }
+
+    pe_bound--;
+
+    if (npes < pe_bound)
         pe_bound = npes;
 
     for (i = 0; i < SHMEM_REDUCE_SYNC_SIZE; i += 1) {
@@ -485,9 +493,9 @@ main ()
     success0 = success1 = success2 = success3 = success4 = success5 =
         success6 = 0;
     for (i = 0; i < N; i += 1) {
-        if (me < 8) {
+        if (me < pe_bound) {
             src0[i] = src1[i] = src2[i] = src3[i] = src4[i] = src5[i] =
-              src6[i] = me + 1;
+              src6[i] = 2;
         }
         else {
             src0[i] = src1[i] = src2[i] = src3[i] = src4[i] = src5[i] =
@@ -508,13 +516,13 @@ main ()
         expected_result6 = 1;
 
     for (i = 1; i <= pe_bound; i++) {
-        expected_result0 = expected_result0 * i;
-        expected_result1 = expected_result1 * i;
-        expected_result2 = expected_result2 * i;
-        expected_result3 = expected_result3 * i;
-        expected_result4 = expected_result4 * i;
-        expected_result5 = expected_result5 * i;
-        expected_result6 = expected_result6 * i;
+        expected_result0 = expected_result0 * 2;
+        expected_result1 = expected_result1 * 2;
+        expected_result2 = expected_result2 * 2;
+        expected_result3 = expected_result3 * 2;
+        expected_result4 = expected_result4 * 2;
+        expected_result5 = expected_result5 * 2;
+        expected_result6 = expected_result6 * 2;
     }
 
     shmem_barrier_all ();
