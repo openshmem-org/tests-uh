@@ -511,21 +511,6 @@ main ()
         dst5[i] = -9;
         dst6[i] = -9;
     }
-    expected_result0 = expected_result1 = expected_result2 =
-        expected_result3 = expected_result4 = expected_result5 =
-        expected_result6 = 1;
-
-    /*
-    for (i = 1; i <= pe_bound; i++) {
-        expected_result0 = expected_result0 * 2;
-        expected_result1 = expected_result1 * 2;
-        expected_result2 = expected_result2 * 2;
-        expected_result3 = expected_result3 * 2;
-        expected_result4 = expected_result4 * 2;
-        expected_result5 = expected_result5 * 2;
-        expected_result6 = expected_result6 * 2;
-    }
-    */
 
     expected_result0 = 1 << pe_bound;
     expected_result1 = 1 << pe_bound;
