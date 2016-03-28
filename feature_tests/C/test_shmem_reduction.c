@@ -515,6 +515,7 @@ main ()
         expected_result3 = expected_result4 = expected_result5 =
         expected_result6 = 1;
 
+    /*
     for (i = 1; i <= pe_bound; i++) {
         expected_result0 = expected_result0 * 2;
         expected_result1 = expected_result1 * 2;
@@ -524,6 +525,15 @@ main ()
         expected_result5 = expected_result5 * 2;
         expected_result6 = expected_result6 * 2;
     }
+    */
+
+    expected_result0 = 1 << pe_bound;
+    expected_result1 = 1 << pe_bound;
+    expected_result2 = 1 << pe_bound;
+    expected_result3 = 1 << pe_bound;
+    expected_result4 = 1 << pe_bound;
+    expected_result5 = 1 << pe_bound;
+    expected_result6 = 1 << pe_bound;
 
     shmem_barrier_all ();
 
