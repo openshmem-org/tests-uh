@@ -7,6 +7,7 @@
  *   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
  *   (shmem) is released by Open Source Software Solutions, Inc., under an
  *   agreement with Silicon Graphics International Corp. (SGI).
+ * Copyright (c) 2016 Intel Corporation
  *
  * All rights reserved.
  *
@@ -68,34 +69,44 @@ main ()
     int major_ver, minor_ver;
     int me;
 
+    int fail_count = 0;
+
     shmem_init ();
     me = shmem_my_pe ();
 
-    if(me == 0){
+    if (me == 0) {
 
       shmem_info_get_version (&major_ver, &minor_ver);
       shmem_info_get_name (name);
 
       if (major_ver == _SHMEM_MAJOR_VERSION) {
-          PRINT_VER("Major","Passed")
+          PRINT_VER("Major","Passed");
       }
       else {
-          PRINT_VER("Major","Failed")
+          PRINT_VER("Major","Failed");
+          fail_count++;
       }
 
       if (minor_ver == _SHMEM_MINOR_VERSION) {
-          PRINT_VER("Minor","Passed")
+          PRINT_VER("Minor","Passed");
       }
       else {
-          PRINT_VER("Minor","Failed")
+          PRINT_VER("Minor","Failed");
+          fail_count++;
       }
 
       if (strlen (name) < _SHMEM_MAX_NAME_LEN) {
-          PRINT_NAME("Passed")
+          PRINT_NAME("Passed");
       }
       else {
-          PRINT_NAME("Undefined")
+          PRINT_NAME("Undefined");
+          fail_count++;
       }
+
+      if (fail_count == 0)
+            printf("All Tests Passed\n");
+      else
+            printf("%d Tests Failed\n", fail_count);
     }
 
     shmem_finalize ();

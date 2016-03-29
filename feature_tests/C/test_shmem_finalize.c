@@ -7,6 +7,7 @@
  *   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
  *   (shmem) is released by Open Source Software Solutions, Inc., under an
  *   agreement with Silicon Graphics International Corp. (SGI).
+ * Copyright (c) 2016 Intel Corporation
  *
  * All rights reserved.
  *
@@ -55,7 +56,7 @@
 #include <shmem.h>
 #include <stdint.h>
 
-uint64_t dest;
+uint64_t dest = -9;
 
 int
 main (int argc, char **argv)
@@ -64,10 +65,11 @@ main (int argc, char **argv)
     int me, npes;
     uint64_t src;
 
+    int fail_count = 0;
+
     shmem_init ();
     me = shmem_my_pe ();
     npes = shmem_n_pes ();
-    dest = -9;
 
     if (npes > 1) {
 
@@ -81,16 +83,24 @@ main (int argc, char **argv)
           /* Check for completion of all communication */
           if ((int)dest == me)
               printf ("Test shmem_finalize: Passed\n");
-          else
+          else {
               printf ("Test shmem_finalize: Failed\n");
+              fail_count++;
+          }
+        }
+
+        if (me == 0) {
+            if (fail_count == 0)
+                printf("All Tests Passed\n");
+            else
+                printf("%d Tests Failed\n", fail_count);
         }
     }
     else {
         printf ("Number of PEs must be > 1 to test shmem finalize, test skipped\n");
 
+        shmem_finalize ();
     }
-
-    shmem_finalize ();
 
     return 0;
 }

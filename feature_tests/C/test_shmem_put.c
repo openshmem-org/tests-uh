@@ -7,6 +7,7 @@
  *   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
  *   (shmem) is released by Open Source Software Solutions, Inc., under an
  *   agreement with Silicon Graphics International Corp. (SGI).
+ * Copyright (c) 2016 Intel Corporation
  *
  * All rights reserved.
  *
@@ -67,6 +68,7 @@ main (int argc, char **argv)
     int me, npes;
     int success1, success2, success3, success4, success5, success6, success7,
         success8;
+    int fail_count = 0;
 
     short src1[N];
     int src2[N];
@@ -208,36 +210,52 @@ main (int argc, char **argv)
 
             if (success1 == 0)
                 printf ("Test shmem_short_put: Passed\n");
-            else
+            else {
                 printf ("Test shmem_short_put: Failed\n");
+                fail_count++;
+            }
             if (success2 == 0)
                 printf ("Test shmem_int_put: Passed\n");
-            else
+            else {
                 printf ("Test shmem_int_put: Failed\n");
+                fail_count++;
+            }
             if (success3 == 0)
                 printf ("Test shmem_long_put: Passed\n");
-            else
+            else {
                 printf ("Test shmem_long_put: Failed\n");
+                fail_count++;
+            }
             if (success4 == 0)
                 printf ("Test shmem_longdouble_put: Passed\n");
-            else
+            else {
                 printf ("Test shmem_longdouble_put: Failed\n");
+                fail_count++;
+            }
             if (success5 == 0)
                 printf ("Test shmem_longlong_put: Passed\n");
-            else
+            else {
                 printf ("Test shmem_longlong_put: Failed\n");
+                fail_count++;
+            }
             if (success6 == 0)
                 printf ("Test shmem_double_put: Passed\n");
-            else
+            else {
                 printf ("Test shmem_double_put: Failed\n");
+                fail_count++;
+            }
             if (success7 == 0)
                 printf ("Test shmem_float_put: Passed\n");
-            else
+            else {
                 printf ("Test shmem_float_put: Failed\n");
+                fail_count++;
+            }
             if (success8 == 0)
                 printf ("Test shmem_putmem: Passed\n");
-            else
+            else {
                 printf ("Test shmem_putmem: Failed\n");
+                fail_count++;
+            }
 
         }
         shmem_barrier_all ();
@@ -275,18 +293,24 @@ main (int argc, char **argv)
                 }
                 if (success2 == 0)
                     printf ("Test shmem_put32: Passed\n");
-                else
+                else {
                     printf ("Test shmem_put32: Failed\n");
+                    fail_count++;
+                }
 
                 if (success3 == 0)
                     printf ("Test shmem_put64: Passed\n");
-                else
+                else {
                     printf ("Test shmem_put64: Failed\n");
+                    fail_count++;
+                }
 
                 if (success4 == 0)
                     printf ("Test shmem_put128: Passed\n");
-                else
+                else {
                     printf ("Test shmem_put128: Failed\n");
+                    fail_count++;
+                }
             }
         }
         else if (sizeof (int) == 8) {
@@ -322,17 +346,24 @@ main (int argc, char **argv)
                 }
                 if (success1 == 0)
                     printf ("Test shmem_put32: Passed\n");
-                else
+                else {
                     printf ("Test shmem_put32: Failed\n");
+                    fail_count++;
+                }
+
                 if (success2 == 0)
                     printf ("Test shmem_put64: Passed\n");
-                else
+                else {
                     printf ("Test shmem_put64: Failed\n");
+                    fail_count++;
+                }
 
                 if (success3 == 0)
                     printf ("Test shmem_put128: Passed\n");
-                else
+                else {
                     printf ("Test shmem_put128: Failed\n");
+                    fail_count++;
+                }
             }
         }
 
@@ -351,26 +382,41 @@ main (int argc, char **argv)
         if (me == 0) {
             if (*dest9 == (npes - 1))
                 printf ("Test shmem_short_p: Passed\n");
-            else
+            else {
                 printf ("Test shmem_short_p: Failed\n");
+                fail_count++;
+            }
             if (*dest10 == (npes - 1))
                 printf ("Test shmem_int_p: Passed\n");
-            else
+            else {
                 printf ("Test shmem_int_p: Failed\n");
+                fail_count++;
+            }
             if (*dest11 == (npes - 1))
                 printf ("Test shmem_long_p: Passed\n");
-            else
+            else {
                 printf ("Test shmem_long_p: Failed\n");
+                fail_count++;
+            }
             if (*dest12 == (npes - 1))
                 printf ("Test shmem_double_p: Passed\n");
-            else
+            else {
                 printf ("Test shmem_double_p: Failed\n");
+                fail_count++;
+            }
             if (*dest13 == (npes - 1))
                 printf ("Test shmem_float_p: Passed\n");
-            else
+            else {
                 printf ("Test shmem_float_p: Failed\n");
+                fail_count++;
+            }
+        }
 
-
+        if (me == 0) {
+            if (fail_count == 0)
+                printf("All Tests Passed\n");
+            else
+                printf("%d Tests Failed\n", fail_count);
         }
 
         shmem_barrier_all ();

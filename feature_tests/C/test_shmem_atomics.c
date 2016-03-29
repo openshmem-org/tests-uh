@@ -7,6 +7,7 @@
  *   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
  *   (shmem) is released by Open Source Software Solutions, Inc., under an
  *   agreement with Silicon Graphics International Corp. (SGI).
+ * Copyright (c) 2016 Intel Corporation
  *
  * All rights reserved.
  *
@@ -83,6 +84,9 @@ main ()
     int success4_p1;
     int success5_p1;
 
+    int *fail_count;
+    int fail_count_remote;
+
     shmem_init ();
     me = shmem_my_pe ();
     npes = shmem_n_pes ();
@@ -98,6 +102,9 @@ main ()
         dest3 = (long *) shmem_malloc (sizeof (*dest3));
         dest4 = (double *) shmem_malloc (sizeof (*dest4));
         dest5 = (long long *) shmem_malloc (sizeof (*dest5));
+
+        fail_count = (int *) shmem_malloc (sizeof (int));
+        *fail_count = 0;
 
         *dest1 = *dest2 = *dest3 = *dest4 = *dest5 = me;
         new_val1 = new_val2 = new_val3 = new_val4 = new_val5 = me;
@@ -161,6 +168,7 @@ main ()
             }
             else {
                 printf ("Test shmem_int_swap: Failed\n");
+                (*fail_count)++;
             }
 
             if (success2_p1 && success2_p2) {
@@ -168,6 +176,7 @@ main ()
             }
             else {
                 printf ("Test shmem_float_swap: Failed\n");
+                (*fail_count)++;
             }
 
             if (success3_p1 && success3_p2) {
@@ -175,6 +184,7 @@ main ()
             }
             else {
                 printf ("Test shmem_long_swap: Failed\n");
+                (*fail_count)++;
             }
 
             if (success4_p1 && success4_p2) {
@@ -182,6 +192,7 @@ main ()
             }
             else {
                 printf ("Test shmem_double_swap: Failed\n");
+                (*fail_count)++;
             }
 
             if (success5_p1 && success5_p2) {
@@ -189,6 +200,7 @@ main ()
             }
             else {
                 printf ("Test shmem_longlong_swap: Failed\n");
+                (*fail_count)++;
             }
 
         }
@@ -251,6 +263,7 @@ main ()
             }
             else {
                 printf ("Test shmem_int_cswap: Failed\n");
+                (*fail_count)++;
             }
 
             if (success3_p1 && success3_p2) {
@@ -258,6 +271,7 @@ main ()
             }
             else {
                 printf ("Test shmem_long_cswap: Failed\n");
+                (*fail_count)++;
             }
 
             if (success5_p1 && success5_p2) {
@@ -265,6 +279,7 @@ main ()
             }
             else {
                 printf ("Test shmem_longlong_cswap: Failed\n");
+                (*fail_count)++;
             }
 
         }
@@ -324,6 +339,7 @@ main ()
             }
             else {
                 printf ("Test shmem_int_fadd: Failed\n");
+                (*fail_count)++;
             }
 
             if (success3_p1 && success3_p2) {
@@ -331,6 +347,7 @@ main ()
             }
             else {
                 printf ("Test shmem_long_fadd: Failed\n");
+                (*fail_count)++;
             }
 
             if (success5_p1 && success5_p2) {
@@ -338,6 +355,7 @@ main ()
             }
             else {
                 printf ("Test shmem_longlong_fadd: Failed\n");
+                (*fail_count)++;
             }
 
         }
@@ -397,6 +415,7 @@ main ()
             }
             else {
                 printf ("Test shmem_int_finc: Failed\n");
+                (*fail_count)++;
             }
 
             if (success3_p1 && success3_p2) {
@@ -404,6 +423,7 @@ main ()
             }
             else {
                 printf ("Test shmem_long_finc: Failed\n");
+                (*fail_count)++;
             }
 
             if (success5_p1 && success5_p2) {
@@ -411,16 +431,31 @@ main ()
             }
             else {
                 printf ("Test shmem_longlong_finc: Failed\n");
+                (*fail_count)++;
             }
-
         }
+
         shmem_barrier_all ();
+
+        if (me == 0) {
+            fail_count_remote = shmem_int_g(fail_count, npes - 1);
+
+            *fail_count += fail_count_remote;
+
+            if (*fail_count == 0)
+                printf("All Tests Passed\n");
+            else
+                printf("%d Tests Failed\n", *fail_count);
+        }
+
+        shmem_barrier_all();
 
         shmem_free (dest1);
         shmem_free (dest2);
         shmem_free (dest3);
         shmem_free (dest4);
         shmem_free (dest5);
+        shmem_free (fail_count);
 
     }
     else {

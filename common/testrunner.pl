@@ -61,6 +61,7 @@ use Env qw($SHELL @LD_LIBRARY_PATH);
 use Time::HiRes qw( usleep ualarm gettimeofday tv_interval nanosleep
                       clock stat );
 use Data::Dumper;
+use POSIX qw(WIFEXITED WEXITSTATUS);
 
 our $EXIT_ERROR = -1;
 our $EXIT_OK = 0;
@@ -133,10 +134,18 @@ sub execute_test($){
 
   open $log_fh, '>', $log_filename or die "Error opening log file '$log_filename'";
   print $log_fh "@output";
+  print $log_fh "\nExit code: $?\n";
   close $log_fh;
 
+  # In case where checking for exit code value
+  if(exists $test_config->{'exit_code'}) {
+      if (WIFEXITED($?) and WEXITSTATUS($?) == $test_config->{'exit_code'}) {
+          return $TEST_OK;
+      }
+  }
+
   # The last line of output from the test must contain "Passed"
-  if($output[$#output] =~ /Passed/){
+  elsif($output[$#output] =~ /Passed/){
     return $TEST_OK;
   }
 
@@ -226,6 +235,7 @@ sub run_test($$) {
             print "= TEST FAILED: $test_config->{'executable'}\n";
             print "===========================================================================\n";
             while (<$log_fh>) { print "= $_"; }
+            print "= Expected exit code: $test_config->{'exit_code'}\n" if exists $test_config->{'exit_code'};
             print "===========================================================================\n";
             close $log_fh;
 
@@ -315,6 +325,11 @@ sub read_test_config($){
      $ht_tmp->{'timeout'} = $tmp_value;
 
      $tmp_value = clean_string($elems[5]);
+     if($tmp_value =~ /^ExitCode([0-9]+)$/) {
+         $ht_tmp->{'exit_code'} = int $1;
+         $tmp_value = "Pass";
+     }
+
      if($tmp_value ne "Pass" and $tmp_value ne "Fail" and $tmp_value ne "Timeout"){
        print "Error: Configuration file, line $line_num >> Invalid value for 'Expected' field: $tmp_value \n";
        exit;
