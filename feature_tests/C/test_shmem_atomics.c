@@ -168,7 +168,7 @@ main ()
             }
             else {
                 printf ("Test shmem_int_swap: Failed\n");
-                *fail_count++;
+                (*fail_count)++;
             }
 
             if (success2_p1 && success2_p2) {
@@ -176,7 +176,7 @@ main ()
             }
             else {
                 printf ("Test shmem_float_swap: Failed\n");
-                *fail_count++;
+                (*fail_count)++;
             }
 
             if (success3_p1 && success3_p2) {
@@ -184,7 +184,7 @@ main ()
             }
             else {
                 printf ("Test shmem_long_swap: Failed\n");
-                *fail_count++;
+                (*fail_count)++;
             }
 
             if (success4_p1 && success4_p2) {
@@ -192,7 +192,7 @@ main ()
             }
             else {
                 printf ("Test shmem_double_swap: Failed\n");
-                *fail_count++;
+                (*fail_count)++;
             }
 
             if (success5_p1 && success5_p2) {
@@ -200,7 +200,7 @@ main ()
             }
             else {
                 printf ("Test shmem_longlong_swap: Failed\n");
-                *fail_count++;
+                (*fail_count)++;
             }
 
         }
@@ -263,7 +263,7 @@ main ()
             }
             else {
                 printf ("Test shmem_int_cswap: Failed\n");
-                *fail_count++;
+                (*fail_count)++;
             }
 
             if (success3_p1 && success3_p2) {
@@ -271,7 +271,7 @@ main ()
             }
             else {
                 printf ("Test shmem_long_cswap: Failed\n");
-                *fail_count++;
+                (*fail_count)++;
             }
 
             if (success5_p1 && success5_p2) {
@@ -279,7 +279,7 @@ main ()
             }
             else {
                 printf ("Test shmem_longlong_cswap: Failed\n");
-                *fail_count++;
+                (*fail_count)++;
             }
 
         }
@@ -339,7 +339,7 @@ main ()
             }
             else {
                 printf ("Test shmem_int_fadd: Failed\n");
-                *fail_count++;
+                (*fail_count)++;
             }
 
             if (success3_p1 && success3_p2) {
@@ -347,7 +347,7 @@ main ()
             }
             else {
                 printf ("Test shmem_long_fadd: Failed\n");
-                *fail_count++;
+                (*fail_count)++;
             }
 
             if (success5_p1 && success5_p2) {
@@ -355,7 +355,7 @@ main ()
             }
             else {
                 printf ("Test shmem_longlong_fadd: Failed\n");
-                *fail_count++;
+                (*fail_count)++;
             }
 
         }
@@ -415,7 +415,7 @@ main ()
             }
             else {
                 printf ("Test shmem_int_finc: Failed\n");
-                *fail_count++;
+                (*fail_count)++;
             }
 
             if (success3_p1 && success3_p2) {
@@ -423,7 +423,7 @@ main ()
             }
             else {
                 printf ("Test shmem_long_finc: Failed\n");
-                *fail_count++;
+                (*fail_count)++;
             }
 
             if (success5_p1 && success5_p2) {
@@ -431,7 +431,7 @@ main ()
             }
             else {
                 printf ("Test shmem_longlong_finc: Failed\n");
-                *fail_count++;
+                (*fail_count)++;
             }
         }
 
