@@ -55,7 +55,7 @@
 #include <shmem.h>
 #include <stdint.h>
 
-uint64_t dest;
+uint64_t dest = -9;
 
 int
 main (int argc, char **argv)
@@ -69,7 +69,6 @@ main (int argc, char **argv)
     shmem_init ();
     me = shmem_my_pe ();
     npes = shmem_n_pes ();
-    dest = -9;
 
     if (npes > 1) {
 
