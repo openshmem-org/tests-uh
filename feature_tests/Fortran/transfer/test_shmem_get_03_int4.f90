@@ -85,7 +85,7 @@ program test_shmem_get
 
     call shmem_barrier_all()
 
-    call shmem_integer_get(dest, src, N, nextpe)
+    call shmem_get4(dest, src, N, nextpe)
 
     call shmem_barrier_all()
 

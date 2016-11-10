@@ -83,7 +83,7 @@ program test_shmem_iget
     call shmem_barrier_all()
 
     if(me .eq. 0) then
-      call shmem_integer_iget(dest, src, 1, 2, N/2, npes - 1)
+      call shmem_iget4(dest, src, 1, 2, N/2, npes - 1)
     end if
 
     call shmem_barrier_all()
