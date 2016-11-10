@@ -52,7 +52,7 @@ program test_shmem_reduction
   real*4, save    :: dest_expected(nelems)
 
   integer,   save      :: pSync(SHMEM_REDUCE_SYNC_SIZE)
-  integer  , save      :: pWrk(MAX(nelems/2 + 1, SHMEM_REDUCE_MIN_WRKDATA_SIZE))
+  real*4   , save      :: pWrk(MAX(nelems/2 + 1, SHMEM_REDUCE_MIN_WRKDATA_SIZE))
 
   integer              :: me, npes, i, pe
   logical              :: success
