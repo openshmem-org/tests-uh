@@ -85,7 +85,7 @@ program test_shmem_iput
 
     call shmem_barrier_all()
 
-    call shmem_real_iput(dest, src, 1, 2, N/2, nextpe)
+    call shmem_iput4(dest, src, 1, 2, N/2, nextpe)
 
     call shmem_barrier_all()
 
