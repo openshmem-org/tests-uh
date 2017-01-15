@@ -55,9 +55,6 @@
 # TODO: logging of individual tests ? to find out more about a failed test
 
 use strict;
-use Env;
-use Env qw(PATH HOME TERM);
-use Env qw($SHELL @LD_LIBRARY_PATH);
 use Time::HiRes qw( usleep ualarm gettimeofday tv_interval nanosleep
                       clock stat );
 use Data::Dumper;
