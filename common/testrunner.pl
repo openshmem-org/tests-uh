@@ -94,7 +94,28 @@ my $ht_configuration;
 
 $ht_configuration = read_test_config $TEST_CONFIG_FILE;
 
-test_runner $ht_configuration;
+# If arguments were specified on the CLI, use those as a filter for
+# which tests to run.  Abort if a test was specified for which we do
+# not have a configuration.
+if (defined(@ARGV)) {
+    my $tests_to_run;
+    foreach my $arg (@ARGV) {
+        my $found = 0;
+        foreach my $key (sort(keys(%{$ht_configuration}))) {
+            if ($ht_configuration->{$key}->{executable} eq $arg) {
+                $found = 1;
+                $tests_to_run->{$key} = $ht_configuration->{$key};
+                last;
+            }
+        }
+
+        die "Test not found: $arg"
+            if (!$found);
+    }
+    test_runner $tests_to_run;
+} else {
+    test_runner $ht_configuration;
+}
 
 exit(0);
 
