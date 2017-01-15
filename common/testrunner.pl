@@ -68,8 +68,14 @@ our $TEST_NOTFOUND = "NotFound";
 our $TEST_UNDEF = "Undef";
 our $TEST_TIMEOUT = "Timeout";
 our $RUN_CMD="oshrun";
+our $RUN_OPTIONS="";
 our $SHELL_OPT="2>&1";
 our $TEST_CONFIG_FILE="test_parameters.conf";
+
+# Let the user override the RUN_OPTIONS, if desired (e.g., for setting
+# OpenSHMEM-specific "oshrun" CLI options).
+$RUN_OPTIONS = $ENV{RUN_OPTIONS}
+    if (exists($ENV{RUN_OPTIONS}));
 
 our $ht_stats = {
   'total'    => '0',
@@ -127,7 +133,7 @@ sub execute_test($){
   my $log_filename = "$test_config->{'executable'}" . ".log";
   my $log_fh;
 
-  @output = `$RUN_CMD -np $test_config->{'npes'} ./$test_config->{'executable'} 2>&1`;
+  @output = `$RUN_CMD $RUN_OPTIONS -np $test_config->{'npes'} ./$test_config->{'executable'} 2>&1`;
 
   open $log_fh, '>', $log_filename or die "Error opening log file '$log_filename'";
   print $log_fh "@output";
