@@ -205,7 +205,8 @@ sub run_test($$) {
 
 	$child_pid = fork();
 	if($child_pid == 0){
-	  my $rc = execute_test $test_config;
+		setpgrp(0, 0);
+		my $rc = execute_test $test_config;
 		if($rc eq $TEST_OK){
 			kill 1, getppid(); # signal the parent that test passed.
 		}else{
@@ -226,7 +227,8 @@ sub run_test($$) {
 			if($test_config->{'timeout'} != 0 && $elapsed >= $test_config->{'timeout'}){
 
 				# terminate the child process and check the results
-				kill 9, $child_pid;
+				kill 9, -$child_pid;
+
 				if($test_result eq $TEST_UNDEF){
 				  # We may be expecting a timeout to occur
 					if($test_config->{'expect'} eq $TEST_TIMEOUT){
