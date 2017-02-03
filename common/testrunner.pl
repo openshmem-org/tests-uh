@@ -157,7 +157,7 @@ sub execute_test($){
   my $test_pid = open TEST_OUT, "-|", "$RUN_CMD $RUN_OPTIONS -np $test_config->{'npes'} ./$test_config->{'executable'} 2>&1";
 
   $SIG{'INT'} = sub {
-      kill 9, $test_pid;
+      kill 'KILL', $test_pid;
       exit;
   };
 
@@ -219,9 +219,9 @@ sub run_test($$) {
 	if($child_pid == 0){
 		my $rc = execute_test $test_config;
 		if($rc eq $TEST_OK){
-			kill 1, getppid(); # signal the parent that test passed.
+			kill 'HUP', getppid(); # signal the parent that test passed.
 		}else{
-			kill 2, getppid(); # signal the parent that test failed.
+			kill 'INT', getppid(); # signal the parent that test failed.
 		}
 		exit 0; # kill child
 	}else{
@@ -238,7 +238,8 @@ sub run_test($$) {
 			if($test_config->{'timeout'} != 0 && $elapsed >= $test_config->{'timeout'}){
 
 				# terminate the child process and check the results
-				kill 2, $child_pid;
+				kill 'INT', $child_pid;
+
 				if($test_result eq $TEST_UNDEF){
 				  # We may be expecting a timeout to occur
 					if($test_config->{'expect'} eq $TEST_TIMEOUT){
