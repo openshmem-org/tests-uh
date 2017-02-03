@@ -239,7 +239,6 @@ sub run_test($$) {
 
 				# terminate the child process and check the results
 				kill 2, $child_pid;
-
 				if($test_result eq $TEST_UNDEF){
 				  # We may be expecting a timeout to occur
 					if($test_config->{'expect'} eq $TEST_TIMEOUT){
