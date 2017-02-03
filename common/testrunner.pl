@@ -154,7 +154,19 @@ sub execute_test($){
   my $log_filename = "$test_config->{'executable'}" . ".log";
   my $log_fh;
 
-  @output = `$RUN_CMD $RUN_OPTIONS -np $test_config->{'npes'} ./$test_config->{'executable'} 2>&1`;
+  my $test_pid = open TEST_OUT, "-|", "$RUN_CMD $RUN_OPTIONS -np $test_config->{'npes'} ./$test_config->{'executable'} 2>&1";
+
+  $SIG{'INT'} = sub {
+      kill 'KILL', $test_pid;
+      exit;
+  };
+
+  if ($test_pid) {
+    @output = <TEST_OUT>;
+    close TEST_OUT;
+  } else {
+    @output = $!;
+  }
 
   open $log_fh, '>', $log_filename or die "Error opening log file '$log_filename'";
   print $log_fh "@output";
@@ -205,11 +217,11 @@ sub run_test($$) {
 
 	$child_pid = fork();
 	if($child_pid == 0){
-	  my $rc = execute_test $test_config;
+		my $rc = execute_test $test_config;
 		if($rc eq $TEST_OK){
-			kill 1, getppid(); # signal the parent that test passed.
+			kill 'HUP', getppid(); # signal the parent that test passed.
 		}else{
-			kill 2, getppid(); # signal the parent that test failed.
+			kill 'INT', getppid(); # signal the parent that test failed.
 		}
 		exit 0; # kill child
 	}else{
@@ -226,7 +238,8 @@ sub run_test($$) {
 			if($test_config->{'timeout'} != 0 && $elapsed >= $test_config->{'timeout'}){
 
 				# terminate the child process and check the results
-				kill 9, $child_pid;
+				kill 'INT', $child_pid;
+
 				if($test_result eq $TEST_UNDEF){
 				  # We may be expecting a timeout to occur
 					if($test_config->{'expect'} eq $TEST_TIMEOUT){
