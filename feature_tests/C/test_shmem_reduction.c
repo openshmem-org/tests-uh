@@ -84,14 +84,16 @@ double expected_result4;
 long double expected_result5;
 long long expected_result6;
 
+#define MAX(x,y) (x) > (y) ? (x) : (y)
+#define WRKDATA_SIZE MAX(N/2+1, SHMEM_REDUCE_MIN_WRKDATA_SIZE)
 
-short pWrk0[SHMEM_REDUCE_MIN_WRKDATA_SIZE];
-int pWrk1[SHMEM_REDUCE_MIN_WRKDATA_SIZE];
-long pWrk2[SHMEM_REDUCE_MIN_WRKDATA_SIZE];
-float pWrk3[SHMEM_REDUCE_MIN_WRKDATA_SIZE];
-double pWrk4[SHMEM_REDUCE_MIN_WRKDATA_SIZE];
-long double pWrk5[SHMEM_REDUCE_MIN_WRKDATA_SIZE];
-long long pWrk6[SHMEM_REDUCE_MIN_WRKDATA_SIZE];
+short pWrk0[WRKDATA_SIZE];
+int pWrk1[WRKDATA_SIZE];
+long pWrk2[WRKDATA_SIZE];
+float pWrk3[WRKDATA_SIZE];
+double pWrk4[WRKDATA_SIZE];
+long double pWrk5[WRKDATA_SIZE];
+long long pWrk6[WRKDATA_SIZE];
 
 int
 main ()
