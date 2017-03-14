@@ -84,7 +84,7 @@ program test_shmem_collects
 
     do i = 1, dest_nelems, 1
       dest(i) = -9
-      dest_expected = -9
+      dest_expected(i) = -9
     end do
 
     do i = 1, nelems, 1
