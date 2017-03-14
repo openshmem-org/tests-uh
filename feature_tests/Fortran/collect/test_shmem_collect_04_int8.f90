@@ -131,9 +131,9 @@ program test_shmem_collects
       end if
 
       if(success .eqv. .TRUE.) then
-        write(*,*) "Test shmem_collect32: Passed"
+        write(*,*) "Test shmem_collect64: Passed"
       else
-        write(*,*) "Test shmem_collect32: Failed"
+        write(*,*) "Test shmem_collect64: Failed"
       end if
     end if
 
