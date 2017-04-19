@@ -73,6 +73,7 @@ main (int argc, char **argv)
 
     if (npes > 1) {
 
+        shmem_barrier_all();
         src = (uint64_t)((me+1)%npes);
         nextpe = (me+1)%npes;
         shmem_put64 (&dest, &src, 1, nextpe);
