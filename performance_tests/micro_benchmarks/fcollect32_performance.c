@@ -7,6 +7,8 @@
  *   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
  *   (shmem) is released by Open Source Software Solutions, Inc., under an
  *   agreement with Silicon Graphics International Corp. (SGI).
+ * Copyright (c) 2017
+ *    Los Alamos National Security, LLC. All rights reserved.
  *
  * All rights reserved.
  *
@@ -51,8 +53,8 @@
 #include <sys/time.h>
 #include <shmem.h>
 
-static long pSyncA[_SHMEM_BCAST_SYNC_SIZE];
-static long pSyncB[_SHMEM_BCAST_SYNC_SIZE];
+static long pSyncA[_SHMEM_COLLECT_SYNC_SIZE];
+static long pSyncB[_SHMEM_COLLECT_SYNC_SIZE];
 
 #define N_ELEMENTS 4
 
