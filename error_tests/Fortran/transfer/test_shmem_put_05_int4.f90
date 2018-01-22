@@ -7,6 +7,8 @@
 !   by Silicon Graphics International Corp. (SGI) The OpenSHMEM API
 !   (shmem) is released by Open Source Software Solutions, Inc., under an
 !   agreement with Silicon Graphics International Corp. (SGI).
+! Copyright (c) 2017
+!   Los Alamos National Security, LLC. All rights reserved.
 !
 ! All rights reserved.
 !
@@ -89,7 +91,7 @@ program test_shmem_put
 
     if(me .eq. 0) then
       do i = 1, N, 1
-        if(dest(i) .ne. 54321 + i) then
+        if(dest(i) .eq. 54321 + i) then
           success1 = .FALSE.
         end if
       end do
