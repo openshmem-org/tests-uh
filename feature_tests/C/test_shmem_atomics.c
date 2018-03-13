@@ -435,6 +435,7 @@ main ()
             }
         }
 
+        fflush(NULL); /* Ensure pass/fail status is last message on stdout */
         shmem_barrier_all ();
 
         if (me == 0) {
