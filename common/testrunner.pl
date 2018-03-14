@@ -97,7 +97,7 @@ $ht_configuration = read_test_config $TEST_CONFIG_FILE;
 # If arguments were specified on the CLI, use those as a filter for
 # which tests to run.  Abort if a test was specified for which we do
 # not have a configuration.
-if (defined(@ARGV)) {
+if (@ARGV) {
     my $tests_to_run;
     foreach my $arg (@ARGV) {
         my $found = 0;
